@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
 
     private int jumpCount = 0;
     private bool isGrounded;
+    private bool wasGrounded;
     private float lastJumpTime = 0f;
     private float groundedCooldown = 0.15f;
 
@@ -26,6 +27,21 @@ public class PlayerController : MonoBehaviour
     public float fallMultiplier = 4f;
     public float lowJumpMultiplier = 3f;
 
+    [Header("Elemental Combat Systems")]
+    [Tooltip("Drag the current WandData ScriptableObject here to change elements")]
+    public WandData currentElementData;
+
+    [Tooltip("The point on the player where basic attacks originate")]
+    public Transform firePoint;
+    public float projectileSpeed = 15f;
+    public float basicFireCooldown = 0.1f;
+
+    [Header("Overhead Indicator")]
+    [Tooltip("Drag the ElementIndicator container object here")]
+    public Transform elementIndicator;
+    [Tooltip("Drag the IndicatorVisual child object with the SpriteRenderer here")]
+    public SpriteRenderer indicatorSpriteRenderer;
+
     private float normalGravityScale;
 
     private Rigidbody2D rb;
@@ -35,6 +51,8 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Animator animator;
     private Camera mainCamera;
+    private WeaponManager weaponManager;
+    private float nextBasicFireTime = 0f;
 
     // Tracks whether we are currently airborne
     private bool isJumping = false;
@@ -44,6 +62,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         playerCollider = GetComponent<Collider2D>();
         playerColliders = GetComponentsInChildren<Collider2D>();
+        weaponManager = GetComponent<WeaponManager>();
 
         normalGravityScale = rb.gravityScale;
 
@@ -70,8 +89,30 @@ public class PlayerController : MonoBehaviour
             platformLayerMask = Physics2D.AllLayers;
         }
 
+        if (firePoint == null)
+        {
+            Transform foundFirePoint = transform.Find("WandPivot/FirePoint");
+            if (foundFirePoint == null)
+            {
+                foundFirePoint = transform.Find("FirePoint");
+            }
+
+            firePoint = foundFirePoint;
+        }
+
         // Self-colliders are filtered out per raycast so floors can share the
         // player's layer while you are still setting up project layers.
+    }
+
+    void Start()
+    {
+        if (mainCamera == null)
+        {
+            mainCamera = Camera.main;
+        }
+
+        EnsureElementIndicator();
+        UpdateActiveElementUI();
     }
 
     void Update()
@@ -119,35 +160,140 @@ public class PlayerController : MonoBehaviour
 
     private void HandleFireInput()
     {
+        if (weaponManager != null && weaponManager.HasBasicAttackReady())
+        {
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
-            // 1. Trigger the animator's Fire parameter
+            if (Time.time < nextBasicFireTime)
+            {
+                return;
+            }
+
             if (animator != null)
             {
                 animator.SetTrigger("Fire");
             }
 
-            // 2. Map mouse position to world coordinates to orient the character flip state
-            if (mainCamera != null && spriteRenderer != null)
-            {
-                Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mousePosition = GetMouseWorldPosition();
 
-                // If the mouse is to the left of the player's center point, flip left
-                if (mousePosition.x < transform.position.x)
-                {
-                    spriteRenderer.flipX = true;
-                }
-                // If the mouse is to the right of the player's center point, look right
-                else
-                {
-                    spriteRenderer.flipX = false;
-                }
+            FireBasicProjectile(mousePosition);
+
+            if (spriteRenderer != null)
+            {
+                SetSpriteFacing(mousePosition.x < transform.position.x);
             }
+
+            nextBasicFireTime = Time.time + basicFireCooldown;
         }
+    }
+
+    private Vector3 GetMouseWorldPosition()
+    {
+        if (mainCamera == null)
+        {
+            mainCamera = Camera.main;
+        }
+
+        if (mainCamera == null)
+        {
+            return transform.position;
+        }
+
+        Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition.z = 0f;
+        return mousePosition;
+    }
+
+    private void FireBasicProjectile(Vector3 mousePosition)
+    {
+        if (currentElementData == null ||
+            currentElementData.basicProjectilePrefab == null ||
+            firePoint == null)
+        {
+            return;
+        }
+
+        Vector2 shootDirection =
+            (mousePosition - firePoint.position).normalized;
+
+        float angle =
+            Mathf.Atan2(shootDirection.y, shootDirection.x) *
+            Mathf.Rad2Deg;
+
+        GameObject bullet = Instantiate(
+            currentElementData.basicProjectilePrefab,
+            firePoint.position,
+            Quaternion.Euler(0f, 0f, angle)
+        );
+
+        Projectile projectile = bullet.GetComponent<Projectile>();
+        if (projectile != null)
+        {
+            projectile.element = currentElementData.elementType;
+        }
+
+        Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
+        if (bulletRb != null)
+        {
+            bulletRb.linearVelocity = shootDirection * projectileSpeed;
+        }
+    }
+
+    private void EnsureElementIndicator()
+    {
+        if (elementIndicator == null)
+        {
+            GameObject indicatorObject = new GameObject("ElementIndicator");
+            indicatorObject.transform.SetParent(transform);
+            indicatorObject.transform.localPosition = new Vector3(0f, 1.8f, 0f);
+            indicatorObject.transform.localRotation = Quaternion.identity;
+            indicatorObject.transform.localScale = Vector3.one;
+            elementIndicator = indicatorObject.transform;
+        }
+
+        if (indicatorSpriteRenderer == null)
+        {
+            GameObject visualObject = new GameObject("IndicatorVisual");
+            visualObject.transform.SetParent(elementIndicator);
+            visualObject.transform.localPosition = Vector3.zero;
+            visualObject.transform.localRotation = Quaternion.identity;
+            visualObject.transform.localScale = new Vector3(0.52f, 0.52f, 1f);
+
+            indicatorSpriteRenderer = visualObject.AddComponent<SpriteRenderer>();
+            indicatorSpriteRenderer.sortingOrder = 20;
+        }
+    }
+
+    public void UpdateActiveElementUI()
+    {
+        EnsureElementIndicator();
+
+        if (currentElementData != null &&
+            indicatorSpriteRenderer != null)
+        {
+            indicatorSpriteRenderer.sprite = currentElementData.elementIcon;
+            indicatorSpriteRenderer.enabled = currentElementData.elementIcon != null;
+        }
+    }
+
+    public void SetActiveElement(WandData elementData)
+    {
+        currentElementData = elementData;
+        UpdateActiveElementUI();
+    }
+
+    public void FaceToward(Vector3 targetPosition)
+    {
+        SetSpriteFacing(targetPosition.x < transform.position.x);
     }
 
     private void CheckGroundedWithLaser()
     {
+        wasGrounded = isGrounded;
+
         // Prevent instant re-grounding after jumping
         if (Time.time - lastJumpTime < groundedCooldown)
         {
@@ -183,8 +329,11 @@ public class PlayerController : MonoBehaviour
         if (hit.collider != null)
         {
             isGrounded = true;
-            jumpCount = 0;
-            isJumping = false;
+            if (!wasGrounded)
+            {
+                jumpCount = 0;
+                isJumping = false;
+            }
         }
         else
         {
@@ -343,6 +492,7 @@ public class PlayerController : MonoBehaviour
             Collider2D hitCollider = hits[i].collider;
 
             if (hitCollider != null &&
+                !hitCollider.isTrigger &&
                 !IsPlayerCollider(hitCollider))
             {
                 return hits[i];
@@ -374,8 +524,21 @@ public class PlayerController : MonoBehaviour
 
             if (spriteRenderer != null)
             {
-                spriteRenderer.flipX = shouldFlip;
+                SetSpriteFacing(shouldFlip);
             }
+        }
+    }
+
+    private void SetSpriteFacing(bool shouldFlip)
+    {
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.flipX = shouldFlip;
+        }
+
+        if (elementIndicator != null)
+        {
+            elementIndicator.localScale = Vector3.one;
         }
     }
 
