@@ -31,8 +31,10 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private float horizontalInput;
     private Collider2D playerCollider;
+    private Collider2D[] playerColliders;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
+    private Camera mainCamera;
 
     // Tracks whether we are currently airborne
     private bool isJumping = false;
@@ -41,8 +43,12 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         playerCollider = GetComponent<Collider2D>();
+        playerColliders = GetComponentsInChildren<Collider2D>();
 
         normalGravityScale = rb.gravityScale;
+
+        // Cache the main camera for mouse position mapping
+        mainCamera = Camera.main;
 
         // SpriteRenderer
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -64,15 +70,18 @@ public class PlayerController : MonoBehaviour
             platformLayerMask = Physics2D.AllLayers;
         }
 
-        // Ignore player's own layer
-        platformLayerMask &= ~(1 << gameObject.layer);
+        // Self-colliders are filtered out per raycast so floors can share the
+        // player's layer while you are still setting up project layers.
     }
 
     void Update()
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
 
-        // Flip sprite
+        // Handle weapon firing and mouse aiming mechanics
+        HandleFireInput();
+
+        // Flip sprite based on movement (only runs if not forcing a face direction from firing)
         UpdateSpriteDirection();
 
         // Ground detection
@@ -108,6 +117,35 @@ public class PlayerController : MonoBehaviour
         );
     }
 
+    private void HandleFireInput()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            // 1. Trigger the animator's Fire parameter
+            if (animator != null)
+            {
+                animator.SetTrigger("Fire");
+            }
+
+            // 2. Map mouse position to world coordinates to orient the character flip state
+            if (mainCamera != null && spriteRenderer != null)
+            {
+                Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+
+                // If the mouse is to the left of the player's center point, flip left
+                if (mousePosition.x < transform.position.x)
+                {
+                    spriteRenderer.flipX = true;
+                }
+                // If the mouse is to the right of the player's center point, look right
+                else
+                {
+                    spriteRenderer.flipX = false;
+                }
+            }
+        }
+    }
+
     private void CheckGroundedWithLaser()
     {
         // Prevent instant re-grounding after jumping
@@ -131,11 +169,9 @@ public class PlayerController : MonoBehaviour
 
         float rayLength = 0.2f;
 
-        RaycastHit2D hit = Physics2D.Raycast(
+        RaycastHit2D hit = GetGroundHit(
             laserStartPoint,
-            Vector2.down,
-            rayLength,
-            platformLayerMask
+            rayLength
         );
 
         Debug.DrawRay(
@@ -205,40 +241,134 @@ public class PlayerController : MonoBehaviour
             playerCollider.bounds.min.y + 0.1f
         );
 
-        RaycastHit2D hit = Physics2D.Raycast(
+        RaycastHit2D hit = GetDropThroughPlatformHit(
             laserStartPoint,
-            Vector2.down,
-            0.5f,
-            platformLayerMask
+            1f
         );
 
         if (hit.collider != null)
         {
-            PlatformEffector2D effector =
-                hit.collider.GetComponent<PlatformEffector2D>();
-
-            if (effector != null)
-            {
-                StartCoroutine(
-                    DropThroughPlatform(effector)
-                );
-            }
+            StartCoroutine(
+                DropThroughPlatform(hit.collider)
+            );
         }
     }
 
     private IEnumerator DropThroughPlatform(
-        PlatformEffector2D effector)
+        Collider2D platformCollider)
     {
-        effector.rotationalOffset = 180f;
+        for (int i = 0; i < playerColliders.Length; i++)
+        {
+            Physics2D.IgnoreCollision(
+                playerColliders[i],
+                platformCollider,
+                true
+            );
+        }
 
-        yield return new WaitForSeconds(0.4f);
+        isGrounded = false;
+        lastJumpTime = Time.time;
 
-        effector.rotationalOffset = 0f;
+        rb.linearVelocity = new Vector2(
+            rb.linearVelocity.x,
+            -5f
+        );
+
+        float timeout = 1f;
+        float timer = 0f;
+
+        while (timer < timeout &&
+               playerCollider.bounds.max.y >
+               platformCollider.bounds.min.y)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        for (int i = 0; i < playerColliders.Length; i++)
+        {
+            Physics2D.IgnoreCollision(
+                playerColliders[i],
+                platformCollider,
+                false
+            );
+        }
+    }
+
+    private RaycastHit2D GetDropThroughPlatformHit(
+        Vector2 startPoint,
+        float rayLength)
+    {
+        RaycastHit2D[] hits = Physics2D.RaycastAll(
+            startPoint,
+            Vector2.down,
+            rayLength,
+            platformLayerMask
+        );
+
+        for (int i = 0; i < hits.Length; i++)
+        {
+            Collider2D hitCollider = hits[i].collider;
+
+            if (hitCollider == null ||
+                hitCollider.isTrigger ||
+                IsPlayerCollider(hitCollider))
+            {
+                continue;
+            }
+
+            if (hitCollider.GetComponent<PlatformEffector2D>() != null ||
+                hitCollider.GetComponentInParent<PlatformEffector2D>() != null)
+            {
+                return hits[i];
+            }
+        }
+
+        return new RaycastHit2D();
+    }
+
+    private RaycastHit2D GetGroundHit(
+        Vector2 startPoint,
+        float rayLength)
+    {
+        RaycastHit2D[] hits = Physics2D.RaycastAll(
+            startPoint,
+            Vector2.down,
+            rayLength,
+            platformLayerMask
+        );
+
+        for (int i = 0; i < hits.Length; i++)
+        {
+            Collider2D hitCollider = hits[i].collider;
+
+            if (hitCollider != null &&
+                !IsPlayerCollider(hitCollider))
+            {
+                return hits[i];
+            }
+        }
+
+        return new RaycastHit2D();
+    }
+
+    private bool IsPlayerCollider(Collider2D colliderToCheck)
+    {
+        for (int i = 0; i < playerColliders.Length; i++)
+        {
+            if (colliderToCheck == playerColliders[i])
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void UpdateSpriteDirection()
     {
-        if (Mathf.Abs(horizontalInput) > 0.01f)
+        // Only flip based on movement vector if player isn't actively forcing a directional look via clicking
+        if (!Input.GetMouseButton(0) && Mathf.Abs(horizontalInput) > 0.01f)
         {
             bool shouldFlip = horizontalInput < 0f;
 
