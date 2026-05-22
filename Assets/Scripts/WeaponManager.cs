@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WeaponManager : MonoBehaviour
 {
@@ -6,55 +7,452 @@ public class WeaponManager : MonoBehaviour
     public Transform firePoint;
     public WandData[] allWands;
     public bool[] unlockedWands = { true, false, false, false };
+    public float basicFireCooldown = 0.1f;
+    public float controlledProjectileFollowSpeed = 28f;
+    public float heldProjectileSpawnTravelSpeed = 10f;
+
+    [Header("Element Inventory UI")]
+    public bool showElementInventory = true;
+    public Vector2 inventorySlotSize = new Vector2(48f, 48f);
+    public Vector2 inventorySpacing = new Vector2(8f, 0f);
 
     private int activeWandIndex = 0;
+    private float nextBasicFireTime = 0f;
+    private bool isHoldingBasicFire;
+    private bool didCreateHeldProjectile;
+    private GameObject heldProjectileObject;
+    private Projectile heldProjectile;
     private PlayerResources resources;
     private Animator animator;
+    private PlayerController playerController;
+    private Image[] inventorySlotBackgrounds;
+    private Image[] inventorySlotIcons;
 
     void Start()
     {
         resources = GetComponent<PlayerResources>();
-        
+        playerController = GetComponent<PlayerController>();
+
+        if (playerController != null &&
+            playerController.currentElementData != null)
+        {
+            EnsureStartingWand(playerController.currentElementData);
+        }
+
         // Find the Animator component (on self or children)
         animator = GetComponent<Animator>();
         if (animator == null)
         {
             animator = GetComponentInChildren<Animator>();
         }
+
+        BuildElementInventoryUI();
+        RefreshElementInventoryUI();
     }
 
     void Update()
     {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if (wandPivot == null || firePoint == null)
+        {
+            return;
+        }
+
+        Camera mainCamera = Camera.main;
+        if (mainCamera == null)
+        {
+            return;
+        }
+
+        Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        mousePos.z = 0f;
         Vector3 lookDir = mousePos - wandPivot.position;
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
         wandPivot.rotation = Quaternion.Euler(0, 0, angle);
 
-        if (Input.GetKeyDown(KeyCode.Alpha1) && unlockedWands[0]) activeWandIndex = 0;
-        if (Input.GetKeyDown(KeyCode.Alpha2) && unlockedWands[1]) activeWandIndex = 1;
-        if (Input.GetKeyDown(KeyCode.Alpha3) && unlockedWands[2]) activeWandIndex = 2;
-        if (Input.GetKeyDown(KeyCode.Alpha4) && unlockedWands[3]) activeWandIndex = 3;
+        if (Input.GetKeyDown(KeyCode.Alpha1)) SetActiveWand(0);
+        if (Input.GetKeyDown(KeyCode.Alpha2)) SetActiveWand(1);
+        if (Input.GetKeyDown(KeyCode.Alpha3)) SetActiveWand(2);
+        if (Input.GetKeyDown(KeyCode.Alpha4)) SetActiveWand(3);
 
-        WandData activeWand = allWands[activeWandIndex];
+        WandData activeWand = GetActiveWand();
         if (activeWand == null) return;
 
-        if (Input.GetMouseButtonDown(0)) FireProjectile(activeWand.basicProjectilePrefab, activeWand.basicManaCost);
-        if (Input.GetKeyDown(KeyCode.Q)) FireProjectile(activeWand.qProjectilePrefab, activeWand.qManaCost);
-        if (Input.GetKeyDown(KeyCode.E)) FireProjectile(activeWand.eProjectilePrefab, activeWand.eManaCost);
-    }
+        HandleBasicFireInput(activeWand, mousePos);
 
-    private void FireProjectile(GameObject prefab, float manaCost)
-    {
-        if (prefab != null && resources.SpendMana(manaCost))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            Instantiate(prefab, firePoint.position, wandPivot.rotation);
-            
-            if (animator != null)
-            {
-                animator.SetTrigger("Fire");
-            }
+            FacePlayerToward(mousePos);
+            FireProjectile(activeWand, activeWand.qProjectilePrefab, activeWand.qManaCost);
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            FacePlayerToward(mousePos);
+            FireProjectile(activeWand, activeWand.eProjectilePrefab, activeWand.eManaCost);
         }
     }
 
-    public void UnlockWand(int index) => unlockedWands[index] = true;
+    private void FireProjectile(WandData wand, GameObject prefab, float manaCost)
+    {
+        if (prefab != null && CanSpendMana(manaCost))
+        {
+            GameObject projectileObject = Instantiate(prefab, firePoint.position, wandPivot.rotation);
+            Projectile projectile = projectileObject.GetComponent<Projectile>();
+            if (projectile != null && wand != null)
+            {
+                projectile.element = wand.elementType;
+            }
+
+            TriggerFireAnimation();
+        }
+    }
+
+    private void HandleBasicFireInput(WandData activeWand, Vector3 mousePos)
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            isHoldingBasicFire = true;
+            didCreateHeldProjectile = false;
+            CreateHeldProjectile(activeWand, mousePos);
+        }
+
+        if (didCreateHeldProjectile)
+        {
+            MoveHeldProjectile(mousePos);
+        }
+
+        if (isHoldingBasicFire && Input.GetMouseButtonUp(0))
+        {
+            if (didCreateHeldProjectile)
+            {
+                LaunchHeldProjectile(mousePos);
+            }
+            else
+            {
+                LaunchHeldProjectile(mousePos);
+            }
+
+            isHoldingBasicFire = false;
+        }
+    }
+
+    private void CreateHeldProjectile(WandData activeWand, Vector3 mousePos)
+    {
+        if (Time.time < nextBasicFireTime ||
+            activeWand == null ||
+            activeWand.basicProjectilePrefab == null ||
+            !CanSpendMana(activeWand.basicManaCost))
+        {
+            isHoldingBasicFire = false;
+            return;
+        }
+
+        FacePlayerToward(mousePos);
+        TriggerFireAnimation();
+
+        heldProjectileObject = Instantiate(
+            activeWand.basicProjectilePrefab,
+            firePoint.position,
+            Quaternion.identity
+        );
+
+        heldProjectile = heldProjectileObject.GetComponent<Projectile>();
+        if (heldProjectile != null)
+        {
+            heldProjectile.element = activeWand.elementType;
+            heldProjectile.HoldInPlace();
+        }
+
+        didCreateHeldProjectile = true;
+    }
+
+    private void MoveHeldProjectile(Vector3 mousePos)
+    {
+        if (heldProjectileObject == null)
+        {
+            return;
+        }
+
+        float followSpeed =
+            Vector3.Distance(heldProjectileObject.transform.position, mousePos) > 0.25f
+                ? heldProjectileSpawnTravelSpeed
+                : controlledProjectileFollowSpeed;
+
+        heldProjectileObject.transform.position = Vector3.MoveTowards(
+            heldProjectileObject.transform.position,
+            mousePos,
+            followSpeed * Time.deltaTime
+        );
+    }
+
+    private void LaunchHeldProjectile(Vector3 mousePos)
+    {
+        if (heldProjectileObject == null)
+        {
+            heldProjectile = null;
+            nextBasicFireTime = Time.time + basicFireCooldown;
+            return;
+        }
+
+        Vector2 launchDirection =
+            mousePos - transform.position;
+        if (launchDirection.sqrMagnitude < 0.01f)
+        {
+            launchDirection = Vector2.right;
+        }
+
+        float angle =
+            Mathf.Atan2(launchDirection.y, launchDirection.x) *
+            Mathf.Rad2Deg;
+
+        heldProjectileObject.transform.rotation =
+            Quaternion.Euler(0f, 0f, angle);
+
+        if (heldProjectile != null)
+        {
+            heldProjectile.Launch(launchDirection);
+        }
+
+        heldProjectileObject = null;
+        heldProjectile = null;
+        didCreateHeldProjectile = false;
+        nextBasicFireTime = Time.time + basicFireCooldown;
+    }
+
+    private void TriggerFireAnimation()
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger("Fire");
+        }
+    }
+
+    private void EnsureStartingWand(WandData startingWand)
+    {
+        if (allWands == null || allWands.Length == 0)
+        {
+            allWands = new WandData[] { startingWand };
+        }
+        else if (allWands[0] == null)
+        {
+            allWands[0] = startingWand;
+        }
+
+        if (unlockedWands == null || unlockedWands.Length < allWands.Length)
+        {
+            bool[] resizedUnlocks = new bool[allWands.Length];
+            for (int i = 0; i < resizedUnlocks.Length; i++)
+            {
+                resizedUnlocks[i] =
+                    unlockedWands != null &&
+                    i < unlockedWands.Length &&
+                    unlockedWands[i];
+            }
+
+            unlockedWands = resizedUnlocks;
+        }
+
+        unlockedWands[0] = true;
+        SetActiveWand(0);
+    }
+
+    private WandData GetActiveWand()
+    {
+        if (allWands == null || allWands.Length == 0)
+        {
+            return null;
+        }
+
+        activeWandIndex = Mathf.Clamp(activeWandIndex, 0, allWands.Length - 1);
+        return allWands[activeWandIndex];
+    }
+
+    private bool IsWandUnlocked(int index)
+    {
+        return unlockedWands != null &&
+               index >= 0 &&
+               index < unlockedWands.Length &&
+               unlockedWands[index] &&
+               allWands != null &&
+               index < allWands.Length &&
+               allWands[index] != null;
+    }
+
+    private void SetActiveWand(int index)
+    {
+        if (!IsWandUnlocked(index))
+        {
+            return;
+        }
+
+        activeWandIndex = index;
+
+        if (playerController != null)
+        {
+            playerController.SetActiveElement(allWands[activeWandIndex]);
+        }
+
+        RefreshElementInventoryUI();
+    }
+
+    private bool CanSpendMana(float manaCost)
+    {
+        return resources == null || resources.SpendMana(manaCost);
+    }
+
+    private void FacePlayerToward(Vector3 targetPosition)
+    {
+        if (playerController != null)
+        {
+            playerController.FaceToward(targetPosition);
+        }
+    }
+
+    public bool HasBasicAttackReady()
+    {
+        WandData activeWand = GetActiveWand();
+
+        return enabled &&
+               wandPivot != null &&
+               firePoint != null &&
+               activeWand != null &&
+               activeWand.basicProjectilePrefab != null;
+    }
+
+    public void UnlockWand(int index)
+    {
+        if (unlockedWands == null || index < 0 || index >= unlockedWands.Length)
+        {
+            return;
+        }
+
+        unlockedWands[index] = true;
+        SetActiveWand(index);
+        RefreshElementInventoryUI();
+    }
+
+    private void BuildElementInventoryUI()
+    {
+        if (!showElementInventory ||
+            allWands == null ||
+            allWands.Length == 0 ||
+            inventorySlotIcons != null)
+        {
+            return;
+        }
+
+        Canvas canvas = FindFirstObjectByType<Canvas>();
+        if (canvas == null)
+        {
+            GameObject canvasObject = new GameObject("ElementInventoryCanvas");
+            canvas = canvasObject.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = 50;
+            canvasObject.AddComponent<CanvasScaler>();
+            canvasObject.AddComponent<GraphicRaycaster>();
+        }
+
+        GameObject inventoryObject = new GameObject("ElementInventory");
+        inventoryObject.transform.SetParent(canvas.transform, false);
+
+        RectTransform inventoryRect =
+            inventoryObject.AddComponent<RectTransform>();
+        inventoryRect.anchorMin = new Vector2(0.5f, 0f);
+        inventoryRect.anchorMax = new Vector2(0.5f, 0f);
+        inventoryRect.pivot = new Vector2(0.5f, 0f);
+        inventoryRect.anchoredPosition = new Vector2(0f, 18f);
+
+        HorizontalLayoutGroup layout =
+            inventoryObject.AddComponent<HorizontalLayoutGroup>();
+        layout.childAlignment = TextAnchor.MiddleCenter;
+        layout.spacing = inventorySpacing.x;
+        layout.childControlWidth = false;
+        layout.childControlHeight = false;
+        layout.childForceExpandWidth = false;
+        layout.childForceExpandHeight = false;
+
+        ContentSizeFitter fitter =
+            inventoryObject.AddComponent<ContentSizeFitter>();
+        fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        inventorySlotBackgrounds = new Image[allWands.Length];
+        inventorySlotIcons = new Image[allWands.Length];
+
+        for (int i = 0; i < allWands.Length; i++)
+        {
+            CreateInventorySlot(inventoryObject.transform, i);
+        }
+    }
+
+    private void CreateInventorySlot(Transform parent, int index)
+    {
+        GameObject slotObject = new GameObject("ElementSlot_" + (index + 1));
+        slotObject.transform.SetParent(parent, false);
+
+        RectTransform slotRect = slotObject.AddComponent<RectTransform>();
+        slotRect.sizeDelta = inventorySlotSize;
+
+        LayoutElement layoutElement = slotObject.AddComponent<LayoutElement>();
+        layoutElement.preferredWidth = inventorySlotSize.x;
+        layoutElement.preferredHeight = inventorySlotSize.y;
+
+        Image slotBackground = slotObject.AddComponent<Image>();
+        slotBackground.color = new Color(0f, 0f, 0f, 0.45f);
+        inventorySlotBackgrounds[index] = slotBackground;
+
+        GameObject iconObject = new GameObject("Icon");
+        iconObject.transform.SetParent(slotObject.transform, false);
+
+        RectTransform iconRect = iconObject.AddComponent<RectTransform>();
+        iconRect.anchorMin = Vector2.zero;
+        iconRect.anchorMax = Vector2.one;
+        iconRect.offsetMin = new Vector2(6f, 6f);
+        iconRect.offsetMax = new Vector2(-6f, -6f);
+
+        Image icon = iconObject.AddComponent<Image>();
+        icon.preserveAspect = true;
+        inventorySlotIcons[index] = icon;
+    }
+
+    private void RefreshElementInventoryUI()
+    {
+        if (!showElementInventory)
+        {
+            return;
+        }
+
+        if (inventorySlotIcons == null)
+        {
+            BuildElementInventoryUI();
+        }
+
+        if (inventorySlotIcons == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < inventorySlotIcons.Length; i++)
+        {
+            WandData wand =
+                allWands != null && i < allWands.Length
+                    ? allWands[i]
+                    : null;
+
+            bool isUnlocked = IsWandUnlocked(i);
+            bool isActive = i == activeWandIndex;
+
+            inventorySlotIcons[i].sprite =
+                wand != null ? wand.elementIcon : null;
+            inventorySlotIcons[i].enabled =
+                wand != null && wand.elementIcon != null;
+            inventorySlotIcons[i].color =
+                isUnlocked ? Color.white : new Color(0.25f, 0.25f, 0.25f, 0.45f);
+
+            inventorySlotBackgrounds[i].color =
+                isActive
+                    ? new Color(1f, 1f, 1f, 0.38f)
+                    : new Color(0f, 0f, 0f, 0.45f);
+        }
+    }
 }
