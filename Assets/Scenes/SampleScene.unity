@@ -384,7 +384,7 @@ MonoBehaviour:
     CustomLookAtTarget: 0
   Lens:
     FieldOfView: 34
-    OrthographicSize: 3.87
+    OrthographicSize: 3.85
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -543,7 +543,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 3.87
+  orthographic size: 3.85
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -568,7 +568,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.1667978, y: -1.1242595, z: -10}
+  m_LocalPosition: {x: -0.16679877, y: -1.1442595, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -615,6 +615,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 580948907}
+  - component: {fileID: 580948908}
   m_Layer: 0
   m_Name: GameDirector
   m_TagString: Untagged
@@ -637,6 +638,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &580948908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 580948906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54a825a0677a530449a75dd4ecd5a543, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  killCount: 0
+  targetKillsForBoss: 75
+  normalEnemyPrefab: {fileID: 100000, guid: d6e1949159d04540af6433277f874550, type: 3}
+  earthEnemyPrefab: {fileID: 100000, guid: d6e1949159d04540af6433277f874550, type: 3}
+  waterEnemyPrefab: {fileID: 0}
+  fireEnemyPrefab: {fileID: 0}
+  bosses: []
+  enemiesPerWave: 20
+  spawnInterval: 1
+  timeBetweenWaves: 4
+  minSpawnDistance: 8
+  maxSpawnDistance: 18
+  minAirSpawnHeightAbovePlayer: 2
+  maxAirSpawnHeightAbovePlayer: 7
+  floorSpawnPoints: []
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1193,11 +1221,17 @@ MonoBehaviour:
   wandPivot: {fileID: 391709119}
   firePoint: {fileID: 9521008}
   allWands:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 1db257853c8604646b30cf7667b13e2b, type: 2}
+  - {fileID: 11400000, guid: 7f6fdb3fc9164b348904f9237a73270b, type: 2}
+  - {fileID: 11400000, guid: 684296789f5c4e08a0208db7c207f673, type: 2}
+  - {fileID: 11400000, guid: 2fbb3bc8c0a34effad2948303b2ed47f, type: 2}
   unlockedWands: 01000000
+  basicFireCooldown: 0.1
+  controlledProjectileFollowSpeed: 28
+  heldProjectileSpawnTravelSpeed: 10
+  showElementInventory: 1
+  inventorySlotSize: {x: 48, y: 48}
+  inventorySpacing: {x: 8, y: 0}
 --- !u!114 &1476606680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1217,6 +1251,13 @@ MonoBehaviour:
   manaRegenRate: 10
   healthSlider: {fileID: 0}
   manaSlider: {fileID: 0}
+  enemyContactDamage: 10
+  contactDamageCooldown: 1
+  enemyContactRadius: 0.95
+  createHealthBarIfMissing: 1
+  healthBarPosition: {x: 28, y: -28}
+  healthBarSize: {x: 240, y: 22}
+  gameOverDelay: 1
 --- !u!114 &1476606681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1238,6 +1279,12 @@ MonoBehaviour:
     m_Bits: 0
   fallMultiplier: 4
   lowJumpMultiplier: 3
+  currentElementData: {fileID: 11400000, guid: 1db257853c8604646b30cf7667b13e2b, type: 2}
+  firePoint: {fileID: 9521008}
+  projectileSpeed: 15
+  basicFireCooldown: 0.1
+  elementIndicator: {fileID: 0}
+  indicatorSpriteRenderer: {fileID: 0}
 --- !u!70 &1476606682
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
