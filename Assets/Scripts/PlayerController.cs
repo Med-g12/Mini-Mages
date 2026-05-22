@@ -9,20 +9,23 @@ public class PlayerController : MonoBehaviour
     [Header("Jumping Mechanics")]
     public float jumpForce = 12f;
     public float doubleJumpForce = 10f;
+
     [Tooltip("Total number of jumps allowed (e.g., 2 for double jump)")]
     public int maxJumps = 2;
+
     private int jumpCount = 0;
     private bool isGrounded;
     private float lastJumpTime = 0f;
-    private float groundedCooldown = 0.15f; // Prevent ground detection immediately after jumping
+    private float groundedCooldown = 0.15f;
 
     [Header("Grounded Check")]
     [Tooltip("The layers that count as solid ground/platforms")]
     public LayerMask platformLayerMask;
 
     [Header("Better Physics / Fast Falling")]
-    public float fallMultiplier = 4f;      // Heavy falling gravity scale
-    public float lowJumpMultiplier = 3f;  // Tap lightly vs hold jump control
+    public float fallMultiplier = 4f;
+    public float lowJumpMultiplier = 3f;
+
     private float normalGravityScale;
 
     private Rigidbody2D rb;
@@ -30,35 +33,38 @@ public class PlayerController : MonoBehaviour
     private Collider2D playerCollider;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
-    // Tracks whether we are currently in a jump (airborne) – prevents premature ground resets.
+
+    // Tracks whether we are currently airborne
     private bool isJumping = false;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         playerCollider = GetComponent<Collider2D>();
-        normalGravityScale = rb.gravityScale; // Save original gravity setting
 
-        // Find the SpriteRenderer component (on self or children)
+        normalGravityScale = rb.gravityScale;
+
+        // SpriteRenderer
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer == null)
         {
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         }
 
-        // Find the Animator component (on self or children)
+        // Animator
         animator = GetComponent<Animator>();
         if (animator == null)
         {
             animator = GetComponentInChildren<Animator>();
         }
 
-        // If the user didn't assign a mask, fall back to *all* layers – this guarantees we can detect any ground.
-        // We also make sure the player's own layer is excluded so the ray never hits itself.
+        // Fallback ground layers
         if (platformLayerMask.value == 0)
         {
             platformLayerMask = Physics2D.AllLayers;
         }
+
+        // Ignore player's own layer
         platformLayerMask &= ~(1 << gameObject.layer);
     }
 
@@ -66,13 +72,13 @@ public class PlayerController : MonoBehaviour
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
 
-        // 1. Flip sprite based on horizontal movement (A/D)
+        // Flip sprite
         UpdateSpriteDirection();
 
-        // 2. Check if we are touching a platform floor
+        // Ground detection
         CheckGroundedWithLaser();
 
-        // 3. Listen for Jump Inputs cleanly (W only)
+        // Jump input
         if (Input.GetKeyDown(KeyCode.W))
         {
             if (isGrounded || jumpCount < maxJumps)
@@ -81,60 +87,67 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        // 4. Apply heavy platformer fast‑fall gravity
+        // Better gravity
         ApplyBetterGravity();
 
-        // 5. Drop‑through platforms logic
+        // Drop-through platforms
         if (Input.GetKeyDown(KeyCode.S))
         {
             CheckAndDrop();
         }
 
-        // 6. Update animation parameters
+        // Animations
         UpdateAnimations();
     }
 
     void FixedUpdate()
     {
-        rb.linearVelocity = new Vector2(horizontalInput * moveSpeed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(
+            horizontalInput * moveSpeed,
+            rb.linearVelocity.y
+        );
     }
 
     private void CheckGroundedWithLaser()
     {
-        // Skip the check for a short window right after a jump – prevents the ray from hitting the ground too early.
+        // Prevent instant re-grounding after jumping
         if (Time.time - lastJumpTime < groundedCooldown)
         {
             isGrounded = false;
             return;
         }
 
-        // If we are still moving upward, ignore ground detection – this avoids the laser hitting the ceiling
-        // (or the platform we just left) while the player is still rising.
-        if (rb.linearVelocity.y > 0f)
+        // Ignore while moving upward
+        if (rb.linearVelocity.y > 0.1f)
         {
             isGrounded = false;
             return;
         }
 
-        // Start the ray a tiny bit inside the collider so we never hit our own body.
         Vector2 laserStartPoint = new Vector2(
             transform.position.x,
-            playerCollider.bounds.min.y + 0.01f);
+            playerCollider.bounds.min.y + 0.02f
+        );
 
-        // Use a longer ray (0.7 units) to reliably reach the floor even if the player is tall or the platform is thin.
-        float rayLength = 0.7f;
+        float rayLength = 0.2f;
 
-        RaycastHit2D hit = Physics2D.Raycast(laserStartPoint, Vector2.down, rayLength, platformLayerMask);
-        Debug.DrawRay(laserStartPoint, Vector2.down * rayLength,
-            hit.collider != null ? Color.green : Color.red);
+        RaycastHit2D hit = Physics2D.Raycast(
+            laserStartPoint,
+            Vector2.down,
+            rayLength,
+            platformLayerMask
+        );
 
-        // Only consider the player grounded if we actually hit something **below** a small threshold.
-        // This prevents the ray from instantly hitting the platform we just left when we are still very close to it.
-        if (hit.collider != null && hit.distance > 0.05f)
+        Debug.DrawRay(
+            laserStartPoint,
+            Vector2.down * rayLength,
+            hit.collider != null ? Color.green : Color.red
+        );
+
+        if (hit.collider != null)
         {
             isGrounded = true;
-            jumpCount = 0; // reset jumps as soon as we touch something solid
-            // We've landed – stop the jumping flag.
+            jumpCount = 0;
             isJumping = false;
         }
         else
@@ -145,27 +158,37 @@ public class PlayerController : MonoBehaviour
 
     private void ExecuteInstantJump()
     {
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+        // Reset vertical velocity before jumping
+        rb.linearVelocity = new Vector2(
+            rb.linearVelocity.x,
+            0f
+        );
 
-        float appliedForce = (jumpCount == 0) ? jumpForce : doubleJumpForce;
-        rb.AddForce(Vector2.up * appliedForce, ForceMode2D.Impulse);
+        float appliedForce =
+            (jumpCount == 0) ? jumpForce : doubleJumpForce;
+
+        rb.AddForce(
+            Vector2.up * appliedForce,
+            ForceMode2D.Impulse
+        );
 
         jumpCount++;
+
         isGrounded = false;
-        lastJumpTime = Time.time;
-        // Mark that we are now airborne – prevents early ground resets.
         isJumping = true;
+        lastJumpTime = Time.time;
     }
 
     private void ApplyBetterGravity()
     {
-        // If falling down, apply a massive gravity pull for snappy heavy landing
+        // Falling
         if (rb.linearVelocity.y < 0)
         {
             rb.gravityScale = fallMultiplier;
         }
-        // If rising but let go of the jump key, cut the jump short
-        else if (rb.linearVelocity.y > 0 && !Input.GetKey(KeyCode.W))
+        // Rising but jump released
+        else if (rb.linearVelocity.y > 0 &&
+                 !Input.GetKey(KeyCode.W))
         {
             rb.gravityScale = lowJumpMultiplier;
         }
@@ -177,62 +200,90 @@ public class PlayerController : MonoBehaviour
 
     private void CheckAndDrop()
     {
-        Vector2 laserStartPoint = new Vector2(transform.position.x, playerCollider.bounds.min.y + 0.1f);
-        RaycastHit2D hit = Physics2D.Raycast(laserStartPoint, Vector2.down, 0.5f, platformLayerMask);
+        Vector2 laserStartPoint = new Vector2(
+            transform.position.x,
+            playerCollider.bounds.min.y + 0.1f
+        );
+
+        RaycastHit2D hit = Physics2D.Raycast(
+            laserStartPoint,
+            Vector2.down,
+            0.5f,
+            platformLayerMask
+        );
 
         if (hit.collider != null)
         {
-            PlatformEffector2D effector = hit.collider.GetComponent<PlatformEffector2D>();
+            PlatformEffector2D effector =
+                hit.collider.GetComponent<PlatformEffector2D>();
+
             if (effector != null)
             {
-                StartCoroutine(DropThroughPlatform(effector));
+                StartCoroutine(
+                    DropThroughPlatform(effector)
+                );
             }
         }
     }
 
-    private IEnumerator DropThroughPlatform(PlatformEffector2D effector)
+    private IEnumerator DropThroughPlatform(
+        PlatformEffector2D effector)
     {
         effector.rotationalOffset = 180f;
+
         yield return new WaitForSeconds(0.4f);
+
         effector.rotationalOffset = 0f;
     }
 
-    // UpdateFacingDirection method removed – using movement‑based flip instead.
-    // Insert this method anywhere inside PlayerController (after UpdateFacingDirection is fine)
-private void UpdateSpriteDirection()
-{
-    // Only flip when the player is actually moving; otherwise keep the previous orientation
-    if (Mathf.Abs(horizontalInput) > 0.01f)
+    private void UpdateSpriteDirection()
     {
-        // When moving right (positive input) we want the sprite to face right → flipX = false
-        // When moving left (negative input) we want the sprite to face left → flipX = true
-        bool shouldFlip = horizontalInput < 0f;
-        if (spriteRenderer != null)
-            spriteRenderer.flipX = shouldFlip;
+        if (Mathf.Abs(horizontalInput) > 0.01f)
+        {
+            bool shouldFlip = horizontalInput < 0f;
+
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.flipX = shouldFlip;
+            }
+        }
     }
-}
+
     private void UpdateAnimations()
     {
         if (animator == null) return;
 
-        // Horizontal speed for idle/run blending
-        animator.SetFloat("Speed", Mathf.Abs(horizontalInput));
+        // Run speed
+        animator.SetFloat(
+            "Speed",
+            Mathf.Abs(horizontalInput)
+        );
 
-        // Grounded flag for landing logic
-        animator.SetBool("IsGrounded", isGrounded);
+        // Grounded state
+        animator.SetBool(
+            "IsGrounded",
+            isGrounded
+        );
 
-        // Vertical velocity – useful for jump/fall conditions
-        animator.SetFloat("VerticalVelocity", rb.linearVelocity.y);
+        // Vertical movement
+        animator.SetFloat(
+            "VerticalVelocity",
+            rb.linearVelocity.y
+        );
 
-        // IsFalling flag – only set if the Animator defines it.
+        // Falling bool (optional)
         foreach (var p in animator.parameters)
         {
-            if (p.name == "IsFalling" && p.type == AnimatorControllerParameterType.Bool)
+            if (p.name == "IsFalling" &&
+                p.type == AnimatorControllerParameterType.Bool)
             {
-                animator.SetBool("IsFalling", rb.linearVelocity.y < -0.05f);
+                animator.SetBool(
+                    "IsFalling",
+                    rb.linearVelocity.y < -0.05f
+                );
+
                 break;
             }
         }
-
     }
 }
