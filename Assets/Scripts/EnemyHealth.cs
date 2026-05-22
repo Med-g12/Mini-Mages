@@ -7,23 +7,29 @@ public class EnemyHealth : MonoBehaviour
     public float baseSpeed = 2.5f;
     public bool isBoss = false;
     public int bossTier = 1;
+    public ElementType enemyElement = ElementType.Earth;
 
     private float currentSpeed;
     private SpriteRenderer sr;
     private Rigidbody2D rb;
     private Collider2D enemyCollider;
+    private EnemyMovement enemyMovement;
     private GameObject currentPlatform;
 
     void Start()
     {
         currentSpeed = baseSpeed;
         sr = GetComponent<SpriteRenderer>();
+        if (sr == null) sr = GetComponentInChildren<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         enemyCollider = GetComponent<Collider2D>();
+        enemyMovement = GetComponent<EnemyMovement>();
     }
 
     void Update()
     {
+        if (enemyMovement != null) return;
+
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player == null) return;
 
