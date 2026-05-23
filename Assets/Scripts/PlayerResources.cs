@@ -24,12 +24,15 @@ public class PlayerResources : MonoBehaviour
     public bool createHealthBarIfMissing = true;
     public Vector2 healthBarPosition = new Vector2(28f, -28f);
     public Vector2 healthBarSize = new Vector2(240f, 22f);
+    public Vector2 manaBarPosition = new Vector2(28f, -58f);
+    public Vector2 manaBarSize = new Vector2(240f, 22f);
     public float gameOverDelay = 1f;
 
     private float nextContactDamageTime;
     private bool isDead;
     private GameObject gameOverPanel;
     private RectTransform healthFillRect;
+    private RectTransform manaFillRect;
 
     void Start()
     {
@@ -71,6 +74,22 @@ public class PlayerResources : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth - amount, 0f, maxHealth);
         UpdateHealthBar();
         if (currentHealth <= 0) Die();
+    }
+
+    public void AddHealth(float amount)
+    {
+        if (isDead) return;
+
+        currentHealth = Mathf.Clamp(currentHealth + amount, 0f, maxHealth);
+        UpdateHealthBar();
+    }
+
+    public void AddMana(float amount)
+    {
+        if (isDead) return;
+
+        currentMana = Mathf.Clamp(currentMana + amount, 0f, maxMana);
+        UpdateManaBar();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -220,7 +239,8 @@ public class PlayerResources : MonoBehaviour
 
     private void EnsureHealthBar()
     {
-        if (healthSlider != null || !createHealthBarIfMissing) return;
+        if (!createHealthBarIfMissing) return;
+        if (healthSlider != null && manaSlider != null) return;
 
         Canvas canvas = FindFirstObjectByType<Canvas>();
         if (canvas == null)
@@ -232,43 +252,80 @@ public class PlayerResources : MonoBehaviour
             canvasObject.AddComponent<GraphicRaycaster>();
         }
 
-        GameObject root = new GameObject("PlayerHealthBar");
-        root.transform.SetParent(canvas.transform, false);
+        if (healthSlider == null)
+        {
+            healthSlider = CreateResourceBar(
+                canvas.transform,
+                "PlayerHealthBar",
+                healthBarPosition,
+                healthBarSize,
+                new Color(0.12f, 0.08f, 0.08f, 0.88f),
+                new Color(0.88f, 0.12f, 0.16f, 1f),
+                out healthFillRect
+            );
+        }
+
+        if (manaSlider == null)
+        {
+            manaSlider = CreateResourceBar(
+                canvas.transform,
+                "PlayerManaBar",
+                manaBarPosition,
+                manaBarSize,
+                new Color(0.06f, 0.08f, 0.16f, 0.88f),
+                new Color(0.16f, 0.42f, 1f, 1f),
+                out manaFillRect
+            );
+        }
+    }
+
+    private Slider CreateResourceBar(
+        Transform parent,
+        string objectName,
+        Vector2 position,
+        Vector2 size,
+        Color backgroundColor,
+        Color fillColor,
+        out RectTransform fillRect)
+    {
+        GameObject root = new GameObject(objectName);
+        root.transform.SetParent(parent, false);
 
         RectTransform rootRect = root.AddComponent<RectTransform>();
         rootRect.anchorMin = new Vector2(0f, 1f);
         rootRect.anchorMax = new Vector2(0f, 1f);
         rootRect.pivot = new Vector2(0f, 1f);
-        rootRect.anchoredPosition = healthBarPosition;
-        rootRect.sizeDelta = healthBarSize;
+        rootRect.anchoredPosition = position;
+        rootRect.sizeDelta = size;
 
         Image background = root.AddComponent<Image>();
-        background.color = new Color(0.12f, 0.08f, 0.08f, 0.88f);
+        background.color = backgroundColor;
 
         GameObject fillObject = new GameObject("Fill");
         fillObject.transform.SetParent(root.transform, false);
 
-        RectTransform fillRect = fillObject.AddComponent<RectTransform>();
+        fillRect = fillObject.AddComponent<RectTransform>();
         fillRect.anchorMin = Vector2.zero;
         fillRect.anchorMax = Vector2.one;
         fillRect.offsetMin = new Vector2(3f, 3f);
         fillRect.offsetMax = new Vector2(-3f, -3f);
         fillRect.pivot = new Vector2(0f, 0.5f);
-        healthFillRect = fillRect;
 
         Image fill = fillObject.AddComponent<Image>();
-        fill.color = new Color(0.88f, 0.12f, 0.16f, 1f);
+        fill.color = fillColor;
         fill.type = Image.Type.Filled;
         fill.fillMethod = Image.FillMethod.Horizontal;
         fill.fillOrigin = 0;
 
-        healthSlider = root.AddComponent<Slider>();
-        healthSlider.transition = Selectable.Transition.None;
-        healthSlider.minValue = 0f;
-        healthSlider.maxValue = 1f;
-        healthSlider.value = 1f;
-        healthSlider.fillRect = fillRect;
-        healthSlider.targetGraphic = fill;
+        Slider slider = root.AddComponent<Slider>();
+        slider.transition = Selectable.Transition.None;
+        slider.minValue = 0f;
+        slider.maxValue = 1f;
+        slider.value = 1f;
+        slider.fillRect = fillRect;
+        slider.targetGraphic = fill;
+
+        return slider;
     }
 
     private void ShowGameOver()
@@ -389,7 +446,13 @@ public class PlayerResources : MonoBehaviour
     {
         if (manaSlider != null)
         {
-            manaSlider.value = maxMana > 0f ? currentMana / maxMana : 0f;
+            manaSlider.value = maxMana > 0f ? Mathf.Clamp01(currentMana / maxMana) : 0f;
+        }
+
+        if (manaFillRect != null)
+        {
+            float manaPercent = maxMana > 0f ? Mathf.Clamp01(currentMana / maxMana) : 0f;
+            manaFillRect.localScale = new Vector3(manaPercent, 1f, 1f);
         }
     }
 }

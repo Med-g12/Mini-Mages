@@ -290,6 +290,24 @@ public class PlayerController : MonoBehaviour
         SetSpriteFacing(targetPosition.x < transform.position.x);
     }
 
+    public void AddSpeedBuff(float speedAmount, float duration)
+    {
+        if (duration <= 0f)
+        {
+            moveSpeed += speedAmount;
+            return;
+        }
+
+        StartCoroutine(SpeedBuffRoutine(speedAmount, duration));
+    }
+
+    private IEnumerator SpeedBuffRoutine(float speedAmount, float duration)
+    {
+        moveSpeed += speedAmount;
+        yield return new WaitForSeconds(duration);
+        moveSpeed -= speedAmount;
+    }
+
     private void CheckGroundedWithLaser()
     {
         wasGrounded = isGrounded;

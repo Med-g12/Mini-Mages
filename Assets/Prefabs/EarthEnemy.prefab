@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 950000}
   - component: {fileID: 1140000}
   - component: {fileID: 1140001}
+  - component: {fileID: -4196417446131523410}
   m_Layer: 0
   m_Name: EarthEnemy
   m_TagString: Enemy
@@ -239,6 +240,22 @@ MonoBehaviour:
   markerColor: {r: 1, g: 0.95, b: 0.1, a: 1}
   markerOffset: {x: 0, y: 0.68, z: 0}
   markerSize: 0.14
+--- !u!114 &-4196417446131523410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 325d70a36c0045543906ca2e042f9765, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDropTable
+  drops:
+  - prefab: {fileID: 5175711495734363953, guid: b99932eb37757a54dad7483df867b3ee, type: 3}
+    dropChancePercent: 15
+    dropOffset: {x: 0, y: 0}
 --- !u!1 &100001
 GameObject:
   m_ObjectHideFlags: 0

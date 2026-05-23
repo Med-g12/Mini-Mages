@@ -97,6 +97,12 @@ public class EnemyHealth : MonoBehaviour
 
     void Die()
     {
+        EnemyDropTable dropTable = GetComponent<EnemyDropTable>();
+        if (dropTable != null)
+        {
+            dropTable.TryDropItems();
+        }
+
         GameDirector director = FindFirstObjectByType<GameDirector>();
         if (director != null)
         {

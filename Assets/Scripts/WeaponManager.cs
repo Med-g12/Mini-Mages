@@ -10,6 +10,7 @@ public class WeaponManager : MonoBehaviour
     public float basicFireCooldown = 0.1f;
     public float controlledProjectileFollowSpeed = 28f;
     public float heldProjectileSpawnTravelSpeed = 10f;
+    public float bonusProjectileDamage = 0f;
 
     [Header("Element Inventory UI")]
     public bool showElementInventory = true;
@@ -101,6 +102,7 @@ public class WeaponManager : MonoBehaviour
             if (projectile != null && wand != null)
             {
                 projectile.element = wand.elementType;
+                projectile.damage += bonusProjectileDamage;
             }
 
             TriggerFireAnimation();
@@ -160,6 +162,7 @@ public class WeaponManager : MonoBehaviour
         if (heldProjectile != null)
         {
             heldProjectile.element = activeWand.elementType;
+            heldProjectile.damage += bonusProjectileDamage;
             heldProjectile.HoldInPlace();
         }
 
@@ -346,6 +349,24 @@ public class WeaponManager : MonoBehaviour
                 return;
             }
         }
+    }
+
+    public void AddDamageBuff(float damageAmount, float duration)
+    {
+        if (duration <= 0f)
+        {
+            bonusProjectileDamage += damageAmount;
+            return;
+        }
+
+        StartCoroutine(DamageBuffRoutine(damageAmount, duration));
+    }
+
+    private System.Collections.IEnumerator DamageBuffRoutine(float damageAmount, float duration)
+    {
+        bonusProjectileDamage += damageAmount;
+        yield return new WaitForSeconds(duration);
+        bonusProjectileDamage -= damageAmount;
     }
 
     private void BuildElementInventoryUI()
