@@ -5,6 +5,8 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
     public float moveSpeed = 6f;
+    [Tooltip("Prevents wall friction from holding the player in place while airborne.")]
+    public PhysicsMaterial2D frictionlessMovementMaterial;
 
     [Header("Jumping Mechanics")]
     public float jumpForce = 12f;
@@ -102,6 +104,7 @@ public class PlayerController : MonoBehaviour
 
         // Self-colliders are filtered out per raycast so floors can share the
         // player's layer while you are still setting up project layers.
+        ApplyFrictionlessMovementMaterial();
     }
 
     void Start()
@@ -513,6 +516,23 @@ public class PlayerController : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void ApplyFrictionlessMovementMaterial()
+    {
+        if (frictionlessMovementMaterial == null)
+        {
+            frictionlessMovementMaterial = new PhysicsMaterial2D("Player Frictionless Movement")
+            {
+                friction = 0f,
+                bounciness = 0f
+            };
+        }
+
+        for (int i = 0; i < playerColliders.Length; i++)
+        {
+            playerColliders[i].sharedMaterial = frictionlessMovementMaterial;
+        }
     }
 
     private void UpdateSpriteDirection()
