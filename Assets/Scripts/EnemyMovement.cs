@@ -62,10 +62,7 @@ public class EnemyMovement : MonoBehaviour
         rb.gravityScale = ShouldFly() ? 0f : rb.gravityScale;
         rb.freezeRotation = true;
 
-        if (ShouldFly())
-        {
-            IgnorePlatformCollisions();
-        }
+        IgnoreEnemyOnlyObstacles();
 
         EnsureVisibilityMarker();
     }
@@ -240,20 +237,29 @@ public class EnemyMovement : MonoBehaviour
         return contactDamage;
     }
 
-    private void IgnorePlatformCollisions()
+    private void IgnoreEnemyOnlyObstacles()
     {
         if (enemyCollider == null) return;
 
         int platformLayer = LayerMask.NameToLayer("Platforms");
-        if (platformLayer < 0) return;
-
         Collider2D[] colliders = FindObjectsByType<Collider2D>(FindObjectsSortMode.None);
         foreach (Collider2D other in colliders)
         {
-            if (other.gameObject.layer == platformLayer)
+            if (other == enemyCollider) continue;
+
+            if ((ShouldFly() && other.gameObject.layer == platformLayer) ||
+                IsBoundaryCollider(other))
             {
                 Physics2D.IgnoreCollision(enemyCollider, other, true);
             }
         }
+    }
+
+    private bool IsBoundaryCollider(Collider2D other)
+    {
+        string objectName = other.gameObject.name.ToLowerInvariant();
+        return objectName.Contains("wall") ||
+               objectName.Contains("boundary") ||
+               objectName.Contains("bound");
     }
 }
