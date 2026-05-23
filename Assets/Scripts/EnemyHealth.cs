@@ -100,7 +100,7 @@ public class EnemyHealth : MonoBehaviour
         GameDirector director = FindFirstObjectByType<GameDirector>();
         if (director != null)
         {
-            if (isBoss) director.OnBossDefeated(bossTier);
+            if (isBoss) director.OnBossDefeated(this);
             else director.OnNormalEnemyDefeated();
         }
         Destroy(gameObject);
