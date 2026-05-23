@@ -11,6 +11,7 @@ public class GameDirector : MonoBehaviour
     public GameObject waterEnemyPrefab;
     public GameObject fireEnemyPrefab;
     public GameObject[] bosses;
+    public WandData[] bossBadgeDrops;
     private int currentStageIndex = 0;
 
     [Header("Wave Settings")]
@@ -30,6 +31,7 @@ public class GameDirector : MonoBehaviour
     private int enemiesDefeatedThisWave = 0;
     private float nextSpawnTime = 0f;
     private bool waitingForNextWave = false;
+    private bool waitingForBossBadgePickup = false;
 
     private readonly ElementType[] waveOrder =
     {
@@ -48,6 +50,7 @@ public class GameDirector : MonoBehaviour
 
     void Update()
     {
+        if (waitingForBossBadgePickup) return;
         if (killCount >= targetKillsForBoss || GameObject.FindGameObjectWithTag("Boss") != null) return;
         if (playerTransform == null) return;
         if (currentWaveIndex >= waveOrder.Length) return;
@@ -246,14 +249,109 @@ public class GameDirector : MonoBehaviour
     {
         if (playerTransform == null) return;
         Vector3 bossSpawnPos = playerTransform.position + new Vector3(Random.Range(-10f, 10f), 5f, 0f);
-        Instantiate(bosses[currentStageIndex], bossSpawnPos, Quaternion.identity);
+        GameObject boss = Instantiate(bosses[currentStageIndex], bossSpawnPos, Quaternion.identity);
+        BossBadgeDropper dropper = boss.GetComponent<BossBadgeDropper>();
+        if (dropper == null)
+        {
+            dropper = boss.AddComponent<BossBadgeDropper>();
+        }
+
+        if (dropper.badgeToDrop == null)
+        {
+            dropper.badgeToDrop = GetBossBadgeDrop(currentStageIndex, null);
+        }
     }
 
     public void OnBossDefeated(int tier)
     {
-        WeaponManager wm = FindFirstObjectByType<WeaponManager>();
-        if (wm != null) wm.UnlockWand(tier);
+        CompleteBossStage();
+    }
+
+    public void OnBossDefeated(EnemyHealth boss)
+    {
+        if (boss == null)
+        {
+            CompleteBossStage();
+            return;
+        }
+
+        BossBadgeDropper dropper = boss.GetComponent<BossBadgeDropper>();
+        if (dropper == null)
+        {
+            dropper = boss.gameObject.AddComponent<BossBadgeDropper>();
+        }
+
+        if (dropper.badgeToDrop == null)
+        {
+            dropper.badgeToDrop = GetBossBadgeDrop(currentStageIndex, boss);
+        }
+
+        BadgePickup pickup = dropper != null ? dropper.DropBadge(boss.transform.position) : null;
+
+        if (pickup != null)
+        {
+            waitingForBossBadgePickup = true;
+        }
+        else
+        {
+            CompleteBossStage();
+        }
+    }
+
+    public void OnBossBadgeCollected(WandData badge)
+    {
+        if (!waitingForBossBadgePickup)
+        {
+            return;
+        }
+
+        CompleteBossStage();
+    }
+
+    private WandData GetBossBadgeDrop(int stageIndex, EnemyHealth boss)
+    {
+        if (bossBadgeDrops != null &&
+            stageIndex >= 0 &&
+            stageIndex < bossBadgeDrops.Length &&
+            bossBadgeDrops[stageIndex] != null)
+        {
+            return bossBadgeDrops[stageIndex];
+        }
+
+        WeaponManager weaponManager = FindFirstObjectByType<WeaponManager>();
+        if (weaponManager == null || weaponManager.allWands == null)
+        {
+            return null;
+        }
+
+        if (boss != null)
+        {
+            foreach (WandData wand in weaponManager.allWands)
+            {
+                if (wand != null && wand.elementType == boss.enemyElement)
+                {
+                    return wand;
+                }
+            }
+
+            if (boss.bossTier >= 0 && boss.bossTier < weaponManager.allWands.Length)
+            {
+                return weaponManager.allWands[boss.bossTier];
+            }
+        }
+
+        return null;
+    }
+
+    private void CompleteBossStage()
+    {
+        waitingForBossBadgePickup = false;
         killCount = 0;
         currentStageIndex++;
+        currentWaveIndex = 0;
+        enemiesSpawnedThisWave = 0;
+        enemiesDefeatedThisWave = 0;
+        waitingForNextWave = false;
+        nextSpawnTime = Time.time + timeBetweenWaves;
     }
 }

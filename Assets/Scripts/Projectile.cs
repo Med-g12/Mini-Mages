@@ -148,6 +148,11 @@ public class Projectile : MonoBehaviour
         if (other.CompareTag("Enemy") || other.CompareTag("Boss"))
         {
             EnemyHealth enemy = other.GetComponent<EnemyHealth>();
+            if (enemy == null)
+            {
+                enemy = other.GetComponentInParent<EnemyHealth>();
+            }
+
             if (enemy != null)
             {
                 if (element == ElementType.Wind) enemy.TakeDamage(damage);
