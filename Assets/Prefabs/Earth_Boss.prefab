@@ -205,7 +205,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36f5d6e27f043a04cb88f5aefbcdff63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossBadgeDropper
-  badgeToDrop: {fileID: 11400000, guid: 7f6fdb3fc9164b348904f9237a73270b, type: 2}
+  badgeToDrop: {fileID: 11400000, guid: 684296789f5c4e08a0208db7c207f673, type: 2}
   pickupRadius: 0.6
   dropOffset: {x: 0, y: 0.75}
 --- !u!58 &-1190832575193986379

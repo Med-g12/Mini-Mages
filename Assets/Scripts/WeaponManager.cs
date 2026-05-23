@@ -8,8 +8,12 @@ public class WeaponManager : MonoBehaviour
     public WandData[] allWands;
     public bool[] unlockedWands = { true, false, false, false };
     public float basicFireCooldown = 0.1f;
+    public float earthBasicFireCooldown = 0.65f;
     public float controlledProjectileFollowSpeed = 28f;
     public float heldProjectileSpawnTravelSpeed = 10f;
+    public float streamHoldDelay = 0.25f;
+    public string playerFireStateName = "Player_Fire";
+    public Vector2 streamMuzzleOffset = Vector2.zero;
 
     [Header("Element Inventory UI")]
     public bool showElementInventory = true;
@@ -20,6 +24,8 @@ public class WeaponManager : MonoBehaviour
     private float nextBasicFireTime = 0f;
     private bool isHoldingBasicFire;
     private bool didCreateHeldProjectile;
+    private float basicFireHoldStartTime;
+    private bool isElementStreamActive;
     private GameObject heldProjectileObject;
     private Projectile heldProjectile;
     private PlayerResources resources;
@@ -109,6 +115,19 @@ public class WeaponManager : MonoBehaviour
 
     private void HandleBasicFireInput(WandData activeWand, Vector3 mousePos)
     {
+        if (activeWand.elementType == ElementType.Water ||
+            activeWand.elementType == ElementType.Fire)
+        {
+            HandleElementStreamBasicFireInput(activeWand, mousePos);
+            return;
+        }
+
+        if (activeWand.elementType == ElementType.Earth)
+        {
+            HandleInstantBasicFireInput(activeWand, mousePos);
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             isHoldingBasicFire = true;
@@ -133,6 +152,162 @@ public class WeaponManager : MonoBehaviour
             }
 
             isHoldingBasicFire = false;
+        }
+    }
+
+    private void HandleInstantBasicFireInput(WandData activeWand, Vector3 mousePos)
+    {
+        if (!Input.GetMouseButtonDown(0) ||
+            Time.time < nextBasicFireTime ||
+            activeWand == null ||
+            activeWand.basicProjectilePrefab == null)
+        {
+            return;
+        }
+
+        FacePlayerToward(mousePos);
+        FireProjectile(activeWand, activeWand.basicProjectilePrefab, activeWand.basicManaCost);
+        nextBasicFireTime = Time.time + GetBasicFireCooldown(activeWand);
+    }
+
+    private void HandleElementStreamBasicFireInput(WandData activeWand, Vector3 mousePos)
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            isHoldingBasicFire = true;
+            didCreateHeldProjectile = false;
+            isElementStreamActive = false;
+            basicFireHoldStartTime = Time.time;
+        }
+
+        if (isHoldingBasicFire &&
+            !isElementStreamActive &&
+            Input.GetMouseButton(0) &&
+            Time.time - basicFireHoldStartTime >= streamHoldDelay)
+        {
+            CreateElementStream(activeWand, mousePos);
+        }
+
+        if (isElementStreamActive)
+        {
+            MoveElementStream(mousePos);
+            KeepPlayerInFirePose();
+        }
+
+        if (isHoldingBasicFire && Input.GetMouseButtonUp(0))
+        {
+            if (isElementStreamActive)
+            {
+                DestroyHeldProjectile();
+                nextBasicFireTime = Time.time + basicFireCooldown;
+            }
+            else
+            {
+                if (Time.time >= nextBasicFireTime)
+                {
+                    FireProjectile(activeWand, activeWand.basicProjectilePrefab, activeWand.basicManaCost);
+                    nextBasicFireTime = Time.time + basicFireCooldown;
+                }
+            }
+
+            isHoldingBasicFire = false;
+            isElementStreamActive = false;
+        }
+    }
+
+    private void CreateElementStream(WandData activeWand, Vector3 mousePos)
+    {
+        if (Time.time < nextBasicFireTime ||
+            activeWand == null ||
+            !CanSpendMana(activeWand.basicManaCost))
+        {
+            isHoldingBasicFire = false;
+            return;
+        }
+
+        GameObject prefab =
+            activeWand.heldBasicProjectilePrefab != null
+                ? activeWand.heldBasicProjectilePrefab
+                : activeWand.basicProjectilePrefab;
+
+        if (prefab == null)
+        {
+            isHoldingBasicFire = false;
+            return;
+        }
+
+        FacePlayerToward(mousePos);
+        TriggerFireAnimation();
+        KeepPlayerInFirePose();
+
+        heldProjectileObject = Instantiate(
+            prefab,
+            GetElementStreamPosition(prefab.GetComponent<Projectile>()),
+            wandPivot.rotation
+        );
+
+        heldProjectile = heldProjectileObject.GetComponent<Projectile>();
+        if (heldProjectile != null)
+        {
+            heldProjectile.element = activeWand.elementType;
+            heldProjectile.HoldInPlace();
+        }
+
+        isElementStreamActive = true;
+        didCreateHeldProjectile = true;
+        MoveElementStream(mousePos);
+    }
+
+    private void MoveElementStream(Vector3 mousePos)
+    {
+        if (heldProjectileObject == null)
+        {
+            return;
+        }
+
+        FacePlayerToward(mousePos);
+        heldProjectileObject.transform.rotation = wandPivot.rotation;
+        heldProjectileObject.transform.position = GetElementStreamPosition(heldProjectile);
+    }
+
+    private Vector3 GetElementStreamPosition(Projectile projectile)
+    {
+        Vector2 attachOffset =
+            projectile != null
+                ? projectile.heldAttachOffset
+                : Vector2.zero;
+
+        return firePoint.position +
+               wandPivot.TransformVector(attachOffset + streamMuzzleOffset);
+    }
+
+    private void DestroyHeldProjectile()
+    {
+        if (heldProjectileObject != null)
+        {
+            Destroy(heldProjectileObject);
+        }
+
+        heldProjectileObject = null;
+        heldProjectile = null;
+        didCreateHeldProjectile = false;
+    }
+
+    private void KeepPlayerInFirePose()
+    {
+        if (animator == null || string.IsNullOrEmpty(playerFireStateName))
+        {
+            return;
+        }
+
+        AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+        if (!state.IsName(playerFireStateName))
+        {
+            animator.Play(playerFireStateName, 0, 0.35f);
+        }
+        else
+        {
+            animator.Play(playerFireStateName, 0, Mathf.Clamp01(state.normalizedTime));
         }
     }
 
@@ -298,6 +473,16 @@ public class WeaponManager : MonoBehaviour
     private bool CanSpendMana(float manaCost)
     {
         return resources == null || resources.SpendMana(manaCost);
+    }
+
+    private float GetBasicFireCooldown(WandData wand)
+    {
+        if (wand != null && wand.elementType == ElementType.Earth)
+        {
+            return earthBasicFireCooldown;
+        }
+
+        return basicFireCooldown;
     }
 
     private void FacePlayerToward(Vector3 targetPosition)

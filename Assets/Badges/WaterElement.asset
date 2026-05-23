@@ -15,7 +15,8 @@ MonoBehaviour:
   wandName: Water
   elementType: 1
   elementIcon: {fileID: 7242965031661056823, guid: 26199552e15c4f0449932d7a17362e3f, type: 3}
-  basicProjectilePrefab: {fileID: 7019178283928350698, guid: b590f7b1600836648898673c3aec0003, type: 3}
+  basicProjectilePrefab: {fileID: 920000000000000001, guid: b482cc421ad746b89f74914704524d0f, type: 3}
+  heldBasicProjectilePrefab: {fileID: 940000000000000001, guid: 6f85f5066fd64ea0982db2ef8a626355, type: 3}
   basicManaCost: 0
   qProjectilePrefab: {fileID: 0}
   qManaCost: 15

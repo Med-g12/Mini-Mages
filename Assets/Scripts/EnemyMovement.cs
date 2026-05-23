@@ -35,11 +35,14 @@ public class EnemyMovement : MonoBehaviour
     private Transform visibilityMarker;
     private float nextDamageTime;
     private float knockbackEndTime;
+    private EnemyHealth enemyHealth;
+    private float speedMultiplier = 1f;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         enemyCollider = GetComponent<Collider2D>();
+        enemyHealth = GetComponent<EnemyHealth>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         if (spriteRenderer != null)
         {
@@ -85,11 +88,11 @@ public class EnemyMovement : MonoBehaviour
 
         if (ShouldFly())
         {
-            rb.linearVelocity = direction.normalized * flyingSpeed;
+            rb.linearVelocity = direction.normalized * flyingSpeed * speedMultiplier;
         }
         else
         {
-            rb.linearVelocity = new Vector2(Mathf.Sign(direction.x) * moveSpeed, rb.linearVelocity.y);
+            rb.linearVelocity = new Vector2(Mathf.Sign(direction.x) * moveSpeed * speedMultiplier, rb.linearVelocity.y);
         }
     }
 
@@ -115,6 +118,7 @@ public class EnemyMovement : MonoBehaviour
     private void PulseHighlight()
     {
         if (spriteRenderer == null) return;
+        if (enemyHealth != null && enemyHealth.IsHitFlashing) return;
 
         float pulse = (Mathf.Sin(Time.time * 7f) + 1f) * 0.5f * highlightPulseAmount;
         spriteRenderer.color = Color.Lerp(baseSpriteColor, highlightColor, pulse);
@@ -216,12 +220,21 @@ public class EnemyMovement : MonoBehaviour
         if (resources == null) return;
 
         resources.TakeDamage(contactDamage);
-        ApplyKnockbackFrom(resources.transform.position);
+        if (enemyHealth == null || !enemyHealth.isBoss)
+        {
+            ApplyKnockbackFrom(resources.transform.position);
+        }
+
         nextDamageTime = Time.time + damageCooldown;
     }
 
     public void ApplyKnockbackFrom(Vector3 sourcePosition)
     {
+        if (enemyHealth != null && enemyHealth.isBoss)
+        {
+            return;
+        }
+
         Vector2 away = transform.position - sourcePosition;
         if (away.sqrMagnitude < 0.01f)
         {
@@ -230,6 +243,27 @@ public class EnemyMovement : MonoBehaviour
 
         rb.linearVelocity = away.normalized * knockbackForce;
         knockbackEndTime = Time.time + knockbackDuration;
+    }
+
+    public void ApplyKnockback(Vector2 direction, float force, float duration)
+    {
+        if (enemyHealth != null && enemyHealth.isBoss)
+        {
+            return;
+        }
+
+        if (direction.sqrMagnitude < 0.01f)
+        {
+            direction = Vector2.up;
+        }
+
+        rb.linearVelocity = direction.normalized * force;
+        knockbackEndTime = Time.time + duration;
+    }
+
+    public void SetSpeedMultiplier(float multiplier)
+    {
+        speedMultiplier = Mathf.Max(0f, multiplier);
     }
 
     public float GetContactDamage()

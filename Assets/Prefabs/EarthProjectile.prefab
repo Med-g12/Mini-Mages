@@ -1,0 +1,131 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &910000000000000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 910000000000000002}
+  - component: {fileID: 910000000000000003}
+  - component: {fileID: 910000000000000004}
+  - component: {fileID: 910000000000000005}
+  - component: {fileID: 910000000000000006}
+  m_Layer: 0
+  m_Name: EarthProjectile
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &910000000000000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 910000000000000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.72, y: 0.72, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &910000000000000003
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 910000000000000001}
+  m_Enabled: 1
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_SortingOrder: 10
+  m_Sprite: {fileID: 488093681734595867, guid: 6ec8c54d2e5cb7e49b219bb933bf099f, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_WasSpriteAssigned: 1
+--- !u!50 &910000000000000004
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 910000000000000001}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0.65
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 0
+--- !u!58 &910000000000000005
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 910000000000000001}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_IsTrigger: 1
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.45
+--- !u!114 &910000000000000006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 910000000000000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: b34ed7610c2d02f44adfca173b4385b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Projectile
+  element: 2
+  speed: 10
+  damage: 18
+  lifetime: 3
+  spinSpeed: 360
+  isHeldByPlayer: 0
+  impactMode: 1
+  knockbackForce: 0
+  knockbackDuration: 0.2
+  areaRadius: 2.6
+  areaDamageMultiplier: 1
+  enemyLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  tickInterval: 0.2
+  canDamageWhileHeld: 0
+  heldAttachOffset: {x: 0, y: 0}
+  startupAnimationFrames: []
+  animationFrames: []
+  framesPerSecond: 10
+  shatterSprites:
+  - {fileID: -5356017380107033998, guid: 6ec8c54d2e5cb7e49b219bb933bf099f, type: 3}
+  - {fileID: -5194958787306355087, guid: 6ec8c54d2e5cb7e49b219bb933bf099f, type: 3}
+  - {fileID: -4155044169795898448, guid: 6ec8c54d2e5cb7e49b219bb933bf099f, type: 3}
+  - {fileID: -2211370628405355506, guid: 6ec8c54d2e5cb7e49b219bb933bf099f, type: 3}
+  - {fileID: 7153465251431827074, guid: 6ec8c54d2e5cb7e49b219bb933bf099f, type: 3}
+  - {fileID: 4104718456710065328, guid: 6ec8c54d2e5cb7e49b219bb933bf099f, type: 3}
+  - {fileID: 4801418737017394563, guid: 6ec8c54d2e5cb7e49b219bb933bf099f, type: 3}
+  - {fileID: -8755490792786937842, guid: 6ec8c54d2e5cb7e49b219bb933bf099f, type: 3}
+  - {fileID: -8952093784869992237, guid: 6ec8c54d2e5cb7e49b219bb933bf099f, type: 3}
+  - {fileID: -3782495247255621459, guid: 6ec8c54d2e5cb7e49b219bb933bf099f, type: 3}
+  shatterPieceCount: 12
+  shatterForce: 5
+  shatterLifetime: 0.45
+  shatterPieceScaleRange: {x: 1.25, y: 1.85}
+  showTrail: 1
+  trailTime: 0.12
+  trailStartWidth: 0.22
+  trailEndWidth: 0.03
+  trailStartColor: {r: 0.85, g: 1, b: 1, a: 0.75}
+  trailEndColor: {r: 0.85, g: 1, b: 1, a: 0}

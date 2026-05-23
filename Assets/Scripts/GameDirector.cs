@@ -343,7 +343,8 @@ public class GameDirector : MonoBehaviour
             dropper = boss.AddComponent<BossBadgeDropper>();
         }
 
-        if (dropper.badgeToDrop == null)
+        if (dropper.badgeToDrop == null ||
+            dropper.badgeToDrop.elementType != boss.GetComponent<EnemyHealth>().enemyElement)
         {
             dropper.badgeToDrop = GetBossBadgeDrop(boss.GetComponent<EnemyHealth>());
         }
@@ -368,7 +369,8 @@ public class GameDirector : MonoBehaviour
             dropper = boss.gameObject.AddComponent<BossBadgeDropper>();
         }
 
-        if (dropper.badgeToDrop == null)
+        if (dropper.badgeToDrop == null ||
+            dropper.badgeToDrop.elementType != boss.enemyElement)
         {
             dropper.badgeToDrop = GetBossBadgeDrop(boss);
         }
@@ -397,7 +399,9 @@ public class GameDirector : MonoBehaviour
     private WandData GetBossBadgeDrop(EnemyHealth boss)
     {
         StageConfig stage = GetCurrentStage();
-        if (stage != null && stage.badgeDrop != null)
+        if (stage != null &&
+            stage.badgeDrop != null &&
+            (boss == null || stage.badgeDrop.elementType == boss.enemyElement))
         {
             return stage.badgeDrop;
         }

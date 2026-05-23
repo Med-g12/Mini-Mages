@@ -1,0 +1,3055 @@
+fileFormatVersion: 2
+guid: 6ec8c54d2e5cb7e49b219bb933bf099f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 488093681734595867
+    second: EarthProjectile_0
+  - first:
+      213: -5356017380107033998
+    second: EarthProjectile_1
+  - first:
+      213: -4194032699492014839
+    second: EarthProjectile_2
+  - first:
+      213: -5194958787306355087
+    second: EarthProjectile_3
+  - first:
+      213: -4155044169795898448
+    second: EarthProjectile_4
+  - first:
+      213: -2211370628405355506
+    second: EarthProjectile_5
+  - first:
+      213: 7153465251431827074
+    second: EarthProjectile_6
+  - first:
+      213: 4104718456710065328
+    second: EarthProjectile_7
+  - first:
+      213: -4931258190394263883
+    second: EarthProjectile_8
+  - first:
+      213: 4801418737017394563
+    second: EarthProjectile_9
+  - first:
+      213: -8755490792786937842
+    second: EarthProjectile_10
+  - first:
+      213: -8952093784869992237
+    second: EarthProjectile_11
+  - first:
+      213: -3782495247255621459
+    second: EarthProjectile_12
+  - first:
+      213: -4392544966112888248
+    second: EarthProjectile_13
+  - first:
+      213: 5975971413445267695
+    second: EarthProjectile_14
+  - first:
+      213: 3629728596536536646
+    second: EarthProjectile_15
+  - first:
+      213: 8688066339216958372
+    second: EarthProjectile_16
+  - first:
+      213: -9052542598590749510
+    second: EarthProjectile_17
+  - first:
+      213: 3575260016086812425
+    second: EarthProjectile_18
+  - first:
+      213: 7639707887704816878
+    second: EarthProjectile_19
+  - first:
+      213: -1242904949200977914
+    second: EarthProjectile_20
+  - first:
+      213: 5041961776959898058
+    second: EarthProjectile_21
+  - first:
+      213: 14004305012891905
+    second: EarthProjectile_22
+  - first:
+      213: -9159040722331226527
+    second: EarthProjectile_23
+  - first:
+      213: 5346242573211937302
+    second: EarthProjectile_24
+  - first:
+      213: 3802666715238160520
+    second: EarthProjectile_25
+  - first:
+      213: 3455374096381598166
+    second: EarthProjectile_26
+  - first:
+      213: -2160319879540191131
+    second: EarthProjectile_27
+  - first:
+      213: -6078205106257580175
+    second: EarthProjectile_28
+  - first:
+      213: 2911588946751940315
+    second: EarthProjectile_29
+  - first:
+      213: -5468080185571917821
+    second: EarthProjectile_30
+  - first:
+      213: 80254207107624006
+    second: EarthProjectile_31
+  - first:
+      213: -2554029787559692743
+    second: EarthProjectile_32
+  - first:
+      213: -4931342278861027846
+    second: EarthProjectile_33
+  - first:
+      213: -8943959330859120135
+    second: EarthProjectile_34
+  - first:
+      213: 7842709794144724729
+    second: EarthProjectile_35
+  - first:
+      213: 7735303638208801942
+    second: EarthProjectile_36
+  - first:
+      213: -3533388450704173870
+    second: EarthProjectile_37
+  - first:
+      213: -2463515357050093393
+    second: EarthProjectile_38
+  - first:
+      213: -2757652489883155180
+    second: EarthProjectile_39
+  - first:
+      213: -4108036480472248453
+    second: EarthProjectile_40
+  - first:
+      213: 782206936495730959
+    second: EarthProjectile_41
+  - first:
+      213: 3474936040062485674
+    second: EarthProjectile_42
+  - first:
+      213: 7152160633049810741
+    second: EarthProjectile_43
+  - first:
+      213: -35524838336767678
+    second: EarthProjectile_44
+  - first:
+      213: -7381532596998419464
+    second: EarthProjectile_45
+  - first:
+      213: 5583208487159071965
+    second: EarthProjectile_46
+  - first:
+      213: -7339760452145660776
+    second: EarthProjectile_47
+  - first:
+      213: 4542765451076468179
+    second: EarthProjectile_48
+  - first:
+      213: -4813845323275808093
+    second: EarthProjectile_49
+  - first:
+      213: -7936523974441263307
+    second: EarthProjectile_50
+  - first:
+      213: -799014543163669864
+    second: EarthProjectile_51
+  - first:
+      213: -1713827377772916619
+    second: EarthProjectile_52
+  - first:
+      213: 2894605145660274774
+    second: EarthProjectile_53
+  - first:
+      213: -6445411851507087612
+    second: EarthProjectile_54
+  - first:
+      213: -884723865847637837
+    second: EarthProjectile_55
+  - first:
+      213: 8704815071811257088
+    second: EarthProjectile_56
+  - first:
+      213: -5093013561307847398
+    second: EarthProjectile_57
+  - first:
+      213: 6403687753461119867
+    second: EarthProjectile_58
+  - first:
+      213: 5251519497393157715
+    second: EarthProjectile_59
+  - first:
+      213: -3064736046042893767
+    second: EarthProjectile_60
+  - first:
+      213: -8042954358139421569
+    second: EarthProjectile_61
+  - first:
+      213: 4679067632540057696
+    second: EarthProjectile_62
+  - first:
+      213: -3904484142315463967
+    second: EarthProjectile_63
+  - first:
+      213: 7479698370153284880
+    second: EarthProjectile_64
+  - first:
+      213: -3790466505206397084
+    second: EarthProjectile_65
+  - first:
+      213: -5493620841523837482
+    second: EarthProjectile_66
+  - first:
+      213: 8036433155455586173
+    second: EarthProjectile_67
+  - first:
+      213: 2594661332975798457
+    second: EarthProjectile_68
+  - first:
+      213: -8252555419400457605
+    second: EarthProjectile_69
+  - first:
+      213: -3580998686481849713
+    second: EarthProjectile_70
+  - first:
+      213: 4260241036019097591
+    second: EarthProjectile_71
+  - first:
+      213: 9094036773185357315
+    second: EarthProjectile_72
+  - first:
+      213: -2482480084948796976
+    second: EarthProjectile_73
+  - first:
+      213: -4284987049427186685
+    second: EarthProjectile_74
+  - first:
+      213: -6268318298272031872
+    second: EarthProjectile_75
+  - first:
+      213: 589747541157624811
+    second: EarthProjectile_76
+  - first:
+      213: 3546938333734444932
+    second: EarthProjectile_77
+  - first:
+      213: 4072073199359777407
+    second: EarthProjectile_78
+  - first:
+      213: -339772917709005044
+    second: EarthProjectile_79
+  - first:
+      213: -3051299710905193760
+    second: EarthProjectile_80
+  - first:
+      213: 3933933705908164764
+    second: EarthProjectile_81
+  - first:
+      213: -1648592282265223185
+    second: EarthProjectile_82
+  - first:
+      213: 8525244029346861663
+    second: EarthProjectile_83
+  - first:
+      213: -1521471867288087351
+    second: EarthProjectile_84
+  - first:
+      213: -1827970056085460741
+    second: EarthProjectile_85
+  - first:
+      213: 6241811193384581111
+    second: EarthProjectile_86
+  - first:
+      213: -2708425092421655218
+    second: EarthProjectile_87
+  - first:
+      213: -819476346739255236
+    second: EarthProjectile_88
+  - first:
+      213: 2722052803530229243
+    second: EarthProjectile_89
+  - first:
+      213: -9004424756317373293
+    second: EarthProjectile_90
+  - first:
+      213: 8673459651803552914
+    second: EarthProjectile_91
+  - first:
+      213: 9015163727742893013
+    second: EarthProjectile_92
+  - first:
+      213: -3962798825809500266
+    second: EarthProjectile_93
+  - first:
+      213: -3858072072587972906
+    second: EarthProjectile_94
+  - first:
+      213: 574296575045587480
+    second: EarthProjectile_95
+  - first:
+      213: 2141576260238049632
+    second: EarthProjectile_96
+  - first:
+      213: 6180792403031358811
+    second: EarthProjectile_97
+  - first:
+      213: 7329149595513779637
+    second: EarthProjectile_98
+  - first:
+      213: 4343668694245131739
+    second: EarthProjectile_99
+  - first:
+      213: -7468619313514914018
+    second: EarthProjectile_100
+  - first:
+      213: 6505041528897332469
+    second: EarthProjectile_101
+  - first:
+      213: -3401893514752980201
+    second: EarthProjectile_102
+  - first:
+      213: 2304578199981449761
+    second: EarthProjectile_103
+  - first:
+      213: 8384756863766676147
+    second: EarthProjectile_104
+  - first:
+      213: -2066380172000938354
+    second: EarthProjectile_105
+  - first:
+      213: 9024355663593896493
+    second: EarthProjectile_106
+  - first:
+      213: 3004120484520870675
+    second: EarthProjectile_107
+  - first:
+      213: -1415629498176026743
+    second: EarthProjectile_108
+  - first:
+      213: -3060627551315404523
+    second: EarthProjectile_109
+  - first:
+      213: -465557777937521752
+    second: EarthProjectile_110
+  - first:
+      213: 5443178534944480399
+    second: EarthProjectile_111
+  - first:
+      213: -7567591341145958694
+    second: EarthProjectile_112
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: EarthProjectile_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 4
+        width: 119
+        height: 265
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1537e41e9e06c600800000000000000
+      internalID: 488093681734595867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_1
+      rect:
+        serializedVersion: 2
+        x: 214
+        y: 184
+        width: 57
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 272e6e7f19a9ba5b0800000000000000
+      internalID: -5356017380107033998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_2
+      rect:
+        serializedVersion: 2
+        x: 311
+        y: 124
+        width: 152
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 905e7621b7dcbc5c0800000000000000
+      internalID: -4194032699492014839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_3
+      rect:
+        serializedVersion: 2
+        x: 582
+        y: 194
+        width: 113
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1768fcbc18cc7e7b0800000000000000
+      internalID: -5194958787306355087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_4
+      rect:
+        serializedVersion: 2
+        x: 706
+        y: 221
+        width: 29
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b3f14987515656c0800000000000000
+      internalID: -4155044169795898448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_5
+      rect:
+        serializedVersion: 2
+        x: 765
+        y: 232
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0c9a2b3122af41e0800000000000000
+      internalID: -2211370628405355506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_6
+      rect:
+        serializedVersion: 2
+        x: 822
+        y: 235
+        width: 17
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 286c1b8deb6364360800000000000000
+      internalID: 7153465251431827074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_7
+      rect:
+        serializedVersion: 2
+        x: 860
+        y: 209
+        width: 58
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0bc613b40b3e6f830800000000000000
+      internalID: 4104718456710065328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_8
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 58
+        width: 155
+        height: 171
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b670d18dc6a09bb0800000000000000
+      internalID: -4931258190394263883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_9
+      rect:
+        serializedVersion: 2
+        x: 747
+        y: 205
+        width: 24
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38593ddf6e012a240800000000000000
+      internalID: 4801418737017394563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_10
+      rect:
+        serializedVersion: 2
+        x: 775
+        y: 213
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e083bb5338f3e7680800000000000000
+      internalID: -8755490792786937842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_11
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 198
+        width: 40
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d887d40226c3c380800000000000000
+      internalID: -8952093784869992237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_12
+      rect:
+        serializedVersion: 2
+        x: 849
+        y: 209
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da0b9b6fc90e18bc0800000000000000
+      internalID: -3782495247255621459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_13
+      rect:
+        serializedVersion: 2
+        x: 498
+        y: 181
+        width: 23
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84a39e240ab8a03c0800000000000000
+      internalID: -4392544966112888248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_14
+      rect:
+        serializedVersion: 2
+        x: 698
+        y: 164
+        width: 42
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe05b46a65aeee250800000000000000
+      internalID: 5975971413445267695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_15
+      rect:
+        serializedVersion: 2
+        x: 737
+        y: 201
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64e23ab6de26f5230800000000000000
+      internalID: 3629728596536536646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_16
+      rect:
+        serializedVersion: 2
+        x: 758
+        y: 198
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a32e0edd46329870800000000000000
+      internalID: 8688066339216958372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_17
+      rect:
+        serializedVersion: 2
+        x: 761
+        y: 169
+        width: 35
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab428e01878ee5280800000000000000
+      internalID: -9052542598590749510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_18
+      rect:
+        serializedVersion: 2
+        x: 837
+        y: 194
+        width: 19
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9070386ca00ed9130800000000000000
+      internalID: 3575260016086812425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_19
+      rect:
+        serializedVersion: 2
+        x: 874
+        y: 198
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eec3562d8d1b50a60800000000000000
+      internalID: 7639707887704816878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_20
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 197
+        width: 16
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6000d4da88050cee0800000000000000
+      internalID: -1242904949200977914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_21
+      rect:
+        serializedVersion: 2
+        x: 454
+        y: 147
+        width: 53
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac1cacec585a8f540800000000000000
+      internalID: 5041961776959898058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_22
+      rect:
+        serializedVersion: 2
+        x: 507
+        y: 122
+        width: 71
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 101ae9957d0c13000800000000000000
+      internalID: 14004305012891905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_23
+      rect:
+        serializedVersion: 2
+        x: 685
+        y: 186
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16e2c1e5dfc84e080800000000000000
+      internalID: -9159040722331226527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_24
+      rect:
+        serializedVersion: 2
+        x: 691
+        y: 193
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61a2e537b4ba13a40800000000000000
+      internalID: 5346242573211937302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_25
+      rect:
+        serializedVersion: 2
+        x: 742
+        y: 182
+        width: 12
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 888d8f8ea39c5c430800000000000000
+      internalID: 3802666715238160520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_26
+      rect:
+        serializedVersion: 2
+        x: 791
+        y: 153
+        width: 49
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d959ecee64f3ff20800000000000000
+      internalID: 3455374096381598166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_27
+      rect:
+        serializedVersion: 2
+        x: 856
+        y: 193
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 560dac2f3800502e0800000000000000
+      internalID: -2160319879540191131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_28
+      rect:
+        serializedVersion: 2
+        x: 863
+        y: 190
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17f2d89d8a0e5aba0800000000000000
+      internalID: -6078205106257580175
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_29
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 164
+        width: 23
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd66a1788ba086820800000000000000
+      internalID: 2911588946751940315
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_30
+      rect:
+        serializedVersion: 2
+        x: 687
+        y: 177
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30042a7da0a7d14b0800000000000000
+      internalID: -5468080185571917821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_31
+      rect:
+        serializedVersion: 2
+        x: 846
+        y: 127
+        width: 37
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64c6162b6ce1d1100800000000000000
+      internalID: 80254207107624006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_32
+      rect:
+        serializedVersion: 2
+        x: 880
+        y: 183
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 936fcb6a0734e8cd0800000000000000
+      internalID: -2554029787559692743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_33
+      rect:
+        serializedVersion: 2
+        x: 891
+        y: 179
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af58f92235a509bb0800000000000000
+      internalID: -4931342278861027846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_34
+      rect:
+        serializedVersion: 2
+        x: 916
+        y: 172
+        width: 6
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f90a9e206ca0e380800000000000000
+      internalID: -8943959330859120135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_35
+      rect:
+        serializedVersion: 2
+        x: 610
+        y: 167
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f6297c5107e6dc60800000000000000
+      internalID: 7842709794144724729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_36
+      rect:
+        serializedVersion: 2
+        x: 683
+        y: 161
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69ce831fca1595b60800000000000000
+      internalID: 7735303638208801942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_37
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 154
+        width: 11
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d45f4ebce1e6fec0800000000000000
+      internalID: -3533388450704173870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_38
+      rect:
+        serializedVersion: 2
+        x: 725
+        y: 138
+        width: 32
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa04f44c5d5dfcdd0800000000000000
+      internalID: -2463515357050093393
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_39
+      rect:
+        serializedVersion: 2
+        x: 743
+        y: 168
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4150b8ecba9dab9d0800000000000000
+      internalID: -2757652489883155180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_40
+      rect:
+        serializedVersion: 2
+        x: 752
+        y: 156
+        width: 19
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7f0b1916925df6c0800000000000000
+      internalID: -4108036480472248453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_41
+      rect:
+        serializedVersion: 2
+        x: 781
+        y: 135
+        width: 25
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f01bcae7015fada00800000000000000
+      internalID: 782206936495730959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_42
+      rect:
+        serializedVersion: 2
+        x: 838
+        y: 164
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa4802ddae3793030800000000000000
+      internalID: 3474936040062485674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_43
+      rect:
+        serializedVersion: 2
+        x: 891
+        y: 168
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5378775b334914360800000000000000
+      internalID: 7152160633049810741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_44
+      rect:
+        serializedVersion: 2
+        x: 598
+        y: 148
+        width: 15
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 249db36095ac18ff0800000000000000
+      internalID: -35524838336767678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_45
+      rect:
+        serializedVersion: 2
+        x: 683
+        y: 154
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fb41f946378f8990800000000000000
+      internalID: -7381532596998419464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_46
+      rect:
+        serializedVersion: 2
+        x: 758
+        y: 146
+        width: 17
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd40018b98a8b7d40800000000000000
+      internalID: 5583208487159071965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_47
+      rect:
+        serializedVersion: 2
+        x: 884
+        y: 150
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89cb569a1cee32a90800000000000000
+      internalID: -7339760452145660776
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_48
+      rect:
+        serializedVersion: 2
+        x: 629
+        y: 143
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dd7451fb152b0f30800000000000000
+      internalID: 4542765451076468179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_49
+      rect:
+        serializedVersion: 2
+        x: 638
+        y: 146
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a2587eee29c13db0800000000000000
+      internalID: -4813845323275808093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_50
+      rect:
+        serializedVersion: 2
+        x: 662
+        y: 117
+        width: 34
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53f9e08ae7dcbd190800000000000000
+      internalID: -7936523974441263307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_51
+      rect:
+        serializedVersion: 2
+        x: 710
+        y: 131
+        width: 17
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 892cb50a18459e4f0800000000000000
+      internalID: -799014543163669864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_52
+      rect:
+        serializedVersion: 2
+        x: 766
+        y: 131
+        width: 17
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 570918584134738e0800000000000000
+      internalID: -1713827377772916619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_53
+      rect:
+        serializedVersion: 2
+        x: 818
+        y: 146
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65839103b04bb2820800000000000000
+      internalID: 2894605145660274774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_54
+      rect:
+        serializedVersion: 2
+        x: 833
+        y: 139
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 407c3dff11c4d86a0800000000000000
+      internalID: -6445411851507087612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_55
+      rect:
+        serializedVersion: 2
+        x: 444
+        y: 89
+        width: 54
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b857dbd454d8b3f0800000000000000
+      internalID: -884723865847637837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_56
+      rect:
+        serializedVersion: 2
+        x: 610
+        y: 137
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 003c6ce0037bdc870800000000000000
+      internalID: 8704815071811257088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_57
+      rect:
+        serializedVersion: 2
+        x: 645
+        y: 137
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a15aff1662bf159b0800000000000000
+      internalID: -5093013561307847398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_58
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 112
+        width: 30
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7bb19565187ed850800000000000000
+      internalID: 6403687753461119867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_59
+      rect:
+        serializedVersion: 2
+        x: 761
+        y: 76
+        width: 80
+        height: 69
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 356382db82521e840800000000000000
+      internalID: 5251519497393157715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_60
+      rect:
+        serializedVersion: 2
+        x: 891
+        y: 135
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9323745cdced775d0800000000000000
+      internalID: -3064736046042893767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_61
+      rect:
+        serializedVersion: 2
+        x: 556
+        y: 0
+        width: 93
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7c7b6aef9fa16090800000000000000
+      internalID: -8042954358139421569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_62
+      rect:
+        serializedVersion: 2
+        x: 634
+        y: 130
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 060049598336fe040800000000000000
+      internalID: 4679067632540057696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_63
+      rect:
+        serializedVersion: 2
+        x: 692
+        y: 124
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ea14220c5c70d9c0800000000000000
+      internalID: -3904484142315463967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_64
+      rect:
+        serializedVersion: 2
+        x: 706
+        y: 127
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0150e0cd90a3dc760800000000000000
+      internalID: 7479698370153284880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_65
+      rect:
+        serializedVersion: 2
+        x: 716
+        y: 120
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4670828dbce856bc0800000000000000
+      internalID: -3790466505206397084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_66
+      rect:
+        serializedVersion: 2
+        x: 865
+        y: 123
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d50a4a73fcb2c3b0800000000000000
+      internalID: -5493620841523837482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_67
+      rect:
+        serializedVersion: 2
+        x: 377
+        y: 58
+        width: 67
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7f0a144065278f60800000000000000
+      internalID: 8036433155455586173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_68
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 32
+        width: 43
+        height: 87
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b8c6783cb6120420800000000000000
+      internalID: 2594661332975798457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_69
+      rect:
+        serializedVersion: 2
+        x: 543
+        y: 114
+        width: 15
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b723969e198097d80800000000000000
+      internalID: -8252555419400457605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_70
+      rect:
+        serializedVersion: 2
+        x: 620
+        y: 116
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f82eb17eaacbd4ec0800000000000000
+      internalID: -3580998686481849713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_71
+      rect:
+        serializedVersion: 2
+        x: 690
+        y: 101
+        width: 25
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ffd57986aa6f1b30800000000000000
+      internalID: 4260241036019097591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_72
+      rect:
+        serializedVersion: 2
+        x: 850
+        y: 115
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3068d005342843e70800000000000000
+      internalID: 9094036773185357315
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_73
+      rect:
+        serializedVersion: 2
+        x: 857
+        y: 119
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d935a6f3857c8dd0800000000000000
+      internalID: -2482480084948796976
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_74
+      rect:
+        serializedVersion: 2
+        x: 872
+        y: 119
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30c4ebb3bfaa884c0800000000000000
+      internalID: -4284987049427186685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_75
+      rect:
+        serializedVersion: 2
+        x: 902
+        y: 107
+        width: 7
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08b1a6cf7b57209a0800000000000000
+      internalID: -6268318298272031872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_76
+      rect:
+        serializedVersion: 2
+        x: 723
+        y: 112
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: beb3cd993443f2800800000000000000
+      internalID: 589747541157624811
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_77
+      rect:
+        serializedVersion: 2
+        x: 730
+        y: 104
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 48f157e3f91493130800000000000000
+      internalID: 3546938333734444932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_78
+      rect:
+        serializedVersion: 2
+        x: 840
+        y: 76
+        width: 34
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7a5a330009e28830800000000000000
+      internalID: 4072073199359777407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_79
+      rect:
+        serializedVersion: 2
+        x: 549
+        y: 101
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0f18afd452e84bf0800000000000000
+      internalID: -339772917709005044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_80
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 100
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ea6e34541b97a5d0800000000000000
+      internalID: -3051299710905193760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_81
+      rect:
+        serializedVersion: 2
+        x: 744
+        y: 92
+        width: 16
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c989796dcd3289630800000000000000
+      internalID: 3933933705908164764
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_82
+      rect:
+        serializedVersion: 2
+        x: 880
+        y: 104
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fef712ccd060f19e0800000000000000
+      internalID: -1648592282265223185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_83
+      rect:
+        serializedVersion: 2
+        x: 547
+        y: 71
+        width: 25
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f525db8a640cf4670800000000000000
+      internalID: 8525244029346861663
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_84
+      rect:
+        serializedVersion: 2
+        x: 585
+        y: 92
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c41b86d565a2eae0800000000000000
+      internalID: -1521471867288087351
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_85
+      rect:
+        serializedVersion: 2
+        x: 715
+        y: 73
+        width: 27
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf8a9f24beeb1a6e0800000000000000
+      internalID: -1827970056085460741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_86
+      rect:
+        serializedVersion: 2
+        x: 872
+        y: 96
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f7beb8b53e5f9650800000000000000
+      internalID: 6241811193384581111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_87
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 86
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e45e3717abdb96ad0800000000000000
+      internalID: -2708425092421655218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_88
+      rect:
+        serializedVersion: 2
+        x: 745
+        y: 60
+        width: 25
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3895caba92a0a4f0800000000000000
+      internalID: -819476346739255236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_89
+      rect:
+        serializedVersion: 2
+        x: 797
+        y: 63
+        width: 18
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf5864e4a9ca6c520800000000000000
+      internalID: 2722052803530229243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_90
+      rect:
+        serializedVersion: 2
+        x: 890
+        y: 87
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39c38f0446bd90380800000000000000
+      internalID: -9004424756317373293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_91
+      rect:
+        serializedVersion: 2
+        x: 282
+        y: 19
+        width: 35
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29c1f6f69915e5870800000000000000
+      internalID: 8673459651803552914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_92
+      rect:
+        serializedVersion: 2
+        x: 321
+        y: 71
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5dbf91065ab4c1d70800000000000000
+      internalID: 9015163727742893013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_93
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 73
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6972a47b67f4109c0800000000000000
+      internalID: -3962798825809500266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_94
+      rect:
+        serializedVersion: 2
+        x: 867
+        y: 63
+        width: 14
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6dee98314ef557ac0800000000000000
+      internalID: -3858072072587972906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_95
+      rect:
+        serializedVersion: 2
+        x: 890
+        y: 66
+        width: 11
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 812d05731bf48f700800000000000000
+      internalID: 574296575045587480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_96
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 78
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06106ea134868bd10800000000000000
+      internalID: 2141576260238049632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_97
+      rect:
+        serializedVersion: 2
+        x: 765
+        y: 36
+        width: 35
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5dfd1d71f596c550800000000000000
+      internalID: 6180792403031358811
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_98
+      rect:
+        serializedVersion: 2
+        x: 817
+        y: 68
+        width: 14
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b5fb42c9be56b560800000000000000
+      internalID: 7329149595513779637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_99
+      rect:
+        serializedVersion: 2
+        x: 833
+        y: 53
+        width: 27
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd54776e9afc74c30800000000000000
+      internalID: 4343668694245131739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_100
+      rect:
+        serializedVersion: 2
+        x: 730
+        y: 56
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e1f52570e422a5890800000000000000
+      internalID: -7468619313514914018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_101
+      rect:
+        serializedVersion: 2
+        x: 765
+        y: 56
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f4e61b2ecc864a50800000000000000
+      internalID: 6505041528897332469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_102
+      rect:
+        serializedVersion: 2
+        x: 797
+        y: 57
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71b81715fdb0ac0d0800000000000000
+      internalID: -3401893514752980201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_103
+      rect:
+        serializedVersion: 2
+        x: 811
+        y: 56
+        width: 10
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 122e007a9a18bff10800000000000000
+      internalID: 2304578199981449761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_104
+      rect:
+        serializedVersion: 2
+        x: 870
+        y: 50
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b2c4d871f3ac5470800000000000000
+      internalID: 8384756863766676147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_105
+      rect:
+        serializedVersion: 2
+        x: 723
+        y: 48
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8639f48e2eb253e0800000000000000
+      internalID: -2066380172000938354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_106
+      rect:
+        serializedVersion: 2
+        x: 814
+        y: 29
+        width: 21
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2a7c47b9a3fc3d70800000000000000
+      internalID: 9024355663593896493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_107
+      rect:
+        serializedVersion: 2
+        x: 681
+        y: 20
+        width: 32
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31347560aa7c0b920800000000000000
+      internalID: 3004120484520870675
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_108
+      rect:
+        serializedVersion: 2
+        x: 748
+        y: 1
+        width: 7
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98747a3c87caa5ce0800000000000000
+      internalID: -1415629498176026743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_109
+      rect:
+        serializedVersion: 2
+        x: 803
+        y: 24
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 519521e35777685d0800000000000000
+      internalID: -3060627551315404523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_110
+      rect:
+        serializedVersion: 2
+        x: 837
+        y: 32
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a32d97eaa10a89f0800000000000000
+      internalID: -465557777937521752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_111
+      rect:
+        serializedVersion: 2
+        x: 869
+        y: 28
+        width: 8
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8c9560d90e0a8b40800000000000000
+      internalID: 5443178534944480399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EarthProjectile_112
+      rect:
+        serializedVersion: 2
+        x: 815
+        y: 18
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad65ca125c38af690800000000000000
+      internalID: -7567591341145958694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      EarthProjectile_0: 488093681734595867
+      EarthProjectile_1: -5356017380107033998
+      EarthProjectile_10: -8755490792786937842
+      EarthProjectile_100: -7468619313514914018
+      EarthProjectile_101: 6505041528897332469
+      EarthProjectile_102: -3401893514752980201
+      EarthProjectile_103: 2304578199981449761
+      EarthProjectile_104: 8384756863766676147
+      EarthProjectile_105: -2066380172000938354
+      EarthProjectile_106: 9024355663593896493
+      EarthProjectile_107: 3004120484520870675
+      EarthProjectile_108: -1415629498176026743
+      EarthProjectile_109: -3060627551315404523
+      EarthProjectile_11: -8952093784869992237
+      EarthProjectile_110: -465557777937521752
+      EarthProjectile_111: 5443178534944480399
+      EarthProjectile_112: -7567591341145958694
+      EarthProjectile_12: -3782495247255621459
+      EarthProjectile_13: -4392544966112888248
+      EarthProjectile_14: 5975971413445267695
+      EarthProjectile_15: 3629728596536536646
+      EarthProjectile_16: 8688066339216958372
+      EarthProjectile_17: -9052542598590749510
+      EarthProjectile_18: 3575260016086812425
+      EarthProjectile_19: 7639707887704816878
+      EarthProjectile_2: -4194032699492014839
+      EarthProjectile_20: -1242904949200977914
+      EarthProjectile_21: 5041961776959898058
+      EarthProjectile_22: 14004305012891905
+      EarthProjectile_23: -9159040722331226527
+      EarthProjectile_24: 5346242573211937302
+      EarthProjectile_25: 3802666715238160520
+      EarthProjectile_26: 3455374096381598166
+      EarthProjectile_27: -2160319879540191131
+      EarthProjectile_28: -6078205106257580175
+      EarthProjectile_29: 2911588946751940315
+      EarthProjectile_3: -5194958787306355087
+      EarthProjectile_30: -5468080185571917821
+      EarthProjectile_31: 80254207107624006
+      EarthProjectile_32: -2554029787559692743
+      EarthProjectile_33: -4931342278861027846
+      EarthProjectile_34: -8943959330859120135
+      EarthProjectile_35: 7842709794144724729
+      EarthProjectile_36: 7735303638208801942
+      EarthProjectile_37: -3533388450704173870
+      EarthProjectile_38: -2463515357050093393
+      EarthProjectile_39: -2757652489883155180
+      EarthProjectile_4: -4155044169795898448
+      EarthProjectile_40: -4108036480472248453
+      EarthProjectile_41: 782206936495730959
+      EarthProjectile_42: 3474936040062485674
+      EarthProjectile_43: 7152160633049810741
+      EarthProjectile_44: -35524838336767678
+      EarthProjectile_45: -7381532596998419464
+      EarthProjectile_46: 5583208487159071965
+      EarthProjectile_47: -7339760452145660776
+      EarthProjectile_48: 4542765451076468179
+      EarthProjectile_49: -4813845323275808093
+      EarthProjectile_5: -2211370628405355506
+      EarthProjectile_50: -7936523974441263307
+      EarthProjectile_51: -799014543163669864
+      EarthProjectile_52: -1713827377772916619
+      EarthProjectile_53: 2894605145660274774
+      EarthProjectile_54: -6445411851507087612
+      EarthProjectile_55: -884723865847637837
+      EarthProjectile_56: 8704815071811257088
+      EarthProjectile_57: -5093013561307847398
+      EarthProjectile_58: 6403687753461119867
+      EarthProjectile_59: 5251519497393157715
+      EarthProjectile_6: 7153465251431827074
+      EarthProjectile_60: -3064736046042893767
+      EarthProjectile_61: -8042954358139421569
+      EarthProjectile_62: 4679067632540057696
+      EarthProjectile_63: -3904484142315463967
+      EarthProjectile_64: 7479698370153284880
+      EarthProjectile_65: -3790466505206397084
+      EarthProjectile_66: -5493620841523837482
+      EarthProjectile_67: 8036433155455586173
+      EarthProjectile_68: 2594661332975798457
+      EarthProjectile_69: -8252555419400457605
+      EarthProjectile_7: 4104718456710065328
+      EarthProjectile_70: -3580998686481849713
+      EarthProjectile_71: 4260241036019097591
+      EarthProjectile_72: 9094036773185357315
+      EarthProjectile_73: -2482480084948796976
+      EarthProjectile_74: -4284987049427186685
+      EarthProjectile_75: -6268318298272031872
+      EarthProjectile_76: 589747541157624811
+      EarthProjectile_77: 3546938333734444932
+      EarthProjectile_78: 4072073199359777407
+      EarthProjectile_79: -339772917709005044
+      EarthProjectile_8: -4931258190394263883
+      EarthProjectile_80: -3051299710905193760
+      EarthProjectile_81: 3933933705908164764
+      EarthProjectile_82: -1648592282265223185
+      EarthProjectile_83: 8525244029346861663
+      EarthProjectile_84: -1521471867288087351
+      EarthProjectile_85: -1827970056085460741
+      EarthProjectile_86: 6241811193384581111
+      EarthProjectile_87: -2708425092421655218
+      EarthProjectile_88: -819476346739255236
+      EarthProjectile_89: 2722052803530229243
+      EarthProjectile_9: 4801418737017394563
+      EarthProjectile_90: -9004424756317373293
+      EarthProjectile_91: 8673459651803552914
+      EarthProjectile_92: 9015163727742893013
+      EarthProjectile_93: -3962798825809500266
+      EarthProjectile_94: -3858072072587972906
+      EarthProjectile_95: 574296575045587480
+      EarthProjectile_96: 2141576260238049632
+      EarthProjectile_97: 6180792403031358811
+      EarthProjectile_98: 7329149595513779637
+      EarthProjectile_99: 4343668694245131739
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -138,7 +138,16 @@ public class PlayerResources : MonoBehaviour
 
         if (enemy != null)
         {
-            enemy.ApplyKnockbackFrom(transform.position);
+            EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
+            if (enemyHealth == null)
+            {
+                enemyHealth = enemy.GetComponentInParent<EnemyHealth>();
+            }
+
+            if (enemyHealth == null || !enemyHealth.isBoss)
+            {
+                enemy.ApplyKnockbackFrom(transform.position);
+            }
         }
 
         nextContactDamageTime = Time.time + contactDamageCooldown;
@@ -352,12 +361,114 @@ public class PlayerResources : MonoBehaviour
         label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         label.fontSize = 24;
         label.color = Color.white;
+
+        GameObject continueButtonObject = new GameObject("ContinueButton");
+        continueButtonObject.transform.SetParent(gameOverPanel.transform, false);
+
+        RectTransform continueButtonRect = continueButtonObject.AddComponent<RectTransform>();
+        continueButtonRect.anchorMin = new Vector2(0.5f, 0.5f);
+        continueButtonRect.anchorMax = new Vector2(0.5f, 0.5f);
+        continueButtonRect.pivot = new Vector2(0.5f, 0.5f);
+        continueButtonRect.anchoredPosition = new Vector2(0f, -92f);
+        continueButtonRect.sizeDelta = new Vector2(190f, 48f);
+
+        Image continueButtonImage = continueButtonObject.AddComponent<Image>();
+        continueButtonImage.color = new Color(0.16f, 0.42f, 0.9f, 1f);
+
+        Button continueButton = continueButtonObject.AddComponent<Button>();
+        continueButton.targetGraphic = continueButtonImage;
+        continueButton.onClick.AddListener(ContinueFromGameOver);
+
+        GameObject continueLabelObject = new GameObject("Text");
+        continueLabelObject.transform.SetParent(continueButtonObject.transform, false);
+
+        RectTransform continueLabelRect = continueLabelObject.AddComponent<RectTransform>();
+        continueLabelRect.anchorMin = Vector2.zero;
+        continueLabelRect.anchorMax = Vector2.one;
+        continueLabelRect.offsetMin = Vector2.zero;
+        continueLabelRect.offsetMax = Vector2.zero;
+
+        Text continueLabel = continueLabelObject.AddComponent<Text>();
+        continueLabel.text = "Continue";
+        continueLabel.alignment = TextAnchor.MiddleCenter;
+        continueLabel.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        continueLabel.fontSize = 24;
+        continueLabel.color = Color.white;
     }
 
     private void RestartScene()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private void ContinueFromGameOver()
+    {
+        isDead = false;
+        currentHealth = maxHealth;
+        currentMana = maxMana;
+        nextContactDamageTime = Time.time + contactDamageCooldown;
+        UpdateHealthBar();
+        UpdateManaBar();
+
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.bodyType = RigidbodyType2D.Dynamic;
+            rb.simulated = true;
+            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
+
+        RestoreEnemyCollisions();
+
+        PlayerController controller = GetComponent<PlayerController>();
+        if (controller != null)
+        {
+            controller.enabled = true;
+        }
+
+        WeaponManager weaponManager = GetComponent<WeaponManager>();
+        if (weaponManager != null)
+        {
+            weaponManager.enabled = true;
+        }
+
+        Animator animator = GetComponent<Animator>();
+        if (animator == null)
+        {
+            animator = GetComponentInChildren<Animator>();
+        }
+
+        if (animator != null)
+        {
+            animator.Play("Player_Idle", 0, 0f);
+        }
+
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(false);
+        }
+    }
+
+    private void RestoreEnemyCollisions()
+    {
+        Collider2D[] playerColliders = GetComponentsInChildren<Collider2D>();
+        EnemyMovement[] enemies = FindObjectsByType<EnemyMovement>(FindObjectsSortMode.None);
+
+        foreach (Collider2D playerCollider in playerColliders)
+        {
+            foreach (EnemyMovement enemy in enemies)
+            {
+                if (enemy == null) continue;
+
+                Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
+                if (enemyCollider != null)
+                {
+                    Physics2D.IgnoreCollision(playerCollider, enemyCollider, false);
+                }
+            }
+        }
     }
 
     private void EnsureEventSystem()
