@@ -331,6 +331,23 @@ public class WeaponManager : MonoBehaviour
         RefreshElementInventoryUI();
     }
 
+    public void UnlockWand(WandData wand)
+    {
+        if (wand == null || allWands == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < allWands.Length; i++)
+        {
+            if (allWands[i] == wand || allWands[i].elementType == wand.elementType)
+            {
+                UnlockWand(i);
+                return;
+            }
+        }
+    }
+
     private void BuildElementInventoryUI()
     {
         if (!showElementInventory ||

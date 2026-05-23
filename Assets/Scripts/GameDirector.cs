@@ -1,116 +1,166 @@
+using System;
 using UnityEngine;
 
 public class GameDirector : MonoBehaviour
 {
-    public int killCount = 0;
-    public int targetKillsForBoss = 75;
+    [Serializable]
+    public class WaveConfig
+    {
+        public string waveName = "Wave";
+        [Min(0)] public int enemiesToSpawn = 10;
+        public GameObject[] enemyPrefabs;
+    }
 
-    [Header("Prefabs")]
-    public GameObject normalEnemyPrefab;
-    public GameObject earthEnemyPrefab;
-    public GameObject waterEnemyPrefab;
-    public GameObject fireEnemyPrefab;
-    public GameObject[] bosses;
-    private int currentStageIndex = 0;
+    [Serializable]
+    public class StageConfig
+    {
+        public string stageName = "Stage";
+        public WaveConfig[] waves =
+        {
+            new WaveConfig()
+        };
+        public GameObject bossPrefab;
+        public WandData badgeDrop;
+    }
 
-    [Header("Wave Settings")]
-    public int enemiesPerWave = 20;
+    [Header("Stages")]
+    public StageConfig[] stages =
+    {
+        new StageConfig()
+    };
+
+    [Header("Timing")]
     public float spawnInterval = 1f;
     public float timeBetweenWaves = 4f;
 
-    [Header("Dynamic Spawn Settings")]
+    [Header("Spawn Area")]
     public float minSpawnDistance = 8f;
     public float maxSpawnDistance = 18f;
     public float minAirSpawnHeightAbovePlayer = 2f;
     public float maxAirSpawnHeightAbovePlayer = 7f;
     public Transform[] floorSpawnPoints;
+
     private Transform playerTransform;
+    private int currentStageIndex = 0;
     private int currentWaveIndex = 0;
     private int enemiesSpawnedThisWave = 0;
     private int enemiesDefeatedThisWave = 0;
     private float nextSpawnTime = 0f;
     private bool waitingForNextWave = false;
+    private bool waitingForBossBadgePickup = false;
+    private bool bossActiveOrPending = false;
 
-    private readonly ElementType[] waveOrder =
-    {
-        ElementType.Earth,
-        ElementType.Water,
-        ElementType.Earth
-    };
-
-    void Start()
+    private void Start()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null) playerTransform = player.transform;
+        if (player != null)
+        {
+            playerTransform = player.transform;
+        }
+
         CacheFloorSpawnPoints();
         nextSpawnTime = Time.time + 2f;
     }
 
-    void Update()
+    private void Update()
     {
-        if (killCount >= targetKillsForBoss || GameObject.FindGameObjectWithTag("Boss") != null) return;
+        if (waitingForBossBadgePickup || bossActiveOrPending) return;
+        if (waitingForNextWave) return;
         if (playerTransform == null) return;
-        if (currentWaveIndex >= waveOrder.Length) return;
-        if (waitingForNextWave || enemiesSpawnedThisWave >= enemiesPerWave) return;
-        if (CountActiveNormalEnemies() >= enemiesPerWave) return;
+
+        StageConfig stage = GetCurrentStage();
+        if (stage == null) return;
+        if (stage.waves == null || stage.waves.Length == 0)
+        {
+            SpawnBoss();
+            return;
+        }
+
+        WaveConfig wave = GetCurrentWave();
+        if (wave == null) return;
+
+        int enemyCount = Mathf.Max(0, wave.enemiesToSpawn);
+        if (enemyCount <= 0)
+        {
+            CompleteCurrentWave();
+            return;
+        }
+
+        if (enemiesSpawnedThisWave >= enemyCount) return;
         if (Time.time < nextSpawnTime) return;
 
-        if (SpawnEnemyDynamically(waveOrder[currentWaveIndex]))
+        if (SpawnEnemyFromWave(wave))
         {
             enemiesSpawnedThisWave++;
             nextSpawnTime = Time.time + spawnInterval;
         }
+        else
+        {
+            Debug.LogWarning("GameDirector wave has enemies to spawn but no enemy prefab assigned.");
+            CompleteCurrentWave();
+        }
     }
 
-    bool SpawnEnemyDynamically(ElementType element)
+    private bool SpawnEnemyFromWave(WaveConfig wave)
     {
-        GameObject prefab = GetEnemyPrefab(element);
-        if (prefab == null) return false;
-
-        Vector3 spawnPosition = GetSpawnPosition(element);
-        GameObject enemy = Instantiate(prefab, spawnPosition, Quaternion.identity);
-
-        EnemyHealth health = enemy.GetComponent<EnemyHealth>();
-        if (health != null)
+        GameObject prefab = GetRandomEnemyPrefab(wave);
+        if (prefab == null)
         {
-            health.enemyElement = element;
+            return false;
         }
 
-        EnemyMovement movement = enemy.GetComponent<EnemyMovement>();
-        if (movement != null)
-        {
-            movement.enemyElement = element;
-        }
-
+        Vector3 spawnPosition = GetSpawnPosition(prefab);
+        Instantiate(prefab, spawnPosition, Quaternion.identity);
         return true;
     }
 
-    private GameObject GetEnemyPrefab(ElementType element)
+    private GameObject GetRandomEnemyPrefab(WaveConfig wave)
     {
-        switch (element)
+        if (wave == null || wave.enemyPrefabs == null || wave.enemyPrefabs.Length == 0)
         {
-            case ElementType.Earth:
-                return earthEnemyPrefab != null ? earthEnemyPrefab : normalEnemyPrefab;
-            case ElementType.Water:
-                return waterEnemyPrefab != null ? waterEnemyPrefab : normalEnemyPrefab;
-            case ElementType.Fire:
-                return fireEnemyPrefab != null ? fireEnemyPrefab : normalEnemyPrefab;
-            default:
-                return normalEnemyPrefab;
+            return null;
         }
+
+        int validCount = 0;
+        foreach (GameObject prefab in wave.enemyPrefabs)
+        {
+            if (prefab != null)
+            {
+                validCount++;
+            }
+        }
+
+        if (validCount == 0)
+        {
+            return null;
+        }
+
+        int roll = UnityEngine.Random.Range(0, validCount);
+        foreach (GameObject prefab in wave.enemyPrefabs)
+        {
+            if (prefab == null) continue;
+            if (roll == 0)
+            {
+                return prefab;
+            }
+
+            roll--;
+        }
+
+        return null;
     }
 
-    private Vector3 GetSpawnPosition(ElementType element)
+    private Vector3 GetSpawnPosition(GameObject enemyPrefab)
     {
-        if (!ShouldSpawnInAir(element) && floorSpawnPoints != null && floorSpawnPoints.Length > 0)
+        if (!ShouldSpawnInAir(enemyPrefab) && floorSpawnPoints != null && floorSpawnPoints.Length > 0)
         {
-            Transform floor = floorSpawnPoints[Random.Range(0, floorSpawnPoints.Length)];
+            Transform floor = floorSpawnPoints[UnityEngine.Random.Range(0, floorSpawnPoints.Length)];
             Collider2D floorCollider = floor.GetComponent<Collider2D>();
             if (floorCollider != null)
             {
                 Bounds bounds = floorCollider.bounds;
                 return new Vector3(
-                    Random.Range(bounds.min.x + 0.5f, bounds.max.x - 0.5f),
+                    UnityEngine.Random.Range(bounds.min.x + 0.5f, bounds.max.x - 0.5f),
                     bounds.max.y + 0.75f,
                     0f
                 );
@@ -119,9 +169,9 @@ public class GameDirector : MonoBehaviour
             return floor.position + Vector3.up * 0.75f;
         }
 
-        float side = Random.value < 0.5f ? -1f : 1f;
-        float xOffset = Random.Range(minSpawnDistance, maxSpawnDistance) * side;
-        float yOffset = Random.Range(minAirSpawnHeightAbovePlayer, maxAirSpawnHeightAbovePlayer);
+        float side = UnityEngine.Random.value < 0.5f ? -1f : 1f;
+        float xOffset = UnityEngine.Random.Range(minSpawnDistance, maxSpawnDistance) * side;
+        float yOffset = UnityEngine.Random.Range(minAirSpawnHeightAbovePlayer, maxAirSpawnHeightAbovePlayer);
         float minY = GetLowestPlatformTopY() + 1.5f;
 
         Vector3 spawnPosition = playerTransform.position + new Vector3(xOffset, yOffset, 0f);
@@ -133,9 +183,24 @@ public class GameDirector : MonoBehaviour
         return spawnPosition;
     }
 
-    private bool ShouldSpawnInAir(ElementType element)
+    private bool ShouldSpawnInAir(GameObject enemyPrefab)
     {
-        return element == ElementType.Earth || element == ElementType.Fire;
+        if (enemyPrefab == null)
+        {
+            return false;
+        }
+
+        EnemyMovement movement = enemyPrefab.GetComponent<EnemyMovement>();
+        if (movement != null)
+        {
+            return movement.enemyElement == ElementType.Earth ||
+                   movement.enemyElement == ElementType.Fire;
+        }
+
+        EnemyHealth health = enemyPrefab.GetComponent<EnemyHealth>();
+        return health != null &&
+               (health.enemyElement == ElementType.Earth ||
+                health.enemyElement == ElementType.Fire);
     }
 
     private float GetLowestPlatformTopY()
@@ -157,23 +222,9 @@ public class GameDirector : MonoBehaviour
             }
         }
 
-        return float.IsPositiveInfinity(lowestTop) ? playerTransform.position.y : lowestTop;
-    }
-
-    private int CountActiveNormalEnemies()
-    {
-        EnemyHealth[] enemies = FindObjectsByType<EnemyHealth>(FindObjectsSortMode.None);
-        int count = 0;
-
-        foreach (EnemyHealth enemy in enemies)
-        {
-            if (enemy != null && !enemy.isBoss)
-            {
-                count++;
-            }
-        }
-
-        return count;
+        return float.IsPositiveInfinity(lowestTop) && playerTransform != null
+            ? playerTransform.position.y
+            : lowestTop;
     }
 
     private void CacheFloorSpawnPoints()
@@ -209,51 +260,179 @@ public class GameDirector : MonoBehaviour
 
     public void OnNormalEnemyDefeated()
     {
-        killCount++;
         enemiesDefeatedThisWave++;
 
-        if (enemiesDefeatedThisWave >= enemiesPerWave && enemiesSpawnedThisWave >= enemiesPerWave)
+        WaveConfig wave = GetCurrentWave();
+        int enemyCount = wave != null ? Mathf.Max(0, wave.enemiesToSpawn) : 0;
+        if (enemiesDefeatedThisWave >= enemyCount &&
+            enemiesSpawnedThisWave >= enemyCount)
         {
-            AdvanceWave();
-        }
-
-        if (killCount >= targetKillsForBoss && currentStageIndex < bosses.Length)
-        {
-            SpawnBoss();
+            CompleteCurrentWave();
         }
     }
 
-    private void AdvanceWave()
+    private void CompleteCurrentWave()
     {
+        StageConfig stage = GetCurrentStage();
+        if (stage == null) return;
+
         currentWaveIndex++;
+        if (stage.waves == null || currentWaveIndex >= stage.waves.Length)
+        {
+            SpawnBoss();
+            return;
+        }
+
         enemiesSpawnedThisWave = 0;
         enemiesDefeatedThisWave = 0;
-
-        if (currentWaveIndex < waveOrder.Length)
-        {
-            waitingForNextWave = true;
-            Invoke(nameof(StartNextWave), timeBetweenWaves);
-        }
+        waitingForNextWave = true;
+        Invoke(nameof(StartNextWave), timeBetweenWaves);
     }
 
     private void StartNextWave()
     {
         waitingForNextWave = false;
+        enemiesSpawnedThisWave = 0;
+        enemiesDefeatedThisWave = 0;
         nextSpawnTime = Time.time;
     }
 
-    void SpawnBoss()
+    private StageConfig GetCurrentStage()
     {
-        if (playerTransform == null) return;
-        Vector3 bossSpawnPos = playerTransform.position + new Vector3(Random.Range(-10f, 10f), 5f, 0f);
-        Instantiate(bosses[currentStageIndex], bossSpawnPos, Quaternion.identity);
+        if (stages == null ||
+            currentStageIndex < 0 ||
+            currentStageIndex >= stages.Length)
+        {
+            return null;
+        }
+
+        return stages[currentStageIndex];
+    }
+
+    private WaveConfig GetCurrentWave()
+    {
+        StageConfig stage = GetCurrentStage();
+        if (stage == null ||
+            stage.waves == null ||
+            currentWaveIndex < 0 ||
+            currentWaveIndex >= stage.waves.Length)
+        {
+            return null;
+        }
+
+        return stage.waves[currentWaveIndex];
+    }
+
+    private void SpawnBoss()
+    {
+        StageConfig stage = GetCurrentStage();
+        if (playerTransform == null || stage == null) return;
+        if (stage.bossPrefab == null)
+        {
+            CompleteBossStage();
+            return;
+        }
+
+        bossActiveOrPending = true;
+        Vector3 bossSpawnPos = playerTransform.position + new Vector3(UnityEngine.Random.Range(-10f, 10f), 5f, 0f);
+        GameObject boss = Instantiate(stage.bossPrefab, bossSpawnPos, Quaternion.identity);
+
+        BossBadgeDropper dropper = boss.GetComponent<BossBadgeDropper>();
+        if (dropper == null)
+        {
+            dropper = boss.AddComponent<BossBadgeDropper>();
+        }
+
+        if (dropper.badgeToDrop == null)
+        {
+            dropper.badgeToDrop = GetBossBadgeDrop(boss.GetComponent<EnemyHealth>());
+        }
     }
 
     public void OnBossDefeated(int tier)
     {
-        WeaponManager wm = FindFirstObjectByType<WeaponManager>();
-        if (wm != null) wm.UnlockWand(tier);
-        killCount = 0;
+        CompleteBossStage();
+    }
+
+    public void OnBossDefeated(EnemyHealth boss)
+    {
+        if (boss == null)
+        {
+            CompleteBossStage();
+            return;
+        }
+
+        BossBadgeDropper dropper = boss.GetComponent<BossBadgeDropper>();
+        if (dropper == null)
+        {
+            dropper = boss.gameObject.AddComponent<BossBadgeDropper>();
+        }
+
+        if (dropper.badgeToDrop == null)
+        {
+            dropper.badgeToDrop = GetBossBadgeDrop(boss);
+        }
+
+        BadgePickup pickup = dropper.DropBadge(boss.transform.position);
+        if (pickup != null)
+        {
+            waitingForBossBadgePickup = true;
+        }
+        else
+        {
+            CompleteBossStage();
+        }
+    }
+
+    public void OnBossBadgeCollected(WandData badge)
+    {
+        if (!waitingForBossBadgePickup)
+        {
+            return;
+        }
+
+        CompleteBossStage();
+    }
+
+    private WandData GetBossBadgeDrop(EnemyHealth boss)
+    {
+        StageConfig stage = GetCurrentStage();
+        if (stage != null && stage.badgeDrop != null)
+        {
+            return stage.badgeDrop;
+        }
+
+        WeaponManager weaponManager = FindFirstObjectByType<WeaponManager>();
+        if (weaponManager == null || weaponManager.allWands == null || boss == null)
+        {
+            return null;
+        }
+
+        foreach (WandData wand in weaponManager.allWands)
+        {
+            if (wand != null && wand.elementType == boss.enemyElement)
+            {
+                return wand;
+            }
+        }
+
+        if (boss.bossTier >= 0 && boss.bossTier < weaponManager.allWands.Length)
+        {
+            return weaponManager.allWands[boss.bossTier];
+        }
+
+        return null;
+    }
+
+    private void CompleteBossStage()
+    {
+        bossActiveOrPending = false;
+        waitingForBossBadgePickup = false;
         currentStageIndex++;
+        currentWaveIndex = 0;
+        enemiesSpawnedThisWave = 0;
+        enemiesDefeatedThisWave = 0;
+        waitingForNextWave = false;
+        nextSpawnTime = Time.time + timeBetweenWaves;
     }
 }
