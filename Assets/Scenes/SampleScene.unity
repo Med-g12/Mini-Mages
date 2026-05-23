@@ -622,7 +622,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.16679877, y: -1.1442595, z: -10}
+  m_LocalPosition: {x: -0.16680372, y: -1.1442595, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -730,7 +730,7 @@ MonoBehaviour:
     - waveName: Wave
       enemiesToSpawn: 5
       enemyPrefabs:
-      - {fileID: 0}
+      - {fileID: 100000, guid: 94e05a8846ea435c96f791bd1e5efba1, type: 3}
     - waveName: Wave
       enemiesToSpawn: 10
       enemyPrefabs:
@@ -740,9 +740,21 @@ MonoBehaviour:
   - stageName: Crimson Destruction
     waves:
     - waveName: Wave
+      enemiesToSpawn: 5
+      enemyPrefabs:
+      - {fileID: 100000, guid: fbe052ce5bc74c1691eb1314e001cd18, type: 3}
+    - waveName: Wave
+      enemiesToSpawn: 5
+      enemyPrefabs:
+      - {fileID: 100000, guid: fbe052ce5bc74c1691eb1314e001cd18, type: 3}
+    - waveName: Wave
+      enemiesToSpawn: 10
+      enemyPrefabs:
+      - {fileID: 100000, guid: fbe052ce5bc74c1691eb1314e001cd18, type: 3}
+    - waveName: Wave
       enemiesToSpawn: 10
       enemyPrefabs: []
-    bossPrefab: {fileID: 0}
+    bossPrefab: {fileID: 4754518623609711788, guid: 00085e28555a6674d810f8640044fb0b, type: 3}
     badgeDrop: {fileID: 0}
   - stageName: Admiral
     waves:
@@ -1322,6 +1334,7 @@ MonoBehaviour:
   basicFireCooldown: 0.1
   controlledProjectileFollowSpeed: 28
   heldProjectileSpawnTravelSpeed: 10
+  bonusProjectileDamage: 0
   showElementInventory: 1
   inventorySlotSize: {x: 48, y: 48}
   inventorySpacing: {x: 8, y: 0}
@@ -1338,7 +1351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerResources
   maxHealth: 100
-  currentHealth: 0
+  currentHealth: 100
   maxMana: 100
   currentMana: 0
   manaRegenRate: 10
@@ -1350,6 +1363,8 @@ MonoBehaviour:
   createHealthBarIfMissing: 1
   healthBarPosition: {x: 28, y: -28}
   healthBarSize: {x: 240, y: 22}
+  manaBarPosition: {x: 28, y: -56}
+  manaBarSize: {x: 240, y: 16}
   gameOverDelay: 1
 --- !u!114 &1476606681
 MonoBehaviour:
