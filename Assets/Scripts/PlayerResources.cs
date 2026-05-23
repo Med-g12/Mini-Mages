@@ -22,7 +22,7 @@ public class PlayerResources : MonoBehaviour
 
     [Header("Auto UI")]
     public bool createHealthBarIfMissing = true;
-    public Vector2 healthBarPosition = new Vector2(28f, -28f);
+    public Vector2 healthBarPosition = new Vector2(48f, -16f);
     public Vector2 healthBarSize = new Vector2(240f, 22f);
     public float gameOverDelay = 1f;
 

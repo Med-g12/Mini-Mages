@@ -1227,7 +1227,7 @@ MonoBehaviour:
   contactDamageCooldown: 1
   enemyContactRadius: 0.95
   createHealthBarIfMissing: 1
-  healthBarPosition: {x: 28, y: -28}
+  healthBarPosition: {x: 28, y: -16}
   healthBarSize: {x: 240, y: 22}
   gameOverDelay: 1
 --- !u!114 &1476606681

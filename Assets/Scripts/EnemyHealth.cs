@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class EnemyHealth : MonoBehaviour
 {
@@ -12,8 +11,8 @@ public class EnemyHealth : MonoBehaviour
     public float hitFlashDuration = 0.12f;
 
     [Header("Boss UI")]
-    public Vector2 bossHealthBarPosition = new Vector2(0f, -34f);
-    public Vector2 bossHealthBarSize = new Vector2(420f, 24f);
+    public Vector3 bossHealthBarOffset = new Vector3(0f, 0.25f, 0f);
+    public Vector2 bossHealthBarSize = new Vector2(1.6f, 0.14f);
 
     private float maxHealth;
     private float currentSpeed;
@@ -27,10 +26,10 @@ public class EnemyHealth : MonoBehaviour
     private float externalKnockbackEndTime;
     private Coroutine hitFlashRoutine;
     private Coroutine slowRoutine;
-    private Slider bossHealthSlider;
-    private RectTransform bossHealthFillRect;
     private GameObject bossHealthBarObject;
+    private Transform bossHealthFill;
     private bool isHitFlashing;
+    private static Sprite bossHealthBarSprite;
 
     public bool IsHitFlashing => isHitFlashing;
 
@@ -80,6 +79,17 @@ public class EnemyHealth : MonoBehaviour
         {
             rb.AddForce(Vector2.up * 8f, ForceMode2D.Impulse);
         }
+    }
+
+    void LateUpdate()
+    {
+        if (!isBoss || bossHealthBarObject == null)
+        {
+            return;
+        }
+
+        bossHealthBarObject.transform.position = GetBossHealthBarPosition();
+        bossHealthBarObject.transform.rotation = Quaternion.identity;
     }
 
     private IEnumerator EnemyDropThroughPlatform()
@@ -225,58 +235,31 @@ public class EnemyHealth : MonoBehaviour
 
     private void EnsureBossHealthBar()
     {
-        if (bossHealthSlider != null)
+        if (bossHealthBarObject != null)
         {
             return;
         }
 
-        Canvas canvas = FindFirstObjectByType<Canvas>();
-        if (canvas == null)
-        {
-            GameObject canvasObject = new GameObject("BossHUDCanvas");
-            canvas = canvasObject.AddComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvasObject.AddComponent<CanvasScaler>();
-            canvasObject.AddComponent<GraphicRaycaster>();
-        }
-
         bossHealthBarObject = new GameObject(gameObject.name + "_HealthBar");
-        bossHealthBarObject.transform.SetParent(canvas.transform, false);
+        bossHealthBarObject.transform.position = GetBossHealthBarPosition();
 
-        RectTransform rootRect = bossHealthBarObject.AddComponent<RectTransform>();
-        rootRect.anchorMin = new Vector2(0.5f, 1f);
-        rootRect.anchorMax = new Vector2(0.5f, 1f);
-        rootRect.pivot = new Vector2(0.5f, 1f);
-        rootRect.anchoredPosition = bossHealthBarPosition;
-        rootRect.sizeDelta = bossHealthBarSize;
-
-        Image background = bossHealthBarObject.AddComponent<Image>();
-        background.color = new Color(0.08f, 0.06f, 0.06f, 0.9f);
+        SpriteRenderer background = bossHealthBarObject.AddComponent<SpriteRenderer>();
+        background.sprite = GetBossHealthBarSprite();
+        background.color = new Color(0.18f, 0.13f, 0.02f, 0.9f);
+        background.sortingOrder = 95;
+        bossHealthBarObject.transform.localScale =
+            new Vector3(bossHealthBarSize.x, bossHealthBarSize.y, 1f);
 
         GameObject fillObject = new GameObject("Fill");
         fillObject.transform.SetParent(bossHealthBarObject.transform, false);
+        fillObject.transform.localPosition = new Vector3(-0.5f, 0f, -0.01f);
+        fillObject.transform.localScale = Vector3.one;
+        bossHealthFill = fillObject.transform;
 
-        RectTransform fillRect = fillObject.AddComponent<RectTransform>();
-        fillRect.anchorMin = Vector2.zero;
-        fillRect.anchorMax = Vector2.one;
-        fillRect.offsetMin = new Vector2(4f, 4f);
-        fillRect.offsetMax = new Vector2(-4f, -4f);
-        fillRect.pivot = new Vector2(0f, 0.5f);
-        bossHealthFillRect = fillRect;
-
-        Image fill = fillObject.AddComponent<Image>();
-        fill.color = new Color(0.85f, 0.08f, 0.08f, 1f);
-        fill.type = Image.Type.Filled;
-        fill.fillMethod = Image.FillMethod.Horizontal;
-        fill.fillOrigin = 0;
-
-        bossHealthSlider = bossHealthBarObject.AddComponent<Slider>();
-        bossHealthSlider.transition = Selectable.Transition.None;
-        bossHealthSlider.minValue = 0f;
-        bossHealthSlider.maxValue = 1f;
-        bossHealthSlider.value = 1f;
-        bossHealthSlider.fillRect = fillRect;
-        bossHealthSlider.targetGraphic = fill;
+        SpriteRenderer fill = fillObject.AddComponent<SpriteRenderer>();
+        fill.sprite = GetBossHealthBarSprite();
+        fill.color = new Color(1f, 0.78f, 0.08f, 1f);
+        fill.sortingOrder = 96;
     }
 
     private void UpdateBossHealthBar()
@@ -287,15 +270,44 @@ public class EnemyHealth : MonoBehaviour
         }
 
         float healthPercent = Mathf.Clamp01(health / maxHealth);
-        if (bossHealthSlider != null)
+        if (bossHealthFill != null)
         {
-            bossHealthSlider.value = healthPercent;
+            bossHealthFill.localScale = new Vector3(healthPercent, 0.72f, 1f);
+            bossHealthFill.localPosition = new Vector3(-0.5f + healthPercent * 0.5f, 0f, -0.01f);
+        }
+    }
+
+    private Vector3 GetBossHealthBarPosition()
+    {
+        if (sr != null)
+        {
+            Bounds bounds = sr.bounds;
+            return new Vector3(bounds.center.x, bounds.max.y, transform.position.z) +
+                   bossHealthBarOffset;
         }
 
-        if (bossHealthFillRect != null)
+        return transform.position + bossHealthBarOffset;
+    }
+
+    private static Sprite GetBossHealthBarSprite()
+    {
+        if (bossHealthBarSprite != null)
         {
-            bossHealthFillRect.localScale = new Vector3(healthPercent, 1f, 1f);
+            return bossHealthBarSprite;
         }
+
+        Texture2D texture = new Texture2D(1, 1);
+        texture.SetPixel(0, 0, Color.white);
+        texture.Apply();
+
+        bossHealthBarSprite = Sprite.Create(
+            texture,
+            new Rect(0f, 0f, 1f, 1f),
+            new Vector2(0.5f, 0.5f),
+            1f
+        );
+
+        return bossHealthBarSprite;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

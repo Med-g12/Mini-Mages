@@ -126,6 +126,17 @@ public class EnemyMovement : MonoBehaviour
 
     private void EnsureVisibilityMarker()
     {
+        if (enemyHealth != null && enemyHealth.isBoss)
+        {
+            Transform existingMarker = transform.Find("EnemyMarker");
+            if (existingMarker != null)
+            {
+                Destroy(existingMarker.gameObject);
+            }
+
+            return;
+        }
+
         if (!showVisibilityMarker || transform.Find("EnemyMarker") != null) return;
 
         GameObject markerObject = new GameObject("EnemyMarker");
