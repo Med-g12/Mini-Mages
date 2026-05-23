@@ -926,14 +926,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54a825a0677a530449a75dd4ecd5a543, type: 3}
   m_Name:
   m_EditorClassIdentifier:
-  killCount: 0
-  targetKillsForBoss: 75
-  normalEnemyPrefab: {fileID: 100000, guid: d6e1949159d04540af6433277f874550, type: 3}
-  earthEnemyPrefab: {fileID: 100000, guid: d6e1949159d04540af6433277f874550, type: 3}
-  waterEnemyPrefab: {fileID: 0}
-  fireEnemyPrefab: {fileID: 0}
-  bosses: []
-  enemiesPerWave: 20
+  stages:
+  - stageName: Earth Stage
+    waves:
+    - waveName: Earth Wave
+      enemiesToSpawn: 20
+      enemyPrefabs:
+      - {fileID: 100000, guid: d6e1949159d04540af6433277f874550, type: 3}
+    bossPrefab: {fileID: 6551586121070330101, guid: 0be4abd8547292d42852f48171147013, type: 3}
+    badgeDrop: {fileID: 11400000, guid: 684296789f5c4e08a0208db7c207f673, type: 2}
+  - stageName: Water Stage
+    waves:
+    - waveName: Water Wave
+      enemiesToSpawn: 20
+      enemyPrefabs:
+      - {fileID: 100000, guid: 94e05a8846ea435c96f791bd1e5efba1, type: 3}
+    bossPrefab: {fileID: 6987567159529471374, guid: a47862505c404dc4fadd6b0c7c52db63, type: 3}
+    badgeDrop: {fileID: 11400000, guid: 7f6fdb3fc9164b348904f9237a73270b, type: 2}
+  - stageName: Fire Stage
+    waves:
+    - waveName: Fire Wave
+      enemiesToSpawn: 20
+      enemyPrefabs:
+      - {fileID: 100000, guid: fbe052ce5bc74c1691eb1314e001cd18, type: 3}
+    bossPrefab: {fileID: 4754518623609711788, guid: 00085e28555a6674d810f8640044fb0b, type: 3}
+    badgeDrop: {fileID: 11400000, guid: 2fbb3bc8c0a34effad2948303b2ed47f, type: 2}
   spawnInterval: 1
   timeBetweenWaves: 4
   minSpawnDistance: 8
