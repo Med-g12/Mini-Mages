@@ -66,7 +66,7 @@ public class BadgePickup : MonoBehaviour
         collected = true;
         weaponManager.UnlockWand(badge);
 
-        GameDirector director = FindFirstObjectByType<GameDirector>();
+        GameDirector director = FindAnyObjectByType<GameDirector>();
         if (director != null)
         {
             director.OnBossBadgeCollected(badge);

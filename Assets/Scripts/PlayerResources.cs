@@ -19,6 +19,10 @@ public class PlayerResources : MonoBehaviour
     public float enemyContactDamage = 10f;
     public float contactDamageCooldown = 1f;
     public float enemyContactRadius = 0.95f;
+    public float bossContactKnockbackForce = 12f;
+    public float bossContactKnockbackUpwardVelocity = 4f;
+    public float bossContactKnockbackDuration = 0.22f;
+    public float damageFlashDuration = 0.12f;
 
     [Header("Auto UI")]
     public bool createHealthBarIfMissing = true;
@@ -28,11 +32,17 @@ public class PlayerResources : MonoBehaviour
 
     private float nextContactDamageTime;
     private bool isDead;
+    private bool isKnockedDown;
+    private Coroutine knockdownRoutine;
+    private Coroutine damageFlashRoutine;
     private GameObject gameOverPanel;
     private RectTransform healthFillRect;
+    private SpriteRenderer[] spriteRenderers;
+    private Color[] baseSpriteColors;
 
     void Start()
     {
+        CacheSpriteRenderers();
         currentHealth = maxHealth;
         currentMana = maxMana;
         EnsureHealthBar();
@@ -42,7 +52,7 @@ public class PlayerResources : MonoBehaviour
 
     void Update()
     {
-        if (isDead) return;
+        if (isDead || isKnockedDown) return;
 
         if (currentMana < maxMana)
         {
@@ -69,31 +79,41 @@ public class PlayerResources : MonoBehaviour
         if (isDead) return;
 
         currentHealth = Mathf.Clamp(currentHealth - amount, 0f, maxHealth);
+        FlashRed();
         UpdateHealthBar();
         if (currentHealth <= 0) Die();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void TakeNonlethalDamage(float amount)
     {
         if (isDead) return;
+
+        currentHealth = Mathf.Clamp(currentHealth - amount, 1f, maxHealth);
+        FlashRed();
+        UpdateHealthBar();
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (isDead || isKnockedDown) return;
         TryTakeEnemyContactDamage(collision.gameObject);
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (isDead) return;
+        if (isDead || isKnockedDown) return;
         TryTakeEnemyContactDamage(collision.gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (isDead) return;
+        if (isDead || isKnockedDown) return;
         TryTakeEnemyContactDamage(other.gameObject);
     }
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (isDead) return;
+        if (isDead || isKnockedDown) return;
         TryTakeEnemyContactDamage(other.gameObject);
     }
 
@@ -101,7 +121,7 @@ public class PlayerResources : MonoBehaviour
     {
         if (Time.time < nextContactDamageTime) return;
 
-        EnemyMovement[] enemies = FindObjectsByType<EnemyMovement>(FindObjectsSortMode.None);
+        EnemyMovement[] enemies = FindObjectsByType<EnemyMovement>();
         foreach (EnemyMovement enemy in enemies)
         {
             if (enemy == null || !enemy.isActiveAndEnabled) continue;
@@ -144,13 +164,164 @@ public class PlayerResources : MonoBehaviour
                 enemyHealth = enemy.GetComponentInParent<EnemyHealth>();
             }
 
-            if (enemyHealth == null || !enemyHealth.isBoss)
+            if (enemyHealth != null && enemyHealth.isBoss)
+            {
+                ApplyBossContactKnockback(enemy.transform.position);
+            }
+            else
             {
                 enemy.ApplyKnockbackFrom(transform.position);
             }
         }
 
         nextContactDamageTime = Time.time + contactDamageCooldown;
+    }
+
+    public void ApplyBossContactKnockback(Vector3 sourcePosition)
+    {
+        if (isDead) return;
+
+        float direction = transform.position.x >= sourcePosition.x ? 1f : -1f;
+        Vector2 knockbackVelocity = new Vector2(
+            direction * bossContactKnockbackForce,
+            bossContactKnockbackUpwardVelocity
+        );
+
+        PlayerController controller = GetComponent<PlayerController>();
+        if (controller != null)
+        {
+            controller.ApplyExternalKnockback(knockbackVelocity, bossContactKnockbackDuration);
+            return;
+        }
+
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.linearVelocity = knockbackVelocity;
+        }
+    }
+
+    private void CacheSpriteRenderers()
+    {
+        spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+        baseSpriteColors = new Color[spriteRenderers.Length];
+        for (int i = 0; i < spriteRenderers.Length; i++)
+        {
+            baseSpriteColors[i] = spriteRenderers[i] != null ? spriteRenderers[i].color : Color.white;
+        }
+    }
+
+    private void FlashRed()
+    {
+        if (spriteRenderers == null || spriteRenderers.Length == 0)
+        {
+            CacheSpriteRenderers();
+        }
+
+        if (damageFlashRoutine != null)
+        {
+            StopCoroutine(damageFlashRoutine);
+        }
+
+        damageFlashRoutine = StartCoroutine(DamageFlashRoutine());
+    }
+
+    private IEnumerator DamageFlashRoutine()
+    {
+        SetSpriteColors(Color.red);
+        yield return new WaitForSeconds(damageFlashDuration);
+        RestoreSpriteColors();
+        damageFlashRoutine = null;
+    }
+
+    private void SetSpriteColors(Color color)
+    {
+        for (int i = 0; i < spriteRenderers.Length; i++)
+        {
+            if (spriteRenderers[i] != null)
+            {
+                spriteRenderers[i].color = color;
+            }
+        }
+    }
+
+    private void RestoreSpriteColors()
+    {
+        for (int i = 0; i < spriteRenderers.Length; i++)
+        {
+            if (spriteRenderers[i] != null)
+            {
+                spriteRenderers[i].color = i < baseSpriteColors.Length ? baseSpriteColors[i] : Color.white;
+            }
+        }
+    }
+
+    public void ApplyKnockdown(Vector3 sourcePosition, float duration)
+    {
+        if (isDead || duration <= 0f) return;
+
+        if (knockdownRoutine != null)
+        {
+            StopCoroutine(knockdownRoutine);
+        }
+
+        knockdownRoutine = StartCoroutine(KnockdownRoutine(sourcePosition, duration));
+    }
+
+    private IEnumerator KnockdownRoutine(Vector3 sourcePosition, float duration)
+    {
+        isKnockedDown = true;
+
+        PlayerController controller = GetComponent<PlayerController>();
+        WeaponManager weaponManager = GetComponent<WeaponManager>();
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        Animator animator = GetComponent<Animator>();
+        if (animator == null)
+        {
+            animator = GetComponentInChildren<Animator>();
+        }
+
+        if (controller != null)
+        {
+            controller.enabled = false;
+        }
+
+        if (weaponManager != null)
+        {
+            weaponManager.enabled = false;
+        }
+
+        if (rb != null)
+        {
+            float dir = transform.position.x >= sourcePosition.x ? 1f : -1f;
+            rb.linearVelocity = new Vector2(dir * 6f, 4f);
+        }
+
+        if (animator != null)
+        {
+            animator.updateMode = AnimatorUpdateMode.Normal;
+            animator.Play("Player_Death", 0, 0f);
+        }
+
+        yield return new WaitForSeconds(duration);
+
+        if (animator != null)
+        {
+            animator.Play("Player_Idle", 0, 0f);
+        }
+
+        if (controller != null)
+        {
+            controller.enabled = true;
+        }
+
+        if (weaponManager != null)
+        {
+            weaponManager.enabled = true;
+        }
+
+        isKnockedDown = false;
+        knockdownRoutine = null;
     }
 
     private void Die()
@@ -204,7 +375,7 @@ public class PlayerResources : MonoBehaviour
     private void IgnoreEnemyCollisionsAfterDeath()
     {
         Collider2D[] playerColliders = GetComponentsInChildren<Collider2D>();
-        EnemyMovement[] enemies = FindObjectsByType<EnemyMovement>(FindObjectsSortMode.None);
+        EnemyMovement[] enemies = FindObjectsByType<EnemyMovement>();
 
         foreach (Collider2D playerCollider in playerColliders)
         {
@@ -231,7 +402,7 @@ public class PlayerResources : MonoBehaviour
     {
         if (healthSlider != null || !createHealthBarIfMissing) return;
 
-        Canvas canvas = FindFirstObjectByType<Canvas>();
+        Canvas canvas = FindAnyObjectByType<Canvas>();
         if (canvas == null)
         {
             GameObject canvasObject = new GameObject("PlayerHUDCanvas");
@@ -282,7 +453,7 @@ public class PlayerResources : MonoBehaviour
 
     private void ShowGameOver()
     {
-        Canvas canvas = FindFirstObjectByType<Canvas>();
+        Canvas canvas = FindAnyObjectByType<Canvas>();
         if (canvas == null)
         {
             GameObject canvasObject = new GameObject("GameOverCanvas");
@@ -454,7 +625,7 @@ public class PlayerResources : MonoBehaviour
     private void RestoreEnemyCollisions()
     {
         Collider2D[] playerColliders = GetComponentsInChildren<Collider2D>();
-        EnemyMovement[] enemies = FindObjectsByType<EnemyMovement>(FindObjectsSortMode.None);
+        EnemyMovement[] enemies = FindObjectsByType<EnemyMovement>();
 
         foreach (Collider2D playerCollider in playerColliders)
         {
@@ -473,7 +644,7 @@ public class PlayerResources : MonoBehaviour
 
     private void EnsureEventSystem()
     {
-        if (FindFirstObjectByType<EventSystem>() != null) return;
+        if (FindAnyObjectByType<EventSystem>() != null) return;
 
         GameObject eventSystemObject = new GameObject("EventSystem");
         eventSystemObject.AddComponent<EventSystem>();

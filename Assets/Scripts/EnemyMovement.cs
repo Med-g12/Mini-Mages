@@ -231,7 +231,11 @@ public class EnemyMovement : MonoBehaviour
         if (resources == null) return;
 
         resources.TakeDamage(contactDamage);
-        if (enemyHealth == null || !enemyHealth.isBoss)
+        if (enemyHealth != null && enemyHealth.isBoss)
+        {
+            resources.ApplyBossContactKnockback(transform.position);
+        }
+        else
         {
             ApplyKnockbackFrom(resources.transform.position);
         }
@@ -282,12 +286,17 @@ public class EnemyMovement : MonoBehaviour
         return contactDamage;
     }
 
+    public void RefreshBaseScale()
+    {
+        baseScale = transform.localScale;
+    }
+
     private void IgnoreEnemyOnlyObstacles()
     {
         if (enemyCollider == null) return;
 
         int platformLayer = LayerMask.NameToLayer("Platforms");
-        Collider2D[] colliders = FindObjectsByType<Collider2D>(FindObjectsSortMode.None);
+        Collider2D[] colliders = FindObjectsByType<Collider2D>();
         foreach (Collider2D other in colliders)
         {
             if (other == enemyCollider) continue;

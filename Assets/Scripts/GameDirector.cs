@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameDirector : MonoBehaviour
 {
@@ -40,6 +42,16 @@ public class GameDirector : MonoBehaviour
     public float maxAirSpawnHeightAbovePlayer = 7f;
     public Transform[] floorSpawnPoints;
 
+    [Header("Enemy Size")]
+    public float windNormalEnemyScaleMultiplier = 1.45f;
+    public float waterNormalEnemyScaleMultiplier = 0.7f;
+
+    [Header("Admiral 2 Support")]
+    public GameObject baktinNiAdmiralPrefab;
+    public float baktinNiAdmiralScale = 3f;
+    public float baktinNiAdmiralPlatformEdgePadding = 0.8f;
+    public float baktinNiAdmiralSpawnHeight = 0.8f;
+
     private Transform playerTransform;
     private int currentStageIndex = 0;
     private int currentWaveIndex = 0;
@@ -49,6 +61,10 @@ public class GameDirector : MonoBehaviour
     private bool waitingForNextWave = false;
     private bool waitingForBossBadgePickup = false;
     private bool bossActiveOrPending = false;
+    private bool skipShortcutTriggered = false;
+    private bool gameWon = false;
+    private string typedSkipInput = string.Empty;
+    private GameObject victoryPanel;
 
     private void Start()
     {
@@ -64,6 +80,9 @@ public class GameDirector : MonoBehaviour
 
     private void Update()
     {
+        HandleSkipLevelShortcut();
+
+        if (gameWon) return;
         if (waitingForBossBadgePickup || bossActiveOrPending) return;
         if (waitingForNextWave) return;
         if (playerTransform == null) return;
@@ -110,8 +129,42 @@ public class GameDirector : MonoBehaviour
         }
 
         Vector3 spawnPosition = GetSpawnPosition(prefab);
-        Instantiate(prefab, spawnPosition, Quaternion.identity);
+        GameObject enemy = Instantiate(prefab, spawnPosition, Quaternion.identity);
+        ApplyNormalEnemySize(enemy);
         return true;
+    }
+
+    private void ApplyNormalEnemySize(GameObject enemy)
+    {
+        if (enemy == null)
+        {
+            return;
+        }
+
+        EnemyHealth health = enemy.GetComponent<EnemyHealth>();
+        EnemyMovement movement = enemy.GetComponent<EnemyMovement>();
+        if (health != null && health.isBoss)
+        {
+            return;
+        }
+
+        ElementType element = movement != null ? movement.enemyElement :
+            health != null ? health.enemyElement :
+            ElementType.Earth;
+
+        if (element == ElementType.Wind)
+        {
+            enemy.transform.localScale *= windNormalEnemyScaleMultiplier;
+        }
+        else if (element == ElementType.Water)
+        {
+            enemy.transform.localScale *= waterNormalEnemyScaleMultiplier;
+        }
+
+        if (movement != null)
+        {
+            movement.RefreshBaseScale();
+        }
     }
 
     private GameObject GetRandomEnemyPrefab(WaveConfig wave)
@@ -193,7 +246,8 @@ public class GameDirector : MonoBehaviour
         EnemyMovement movement = enemyPrefab.GetComponent<EnemyMovement>();
         if (movement != null)
         {
-            return movement.enemyElement == ElementType.Earth ||
+            return movement.flyAnywhere ||
+                   movement.enemyElement == ElementType.Earth ||
                    movement.enemyElement == ElementType.Fire;
         }
 
@@ -244,7 +298,7 @@ public class GameDirector : MonoBehaviour
         int layer = LayerMask.NameToLayer(layerName);
         if (layer < 0) return new GameObject[0];
 
-        GameObject[] allObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+        GameObject[] allObjects = FindObjectsByType<GameObject>();
         System.Collections.Generic.List<GameObject> matches = new System.Collections.Generic.List<GameObject>();
 
         foreach (GameObject obj in allObjects)
@@ -325,6 +379,11 @@ public class GameDirector : MonoBehaviour
 
     private void SpawnBoss()
     {
+        if (bossActiveOrPending)
+        {
+            return;
+        }
+
         StageConfig stage = GetCurrentStage();
         if (playerTransform == null || stage == null) return;
         if (stage.bossPrefab == null)
@@ -333,9 +392,42 @@ public class GameDirector : MonoBehaviour
             return;
         }
 
+        bool isAdmiral2Boss = stage.bossPrefab.name.StartsWith("Admiral2_GroundPound");
+        if (isAdmiral2Boss && FindAnyObjectByType<Admiral2Boss>() != null)
+        {
+            return;
+        }
+
         bossActiveOrPending = true;
-        Vector3 bossSpawnPos = playerTransform.position + new Vector3(UnityEngine.Random.Range(-10f, 10f), 5f, 0f);
+        Vector3 bossSpawnPos = playerTransform.position + new Vector3(UnityEngine.Random.Range(-10f, 10f), 8f, 0f);
+        if (isAdmiral2Boss)
+        {
+            bossSpawnPos = GetBottomFloorBossSpawnPosition();
+        }
+
         GameObject boss = Instantiate(stage.bossPrefab, bossSpawnPos, Quaternion.identity);
+
+        if (boss == null)
+        {
+            CompleteBossStage();
+            return;
+        }
+
+        EnemyHealth bossHealth = boss.GetComponent<EnemyHealth>();
+        if (bossHealth == null)
+        {
+            bossHealth = boss.AddComponent<EnemyHealth>();
+        }
+
+        if (isAdmiral2Boss)
+        {
+            ConfigureAdmiral2Boss(boss);
+            SpawnBaktinNiAdmiralsOnPlatforms();
+        }
+        else if (bossHealth != null && bossHealth.enemyElement == ElementType.Water)
+        {
+            ConfigureWaterBoss(boss);
+        }
 
         BossBadgeDropper dropper = boss.GetComponent<BossBadgeDropper>();
         if (dropper == null)
@@ -344,10 +436,300 @@ public class GameDirector : MonoBehaviour
         }
 
         if (dropper.badgeToDrop == null ||
-            dropper.badgeToDrop.elementType != boss.GetComponent<EnemyHealth>().enemyElement)
+            (bossHealth != null && dropper.badgeToDrop.elementType != bossHealth.enemyElement))
         {
-            dropper.badgeToDrop = GetBossBadgeDrop(boss.GetComponent<EnemyHealth>());
+            dropper.badgeToDrop = GetBossBadgeDrop(bossHealth);
         }
+    }
+
+    private void ConfigureAdmiral2Boss(GameObject boss)
+    {
+        boss.tag = "Boss";
+
+        Rigidbody2D bossRb = boss.GetComponent<Rigidbody2D>();
+        if (bossRb == null)
+        {
+            bossRb = boss.AddComponent<Rigidbody2D>();
+        }
+
+        bossRb.bodyType = RigidbodyType2D.Dynamic;
+        bossRb.gravityScale = 1f;
+        bossRb.mass = 1000f;
+        bossRb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        bossRb.freezeRotation = true;
+
+        CircleCollider2D bossCollider = boss.GetComponent<CircleCollider2D>();
+        if (bossCollider == null)
+        {
+            bossCollider = boss.AddComponent<CircleCollider2D>();
+        }
+
+        bossCollider.radius = 0.75f;
+        bossCollider.offset = Vector2.zero;
+
+        SpriteRenderer bossRenderer = boss.GetComponent<SpriteRenderer>();
+        if (bossRenderer != null)
+        {
+            bossRenderer.sortingOrder = Mathf.Max(bossRenderer.sortingOrder, 30);
+        }
+
+        Animator bossAnimator = boss.GetComponent<Animator>();
+        if (bossAnimator == null)
+        {
+            bossAnimator = boss.AddComponent<Animator>();
+        }
+
+        RuntimeAnimatorController bossController = Resources.Load<RuntimeAnimatorController>("Admiral2BossAnimator");
+        if (bossController != null)
+        {
+            bossAnimator.runtimeAnimatorController = bossController;
+        }
+
+        boss.transform.localScale = Vector3.one * 5.4f;
+
+        EnemyHealth bossHealth = boss.GetComponent<EnemyHealth>();
+        if (bossHealth == null)
+        {
+            bossHealth = boss.AddComponent<EnemyHealth>();
+        }
+
+        bossHealth.isBoss = true;
+        bossHealth.health = 400f;
+        bossHealth.baseSpeed = 2.5f;
+        bossHealth.bossTier = 5;
+        bossHealth.enemyElement = ElementType.Wind;
+        bossHealth.allowBuiltInMovement = false;
+        bossHealth.damageReceivedMultiplier = 0.55f;
+        bossHealth.bossHealthBarOffset = new Vector3(0f, 0.60f, 0f);
+        bossHealth.bossHealthBarSize = new Vector2(3.2f, 0.24f);
+
+        Admiral2Boss admiral2Boss = boss.GetComponent<Admiral2Boss>();
+        if (admiral2Boss == null)
+        {
+            admiral2Boss = boss.AddComponent<Admiral2Boss>();
+        }
+
+        StageConfig stage = GetCurrentStage();
+        WaveConfig summonWave = stage != null && stage.waves != null && stage.waves.Length > 0
+            ? stage.waves[stage.waves.Length - 1]
+            : null;
+        if (summonWave != null)
+        {
+            admiral2Boss.SetLaughSummonPrefabs(summonWave.enemyPrefabs);
+        }
+
+    }
+
+    private void ConfigureWaterBoss(GameObject boss)
+    {
+        if (boss == null)
+        {
+            return;
+        }
+
+        WaterBossDash dash = boss.GetComponent<WaterBossDash>();
+        if (dash == null)
+        {
+            dash = boss.AddComponent<WaterBossDash>();
+        }
+
+        Rigidbody2D bossRb = boss.GetComponent<Rigidbody2D>();
+        if (bossRb != null)
+        {
+            bossRb.gravityScale = 0f;
+            bossRb.freezeRotation = true;
+            bossRb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        }
+    }
+
+    private void SpawnBaktinNiAdmiralsOnPlatforms()
+    {
+        GameObject prefab = baktinNiAdmiralPrefab;
+        if (prefab == null)
+        {
+            prefab = Resources.Load<GameObject>("BaktinNiAdmiral2_0");
+        }
+
+        if (prefab == null)
+        {
+            Debug.LogWarning("BaktinNiAdmiral2_0 prefab was not found in Resources.");
+            return;
+        }
+
+        DestroyExistingBaktinNiAdmirals();
+
+        Collider2D[] platforms = GetBaktinPatrolPlatforms();
+        if (platforms.Length == 0)
+        {
+            Debug.LogWarning("No platforms were found for BaktinNiAdmiral patrol spawns.");
+            return;
+        }
+
+        for (int i = 0; i < platforms.Length; i++)
+        {
+            Bounds platformBounds = platforms[i].bounds;
+            float spawnFromLeft = i % 2 == 0 ? 1f : -1f;
+            float spawnX = spawnFromLeft > 0f
+                ? platformBounds.min.x + baktinNiAdmiralPlatformEdgePadding
+                : platformBounds.max.x - baktinNiAdmiralPlatformEdgePadding;
+            Vector3 spawnPosition = new Vector3(
+                spawnX,
+                platformBounds.max.y + baktinNiAdmiralSpawnHeight,
+                0f
+            );
+
+            GameObject baktin = Instantiate(prefab, spawnPosition, Quaternion.identity);
+            ConfigureBaktinNiAdmiral(baktin, platformBounds, spawnFromLeft);
+        }
+    }
+
+    private void DestroyExistingBaktinNiAdmirals()
+    {
+        PlatformPatrolEnemy[] existingBaktins = FindObjectsByType<PlatformPatrolEnemy>(FindObjectsSortMode.None);
+        for (int i = 0; i < existingBaktins.Length; i++)
+        {
+            if (existingBaktins[i] != null)
+            {
+                Destroy(existingBaktins[i].gameObject);
+            }
+        }
+    }
+
+    private Collider2D[] GetBaktinPatrolPlatforms()
+    {
+        int platformLayer = LayerMask.NameToLayer("Platforms");
+        Collider2D[] colliders = FindObjectsByType<Collider2D>(FindObjectsSortMode.None);
+        System.Collections.Generic.List<Collider2D> platforms = new System.Collections.Generic.List<Collider2D>();
+
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            Collider2D collider = colliders[i];
+            if (collider == null ||
+                collider.isTrigger ||
+                collider.gameObject.layer != platformLayer ||
+                collider.bounds.size.x < 3f ||
+                collider.CompareTag("Player") ||
+                collider.GetComponentInParent<EnemyHealth>() != null)
+            {
+                continue;
+            }
+
+            platforms.Add(collider);
+        }
+
+        return platforms.ToArray();
+    }
+
+    private void ConfigureBaktinNiAdmiral(GameObject baktin, Bounds platformBounds, float initialDirection)
+    {
+        if (baktin == null)
+        {
+            return;
+        }
+
+        baktin.name = "BaktinNiAdmiral";
+        baktin.tag = "Enemy";
+        baktin.transform.localScale = Vector3.one * baktinNiAdmiralScale;
+
+        Rigidbody2D rb = baktin.GetComponent<Rigidbody2D>();
+        if (rb == null)
+        {
+            rb = baktin.AddComponent<Rigidbody2D>();
+        }
+
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        rb.gravityScale = 1f;
+        rb.mass = 1000f;
+        rb.freezeRotation = true;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
+        Collider2D collider = baktin.GetComponent<Collider2D>();
+        if (collider == null)
+        {
+            BoxCollider2D box = baktin.AddComponent<BoxCollider2D>();
+            box.size = new Vector2(0.6f, 0.4f);
+            box.offset = Vector2.zero;
+        }
+
+        SpriteRenderer renderer = baktin.GetComponentInChildren<SpriteRenderer>();
+        if (renderer != null)
+        {
+            renderer.sortingOrder = Mathf.Max(renderer.sortingOrder, 30);
+        }
+
+        EnemyHealth health = baktin.GetComponent<EnemyHealth>();
+        if (health == null)
+        {
+            health = baktin.AddComponent<EnemyHealth>();
+        }
+
+        health.health = 80f;
+        health.baseSpeed = 2.2f;
+        health.enemyElement = ElementType.Wind;
+        health.isBoss = false;
+        health.allowBuiltInMovement = false;
+
+        PlatformPatrolEnemy patrol = baktin.GetComponent<PlatformPatrolEnemy>();
+        if (patrol == null)
+        {
+            patrol = baktin.AddComponent<PlatformPatrolEnemy>();
+        }
+
+        patrol.walkSpeed = 2.2f;
+        patrol.contactDamage = 12f;
+        patrol.playerKnockbackForce = 10f;
+        patrol.playerKnockbackUpwardVelocity = 4f;
+        patrol.playerKnockbackDuration = 0.22f;
+        patrol.groundLayerMask = LayerMask.GetMask("Platforms", "Default");
+        patrol.SetPatrolBounds(
+            platformBounds.min.x + baktinNiAdmiralPlatformEdgePadding,
+            platformBounds.max.x - baktinNiAdmiralPlatformEdgePadding
+        );
+        patrol.SetDirection(initialDirection);
+    }
+
+    private Vector3 GetBottomFloorBossSpawnPosition()
+    {
+        Collider2D bottomFloor = null;
+        float lowestTop = float.PositiveInfinity;
+
+        Collider2D[] colliders = FindObjectsByType<Collider2D>(FindObjectsSortMode.None);
+        foreach (Collider2D collider in colliders)
+        {
+            if (collider == null || collider.isTrigger)
+            {
+                continue;
+            }
+
+            GameObject colliderObject = collider.gameObject;
+            if (colliderObject.CompareTag("Player") ||
+                colliderObject.GetComponent<EnemyHealth>() != null ||
+                colliderObject.GetComponentInParent<EnemyHealth>() != null)
+            {
+                continue;
+            }
+
+            Bounds bounds = collider.bounds;
+            if (bounds.size.x < 4f)
+            {
+                continue;
+            }
+
+            if (bounds.max.y < lowestTop)
+            {
+                lowestTop = bounds.max.y;
+                bottomFloor = collider;
+            }
+        }
+
+        if (bottomFloor == null)
+        {
+            return playerTransform.position + new Vector3(0f, 8.5f, 0f);
+        }
+
+        Bounds floorBounds = bottomFloor.bounds;
+        float spawnX = Mathf.Clamp(playerTransform.position.x, floorBounds.min.x + 1f, floorBounds.max.x - 1f);
+        return new Vector3(spawnX, floorBounds.max.y + 2f, 0f);
     }
 
     public void OnBossDefeated(int tier)
@@ -360,6 +742,12 @@ public class GameDirector : MonoBehaviour
         if (boss == null)
         {
             CompleteBossStage();
+            return;
+        }
+
+        if (boss.GetComponent<Admiral2Boss>() != null)
+        {
+            HandleFinalBossDefeat();
             return;
         }
 
@@ -406,7 +794,7 @@ public class GameDirector : MonoBehaviour
             return stage.badgeDrop;
         }
 
-        WeaponManager weaponManager = FindFirstObjectByType<WeaponManager>();
+        WeaponManager weaponManager = FindAnyObjectByType<WeaponManager>();
         if (weaponManager == null || weaponManager.allWands == null || boss == null)
         {
             return null;
@@ -426,6 +814,226 @@ public class GameDirector : MonoBehaviour
         }
 
         return null;
+    }
+
+    private void HandleSkipLevelShortcut()
+    {
+        if (skipShortcutTriggered || gameWon || string.IsNullOrEmpty(Input.inputString))
+        {
+            return;
+        }
+
+        foreach (char typedChar in Input.inputString)
+        {
+            if (typedChar == '\b')
+            {
+                if (typedSkipInput.Length > 0)
+                {
+                    typedSkipInput = typedSkipInput.Substring(0, typedSkipInput.Length - 1);
+                }
+
+                continue;
+            }
+
+            if (!char.IsLetterOrDigit(typedChar) && !char.IsWhiteSpace(typedChar))
+            {
+                continue;
+            }
+
+            typedSkipInput += char.ToLowerInvariant(typedChar);
+            if (typedSkipInput.Length > 10)
+            {
+                typedSkipInput = typedSkipInput.Substring(typedSkipInput.Length - 10);
+            }
+
+            string normalized = NormalizeShortcutInput(typedSkipInput);
+            string target = NormalizeShortcutInput("admiral 2");
+            if (normalized == target)
+            {
+                SkipToFinalLevel();
+                skipShortcutTriggered = true;
+                return;
+            }
+
+            if (!target.StartsWith(normalized))
+            {
+                typedSkipInput = string.Empty;
+            }
+        }
+    }
+
+    private string NormalizeShortcutInput(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return string.Empty;
+        }
+
+        string normalized = string.Empty;
+        foreach (char c in input)
+        {
+            if (!char.IsWhiteSpace(c))
+            {
+                normalized += char.ToLowerInvariant(c);
+            }
+        }
+
+        return normalized;
+    }
+
+    private void SkipToFinalLevel()
+    {
+        if (stages == null || stages.Length == 0)
+        {
+            return;
+        }
+
+        int finalStageIndex = stages.Length - 1;
+        ClearExistingCombatants();
+
+        currentStageIndex = finalStageIndex;
+        currentWaveIndex = 0;
+        enemiesSpawnedThisWave = 0;
+        enemiesDefeatedThisWave = 0;
+        waitingForNextWave = false;
+        waitingForBossBadgePickup = false;
+        bossActiveOrPending = false;
+        gameWon = false;
+        victoryPanel = null;
+        nextSpawnTime = Time.time;
+
+        StageConfig stage = GetCurrentStage();
+        if (stage == null)
+        {
+            return;
+        }
+
+        if (stage.waves == null || stage.waves.Length == 0)
+        {
+            SpawnBoss();
+            return;
+        }
+
+        currentWaveIndex = stage.waves.Length;
+        SpawnBoss();
+    }
+
+    private void ClearExistingCombatants()
+    {
+        EnemyHealth[] enemies = FindObjectsByType<EnemyHealth>();
+        foreach (EnemyHealth enemy in enemies)
+        {
+            if (enemy == null || enemy.gameObject == null)
+            {
+                continue;
+            }
+
+            if (enemy.gameObject.CompareTag("Player"))
+            {
+                continue;
+            }
+
+            Destroy(enemy.gameObject);
+        }
+    }
+
+    private void HandleFinalBossDefeat()
+    {
+        bossActiveOrPending = false;
+        waitingForBossBadgePickup = false;
+        gameWon = true;
+        ClearExistingCombatants();
+        ShowVictoryPanel();
+        Time.timeScale = 0f;
+    }
+
+    private void ShowVictoryPanel()
+    {
+        if (victoryPanel != null)
+        {
+            victoryPanel.SetActive(true);
+            return;
+        }
+
+        Canvas canvas = FindAnyObjectByType<Canvas>();
+        if (canvas == null)
+        {
+            GameObject canvasObject = new GameObject("VictoryCanvas");
+            canvas = canvasObject.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = 200;
+            canvasObject.AddComponent<CanvasScaler>();
+            canvasObject.AddComponent<GraphicRaycaster>();
+        }
+
+        victoryPanel = new GameObject("VictoryPanel");
+        victoryPanel.transform.SetParent(canvas.transform, false);
+
+        RectTransform panelRect = victoryPanel.AddComponent<RectTransform>();
+        panelRect.anchorMin = Vector2.zero;
+        panelRect.anchorMax = Vector2.one;
+        panelRect.offsetMin = Vector2.zero;
+        panelRect.offsetMax = Vector2.zero;
+
+        Image overlay = victoryPanel.AddComponent<Image>();
+        overlay.color = new Color(0.06f, 0.22f, 0.12f, 0.82f);
+
+        GameObject titleObject = new GameObject("VictoryText");
+        titleObject.transform.SetParent(victoryPanel.transform, false);
+
+        RectTransform titleRect = titleObject.AddComponent<RectTransform>();
+        titleRect.anchorMin = new Vector2(0.5f, 0.5f);
+        titleRect.anchorMax = new Vector2(0.5f, 0.5f);
+        titleRect.pivot = new Vector2(0.5f, 0.5f);
+        titleRect.anchoredPosition = new Vector2(0f, 45f);
+        titleRect.sizeDelta = new Vector2(540f, 130f);
+
+        Text title = titleObject.AddComponent<Text>();
+        title.text = "CONGRATULATIONS!\nYou defeated Admiral 2!";
+        title.alignment = TextAnchor.MiddleCenter;
+        title.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        title.fontSize = 40;
+        title.color = Color.white;
+
+        GameObject buttonObject = new GameObject("PlayAgainButton");
+        buttonObject.transform.SetParent(victoryPanel.transform, false);
+
+        RectTransform buttonRect = buttonObject.AddComponent<RectTransform>();
+        buttonRect.anchorMin = new Vector2(0.5f, 0.5f);
+        buttonRect.anchorMax = new Vector2(0.5f, 0.5f);
+        buttonRect.pivot = new Vector2(0.5f, 0.5f);
+        buttonRect.anchoredPosition = new Vector2(0f, -80f);
+        buttonRect.sizeDelta = new Vector2(220f, 56f);
+
+        Image buttonImage = buttonObject.AddComponent<Image>();
+        buttonImage.color = new Color(0.18f, 0.62f, 0.26f, 1f);
+
+        Button playAgainButton = buttonObject.AddComponent<Button>();
+        playAgainButton.targetGraphic = buttonImage;
+        playAgainButton.onClick.AddListener(PlayAgain);
+
+        GameObject buttonTextObject = new GameObject("Text");
+        buttonTextObject.transform.SetParent(buttonObject.transform, false);
+
+        RectTransform buttonTextRect = buttonTextObject.AddComponent<RectTransform>();
+        buttonTextRect.anchorMin = Vector2.zero;
+        buttonTextRect.anchorMax = Vector2.one;
+        buttonTextRect.offsetMin = Vector2.zero;
+        buttonTextRect.offsetMax = Vector2.zero;
+
+        Text buttonText = buttonTextObject.AddComponent<Text>();
+        buttonText.text = "PLAY AGAIN";
+        buttonText.alignment = TextAnchor.MiddleCenter;
+        buttonText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        buttonText.fontSize = 24;
+        buttonText.color = Color.white;
+    }
+
+    private void PlayAgain()
+    {
+        Time.timeScale = 1f;
+        Scene activeScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(activeScene.buildIndex);
     }
 
     private void CompleteBossStage()

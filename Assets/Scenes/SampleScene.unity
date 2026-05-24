@@ -625,7 +625,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f453f694addf4275988fac205bc91968, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineConfiner2D
   BoundingShape2D: {fileID: 1437608508}
   Damping: 0.5
@@ -645,7 +645,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
   Priority:
     Enabled: 0
@@ -660,7 +660,7 @@ MonoBehaviour:
     CustomLookAtTarget: 0
   Lens:
     FieldOfView: 34
-    OrthographicSize: 3.85
+    OrthographicSize: 4.26
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -703,7 +703,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b617507da6d07e749b7efdb34e1173e1, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineFollow
   TrackerSettings:
     BindingMode: 4
@@ -750,8 +750,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_RenderShadows: 1
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
@@ -819,7 +819,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 3.85
+  orthographic size: 4.26
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -844,7 +844,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.16679877, y: -1.1442595, z: -10}
+  m_LocalPosition: {x: -0.16679877, y: -0.7342596, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -860,7 +860,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineBrain
   ShowDebugText: 0
   ShowCameraFrustum: 1
@@ -924,8 +924,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 54a825a0677a530449a75dd4ecd5a543, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   stages:
   - stageName: Earth Stage
     waves:
@@ -951,6 +951,17 @@ MonoBehaviour:
       - {fileID: 100000, guid: fbe052ce5bc74c1691eb1314e001cd18, type: 3}
     bossPrefab: {fileID: 4754518623609711788, guid: 00085e28555a6674d810f8640044fb0b, type: 3}
     badgeDrop: {fileID: 11400000, guid: 2fbb3bc8c0a34effad2948303b2ed47f, type: 2}
+  - stageName: Final Showdown
+    waves:
+    - waveName: Mixed Element Wave
+      enemiesToSpawn: 18
+      enemyPrefabs:
+      - {fileID: 100000, guid: d6e1949159d04540af6433277f874550, type: 3}
+      - {fileID: 100000, guid: 94e05a8846ea435c96f791bd1e5efba1, type: 3}
+      - {fileID: 100000, guid: fbe052ce5bc74c1691eb1314e001cd18, type: 3}
+      - {fileID: 100000, guid: 6b1c6e9afc7f4a7b98d8ce2f7421c102, type: 3}
+    bossPrefab: {fileID: 7766717611197441085, guid: 2a7c8d4f752e8f94797dc4f5baf004d5, type: 3}
+    badgeDrop: {fileID: 0}
   spawnInterval: 1
   timeBetweenWaves: 4
   minSpawnDistance: 8
@@ -958,6 +969,12 @@ MonoBehaviour:
   minAirSpawnHeightAbovePlayer: 10
   maxAirSpawnHeightAbovePlayer: 10
   floorSpawnPoints: []
+  windNormalEnemyScaleMultiplier: 1.45
+  waterNormalEnemyScaleMultiplier: 0.7
+  baktinNiAdmiralPrefab: {fileID: 0}
+  baktinNiAdmiralScale: 3
+  baktinNiAdmiralPlatformEdgePadding: 0.8
+  baktinNiAdmiralSpawnHeight: 0.8
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -985,8 +1002,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_ComponentVersion: 2
   m_LightType: 4
   m_BlendStyleIndex: 0
@@ -1371,7 +1388,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55961336ac5b1ee46ad9c31ac9cdfcc5, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponManager
   wandPivot: {fileID: 391709119}
   firePoint: {fileID: 9521008}
@@ -1382,8 +1399,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2fbb3bc8c0a34effad2948303b2ed47f, type: 2}
   unlockedWands: 01000000
   basicFireCooldown: 0.1
+  earthBasicFireCooldown: 0.65
   controlledProjectileFollowSpeed: 28
   heldProjectileSpawnTravelSpeed: 10
+  streamHoldDelay: 0.25
+  playerFireStateName: Player_Fire
+  streamMuzzleOffset: {x: -0.35, y: 0}
   showElementInventory: 1
   inventorySlotSize: {x: 48, y: 48}
   inventorySpacing: {x: 8, y: 0}
@@ -1397,7 +1418,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4cc00bb4d62b1b84590afb95281dbe81, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerResources
   maxHealth: 100
   currentHealth: 0
@@ -1410,7 +1431,7 @@ MonoBehaviour:
   contactDamageCooldown: 1
   enemyContactRadius: 0.95
   createHealthBarIfMissing: 1
-  healthBarPosition: {x: 28, y: -16}
+  healthBarPosition: {x: 28, y: -28}
   healthBarSize: {x: 240, y: 22}
   gameOverDelay: 1
 --- !u!114 &1476606681
@@ -1423,7 +1444,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 385cc669afc2c9a48a4f25a09f19b17b, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 6
   frictionlessMovementMaterial: {fileID: 0}
@@ -1597,7 +1618,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage:
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0

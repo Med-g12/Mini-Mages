@@ -6,9 +6,11 @@ public class EnemyHealth : MonoBehaviour
     public float health = 30f;
     public float baseSpeed = 2.5f;
     public bool isBoss = false;
+    public bool isInvulnerable = false;
     public int bossTier = 1;
     public ElementType enemyElement = ElementType.Earth;
     public float hitFlashDuration = 0.12f;
+    public float damageReceivedMultiplier = 1f;
 
     [Header("Boss UI")]
     public Vector3 bossHealthBarOffset = new Vector3(0f, 0.25f, 0f);
@@ -30,6 +32,9 @@ public class EnemyHealth : MonoBehaviour
     private Transform bossHealthFill;
     private bool isHitFlashing;
     private static Sprite bossHealthBarSprite;
+
+    [Tooltip("Disable the built-in chase logic for bosses that handle movement themselves.")]
+    public bool allowBuiltInMovement = true;
 
     public bool IsHitFlashing => isHitFlashing;
 
@@ -59,6 +64,7 @@ public class EnemyHealth : MonoBehaviour
 
     void Update()
     {
+        if (!allowBuiltInMovement) return;
         if (enemyMovement != null) return;
         if (Time.time < externalKnockbackEndTime) return;
 
@@ -108,10 +114,27 @@ public class EnemyHealth : MonoBehaviour
 
     public void TakeDamage(float amount)
     {
-        health -= amount;
+        if (isInvulnerable)
+        {
+            return;
+        }
+
+        float adjustedAmount = amount * damageReceivedMultiplier;
+        health -= adjustedAmount;
         FlashRed();
         UpdateBossHealthBar();
         if (health <= 0) Die();
+    }
+
+    public void Heal(float amount)
+    {
+        if (amount <= 0f || health <= 0f)
+        {
+            return;
+        }
+
+        health = Mathf.Min(health + amount, maxHealth);
+        UpdateBossHealthBar();
     }
 
     public void ApplySlow(float multiplier, float duration)
@@ -327,7 +350,7 @@ public class EnemyHealth : MonoBehaviour
             Destroy(bossHealthBarObject);
         }
 
-        GameDirector director = FindFirstObjectByType<GameDirector>();
+        GameDirector director = FindAnyObjectByType<GameDirector>();
         if (director != null)
         {
             if (isBoss) director.OnBossDefeated(this);

@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
     private float horizontalInput;
+    private float externalKnockbackUntil;
     private Collider2D playerCollider;
     private Collider2D[] playerColliders;
     private SpriteRenderer spriteRenderer;
@@ -55,9 +56,6 @@ public class PlayerController : MonoBehaviour
     private Camera mainCamera;
     private WeaponManager weaponManager;
     private float nextBasicFireTime = 0f;
-
-    // Tracks whether we are currently airborne
-    private bool isJumping = false;
 
     void Awake()
     {
@@ -155,10 +153,21 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (Time.time < externalKnockbackUntil)
+        {
+            return;
+        }
+
         rb.linearVelocity = new Vector2(
             horizontalInput * moveSpeed,
             rb.linearVelocity.y
         );
+    }
+
+    public void ApplyExternalKnockback(Vector2 velocity, float duration)
+    {
+        externalKnockbackUntil = Mathf.Max(externalKnockbackUntil, Time.time + duration);
+        rb.linearVelocity = velocity;
     }
 
     private void HandleFireInput()
@@ -335,7 +344,6 @@ public class PlayerController : MonoBehaviour
             if (!wasGrounded)
             {
                 jumpCount = 0;
-                isJumping = false;
             }
         }
         else
@@ -363,7 +371,6 @@ public class PlayerController : MonoBehaviour
         jumpCount++;
 
         isGrounded = false;
-        isJumping = true;
         lastJumpTime = Time.time;
     }
 
