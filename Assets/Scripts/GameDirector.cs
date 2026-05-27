@@ -11,6 +11,21 @@ public class GameDirector : MonoBehaviour
         public string waveName = "Wave";
         [Min(0)] public int enemiesToSpawn = 10;
         public GameObject[] enemyPrefabs;
+        public ElementWaveConfig[] elementSpawns =
+        {
+            new ElementWaveConfig { element = ElementType.Wind },
+            new ElementWaveConfig { element = ElementType.Water },
+            new ElementWaveConfig { element = ElementType.Earth },
+            new ElementWaveConfig { element = ElementType.Fire }
+        };
+    }
+
+    [Serializable]
+    public class ElementWaveConfig
+    {
+        public ElementType element = ElementType.Earth;
+        [Min(0)] public int enemiesToSpawn = 0;
+        public GameObject[] enemyPrefabs;
     }
 
     [Serializable]
@@ -57,6 +72,7 @@ public class GameDirector : MonoBehaviour
     private int currentWaveIndex = 0;
     private int enemiesSpawnedThisWave = 0;
     private int enemiesDefeatedThisWave = 0;
+    private int[] enemiesSpawnedByElementThisWave = new int[0];
     private float nextSpawnTime = 0f;
     private bool waitingForNextWave = false;
     private bool waitingForBossBadgePickup = false;
@@ -98,7 +114,9 @@ public class GameDirector : MonoBehaviour
         WaveConfig wave = GetCurrentWave();
         if (wave == null) return;
 
-        int enemyCount = Mathf.Max(0, wave.enemiesToSpawn);
+        EnsureElementSpawnCounters(wave);
+
+        int enemyCount = GetWaveEnemyCount(wave);
         if (enemyCount <= 0)
         {
             CompleteCurrentWave();
@@ -169,13 +187,34 @@ public class GameDirector : MonoBehaviour
 
     private GameObject GetRandomEnemyPrefab(WaveConfig wave)
     {
-        if (wave == null || wave.enemyPrefabs == null || wave.enemyPrefabs.Length == 0)
+        ElementWaveConfig elementConfig = GetRandomElementSpawnConfig(wave);
+        if (elementConfig != null)
+        {
+            GameObject prefab = GetRandomPrefabFromArray(elementConfig.enemyPrefabs);
+            if (prefab == null)
+            {
+                prefab = GetRandomEnemyPrefabForElement(wave.enemyPrefabs, elementConfig.element);
+            }
+
+            if (prefab != null)
+            {
+                MarkElementSpawned(wave, elementConfig);
+                return prefab;
+            }
+        }
+
+        return GetRandomPrefabFromArray(wave != null ? wave.enemyPrefabs : null);
+    }
+
+    private GameObject GetRandomPrefabFromArray(GameObject[] prefabs)
+    {
+        if (prefabs == null || prefabs.Length == 0)
         {
             return null;
         }
 
         int validCount = 0;
-        foreach (GameObject prefab in wave.enemyPrefabs)
+        foreach (GameObject prefab in prefabs)
         {
             if (prefab != null)
             {
@@ -189,7 +228,7 @@ public class GameDirector : MonoBehaviour
         }
 
         int roll = UnityEngine.Random.Range(0, validCount);
-        foreach (GameObject prefab in wave.enemyPrefabs)
+        foreach (GameObject prefab in prefabs)
         {
             if (prefab == null) continue;
             if (roll == 0)
@@ -201,6 +240,161 @@ public class GameDirector : MonoBehaviour
         }
 
         return null;
+    }
+
+    private GameObject GetRandomEnemyPrefabForElement(GameObject[] prefabs, ElementType element)
+    {
+        if (prefabs == null || prefabs.Length == 0)
+        {
+            return null;
+        }
+
+        System.Collections.Generic.List<GameObject> matches = new System.Collections.Generic.List<GameObject>();
+        for (int i = 0; i < prefabs.Length; i++)
+        {
+            if (prefabs[i] != null && GetPrefabElement(prefabs[i]) == element)
+            {
+                matches.Add(prefabs[i]);
+            }
+        }
+
+        return matches.Count > 0
+            ? matches[UnityEngine.Random.Range(0, matches.Count)]
+            : null;
+    }
+
+    private ElementWaveConfig GetRandomElementSpawnConfig(WaveConfig wave)
+    {
+        if (wave == null || !HasElementSpawnControls(wave))
+        {
+            return null;
+        }
+
+        EnsureElementSpawnCounters(wave);
+
+        int remainingTotal = 0;
+        for (int i = 0; i < wave.elementSpawns.Length; i++)
+        {
+            ElementWaveConfig config = wave.elementSpawns[i];
+            int remaining = config != null ? Mathf.Max(0, config.enemiesToSpawn) - GetElementSpawnedCount(i) : 0;
+            remainingTotal += Mathf.Max(0, remaining);
+        }
+
+        if (remainingTotal <= 0)
+        {
+            return null;
+        }
+
+        int roll = UnityEngine.Random.Range(0, remainingTotal);
+        for (int i = 0; i < wave.elementSpawns.Length; i++)
+        {
+            ElementWaveConfig config = wave.elementSpawns[i];
+            int remaining = config != null ? Mathf.Max(0, config.enemiesToSpawn) - GetElementSpawnedCount(i) : 0;
+            if (remaining <= 0)
+            {
+                continue;
+            }
+
+            if (roll < remaining)
+            {
+                return config;
+            }
+
+            roll -= remaining;
+        }
+
+        return null;
+    }
+
+    private void MarkElementSpawned(WaveConfig wave, ElementWaveConfig elementConfig)
+    {
+        if (wave == null || elementConfig == null || wave.elementSpawns == null)
+        {
+            return;
+        }
+
+        EnsureElementSpawnCounters(wave);
+        for (int i = 0; i < wave.elementSpawns.Length; i++)
+        {
+            if (wave.elementSpawns[i] == elementConfig)
+            {
+                enemiesSpawnedByElementThisWave[i]++;
+                return;
+            }
+        }
+    }
+
+    private int GetElementSpawnedCount(int index)
+    {
+        return enemiesSpawnedByElementThisWave != null &&
+               index >= 0 &&
+               index < enemiesSpawnedByElementThisWave.Length
+            ? enemiesSpawnedByElementThisWave[index]
+            : 0;
+    }
+
+    private int GetWaveEnemyCount(WaveConfig wave)
+    {
+        if (wave == null)
+        {
+            return 0;
+        }
+
+        if (!HasElementSpawnControls(wave))
+        {
+            return Mathf.Max(0, wave.enemiesToSpawn);
+        }
+
+        int total = 0;
+        for (int i = 0; i < wave.elementSpawns.Length; i++)
+        {
+            if (wave.elementSpawns[i] != null)
+            {
+                total += Mathf.Max(0, wave.elementSpawns[i].enemiesToSpawn);
+            }
+        }
+
+        return total;
+    }
+
+    private bool HasElementSpawnControls(WaveConfig wave)
+    {
+        if (wave == null || wave.elementSpawns == null)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < wave.elementSpawns.Length; i++)
+        {
+            if (wave.elementSpawns[i] != null && wave.elementSpawns[i].enemiesToSpawn > 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void EnsureElementSpawnCounters(WaveConfig wave)
+    {
+        int count = wave != null && wave.elementSpawns != null ? wave.elementSpawns.Length : 0;
+        if (enemiesSpawnedByElementThisWave == null ||
+            enemiesSpawnedByElementThisWave.Length != count)
+        {
+            enemiesSpawnedByElementThisWave = new int[count];
+        }
+    }
+
+    private ElementType GetPrefabElement(GameObject prefab)
+    {
+        EnemyMovement movement = prefab != null ? prefab.GetComponent<EnemyMovement>() : null;
+        if (movement != null)
+        {
+            return movement.enemyElement;
+        }
+
+        EnemyHealth health = prefab != null ? prefab.GetComponent<EnemyHealth>() : null;
+        return health != null ? health.enemyElement : ElementType.Earth;
     }
 
     private Vector3 GetSpawnPosition(GameObject enemyPrefab)
@@ -339,6 +533,7 @@ public class GameDirector : MonoBehaviour
 
         enemiesSpawnedThisWave = 0;
         enemiesDefeatedThisWave = 0;
+        ResetElementSpawnCounters();
         waitingForNextWave = true;
         Invoke(nameof(StartNextWave), timeBetweenWaves);
     }
@@ -348,6 +543,7 @@ public class GameDirector : MonoBehaviour
         waitingForNextWave = false;
         enemiesSpawnedThisWave = 0;
         enemiesDefeatedThisWave = 0;
+        ResetElementSpawnCounters();
         nextSpawnTime = Time.time;
     }
 
@@ -515,9 +711,41 @@ public class GameDirector : MonoBehaviour
             : null;
         if (summonWave != null)
         {
-            admiral2Boss.SetLaughSummonPrefabs(summonWave.enemyPrefabs);
+            admiral2Boss.SetLaughSummonPrefabs(GetAllWaveEnemyPrefabs(summonWave));
         }
 
+    }
+
+    private GameObject[] GetAllWaveEnemyPrefabs(WaveConfig wave)
+    {
+        System.Collections.Generic.List<GameObject> prefabs = new System.Collections.Generic.List<GameObject>();
+        AddPrefabs(prefabs, wave != null ? wave.enemyPrefabs : null);
+
+        if (wave != null && wave.elementSpawns != null)
+        {
+            for (int i = 0; i < wave.elementSpawns.Length; i++)
+            {
+                AddPrefabs(prefabs, wave.elementSpawns[i] != null ? wave.elementSpawns[i].enemyPrefabs : null);
+            }
+        }
+
+        return prefabs.ToArray();
+    }
+
+    private void AddPrefabs(System.Collections.Generic.List<GameObject> destination, GameObject[] prefabs)
+    {
+        if (destination == null || prefabs == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < prefabs.Length; i++)
+        {
+            if (prefabs[i] != null && !destination.Contains(prefabs[i]))
+            {
+                destination.Add(prefabs[i]);
+            }
+        }
     }
 
     private void ConfigureWaterBoss(GameObject boss)
@@ -895,6 +1123,7 @@ public class GameDirector : MonoBehaviour
         currentWaveIndex = 0;
         enemiesSpawnedThisWave = 0;
         enemiesDefeatedThisWave = 0;
+        ResetElementSpawnCounters();
         waitingForNextWave = false;
         waitingForBossBadgePickup = false;
         bossActiveOrPending = false;
@@ -1044,7 +1273,13 @@ public class GameDirector : MonoBehaviour
         currentWaveIndex = 0;
         enemiesSpawnedThisWave = 0;
         enemiesDefeatedThisWave = 0;
+        ResetElementSpawnCounters();
         waitingForNextWave = false;
         nextSpawnTime = Time.time + timeBetweenWaves;
+    }
+
+    private void ResetElementSpawnCounters()
+    {
+        enemiesSpawnedByElementThisWave = new int[0];
     }
 }

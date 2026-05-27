@@ -49,11 +49,14 @@ public class PlatformPatrolEnemy : MonoBehaviour
         lockedZ = transform.position.z;
         patrolX = transform.position.x;
         IgnoreEnemyCollisions();
+        IgnorePlayerCollisions();
         EnsureNameTag();
     }
 
     private void FixedUpdate()
     {
+        TryDamageNearbyPlayer();
+
         if (ShouldTurnAround())
         {
             direction *= -1f;
@@ -73,6 +76,37 @@ public class PlatformPatrolEnemy : MonoBehaviour
         if (spriteRenderer != null)
         {
             spriteRenderer.flipX = direction < 0f;
+        }
+    }
+
+    private void TryDamageNearbyPlayer()
+    {
+        if (Time.time < nextContactDamageTime || bodyCollider == null)
+        {
+            return;
+        }
+
+        PlayerResources resources = FindAnyObjectByType<PlayerResources>();
+        if (resources == null)
+        {
+            return;
+        }
+
+        Collider2D playerCollider = resources.GetComponent<Collider2D>();
+        if (playerCollider == null)
+        {
+            playerCollider = resources.GetComponentInChildren<Collider2D>();
+        }
+
+        if (playerCollider != null)
+        {
+            ColliderDistance2D distance = bodyCollider.Distance(playerCollider);
+            if (distance.isOverlapped || distance.distance <= 0.05f)
+            {
+                resources.TakeDamage(contactDamage);
+                KnockbackPlayer(resources);
+                nextContactDamageTime = Time.time + contactDamageCooldown;
+            }
         }
     }
 
@@ -210,6 +244,29 @@ public class PlatformPatrolEnemy : MonoBehaviour
         for (int i = 0; i < colliders.Length; i++)
         {
             TryIgnoreNonPlayerNonPlatform(colliders[i]);
+        }
+    }
+
+    private void IgnorePlayerCollisions()
+    {
+        if (bodyCollider == null)
+        {
+            return;
+        }
+
+        PlayerResources resources = FindAnyObjectByType<PlayerResources>();
+        if (resources == null)
+        {
+            return;
+        }
+
+        Collider2D[] playerColliders = resources.GetComponentsInChildren<Collider2D>();
+        for (int i = 0; i < playerColliders.Length; i++)
+        {
+            if (playerColliders[i] != null)
+            {
+                Physics2D.IgnoreCollision(bodyCollider, playerColliders[i], true);
+            }
         }
     }
 

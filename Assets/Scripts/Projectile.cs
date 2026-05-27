@@ -15,6 +15,7 @@ public class Projectile : MonoBehaviour
     public ProjectileImpactMode impactMode = ProjectileImpactMode.SingleTarget;
     public float knockbackForce = 0f;
     public float knockbackDuration = 0.2f;
+    public bool windImpactAoE = false;
 
     [Header("Area Effect")]
     public float areaRadius = 2.25f;
@@ -209,6 +210,13 @@ public class Projectile : MonoBehaviour
                     return;
                 }
 
+                if (element == ElementType.Wind && windImpactAoE)
+                {
+                    ApplyWindImpactAoE();
+                    Destroy(gameObject);
+                    return;
+                }
+
                 ApplyElementHit(enemy);
                 if (impactMode == ProjectileImpactMode.WaterSpray ||
                     impactMode == ProjectileImpactMode.FireBreath)
@@ -365,6 +373,27 @@ public class Projectile : MonoBehaviour
             {
                 ApplyElementHit(enemy);
             }
+        }
+    }
+
+    private void ApplyWindImpactAoE()
+    {
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, areaRadius, enemyLayers);
+        foreach (Collider2D hit in hits)
+        {
+            EnemyHealth enemy = hit.GetComponent<EnemyHealth>();
+            if (enemy == null)
+            {
+                enemy = hit.GetComponentInParent<EnemyHealth>();
+            }
+
+            if (enemy == null || hitEnemies.Contains(enemy))
+            {
+                continue;
+            }
+
+            hitEnemies.Add(enemy);
+            ApplyElementHit(enemy);
         }
     }
 

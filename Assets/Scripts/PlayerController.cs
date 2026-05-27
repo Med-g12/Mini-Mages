@@ -166,6 +166,11 @@ public class PlayerController : MonoBehaviour
 
     public void ApplyExternalKnockback(Vector2 velocity, float duration)
     {
+        if (weaponManager != null)
+        {
+            weaponManager.CancelHeldBasicFire();
+        }
+
         externalKnockbackUntil = Mathf.Max(externalKnockbackUntil, Time.time + duration);
         rb.linearVelocity = velocity;
     }

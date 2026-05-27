@@ -66,6 +66,7 @@ public class EnemyMovement : MonoBehaviour
         rb.freezeRotation = true;
 
         IgnoreEnemyOnlyObstacles();
+        IgnorePlayerCollisions();
 
         EnsureVisibilityMarker();
     }
@@ -305,6 +306,29 @@ public class EnemyMovement : MonoBehaviour
                 IsBoundaryCollider(other))
             {
                 Physics2D.IgnoreCollision(enemyCollider, other, true);
+            }
+        }
+    }
+
+    private void IgnorePlayerCollisions()
+    {
+        if (enemyCollider == null)
+        {
+            return;
+        }
+
+        PlayerResources playerResources = FindAnyObjectByType<PlayerResources>();
+        if (playerResources == null)
+        {
+            return;
+        }
+
+        Collider2D[] playerColliders = playerResources.GetComponentsInChildren<Collider2D>();
+        for (int i = 0; i < playerColliders.Length; i++)
+        {
+            if (playerColliders[i] != null)
+            {
+                Physics2D.IgnoreCollision(enemyCollider, playerColliders[i], true);
             }
         }
     }

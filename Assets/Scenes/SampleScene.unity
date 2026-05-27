@@ -933,6 +933,19 @@ MonoBehaviour:
       enemiesToSpawn: 20
       enemyPrefabs:
       - {fileID: 100000, guid: d6e1949159d04540af6433277f874550, type: 3}
+      elementSpawns:
+      - element: 0
+        enemiesToSpawn: 0
+        enemyPrefabs: []
+      - element: 1
+        enemiesToSpawn: 0
+        enemyPrefabs: []
+      - element: 2
+        enemiesToSpawn: 0
+        enemyPrefabs: []
+      - element: 3
+        enemiesToSpawn: 0
+        enemyPrefabs: []
     bossPrefab: {fileID: 6551586121070330101, guid: 0be4abd8547292d42852f48171147013, type: 3}
     badgeDrop: {fileID: 11400000, guid: 684296789f5c4e08a0208db7c207f673, type: 2}
   - stageName: Water Stage
@@ -941,6 +954,19 @@ MonoBehaviour:
       enemiesToSpawn: 20
       enemyPrefabs:
       - {fileID: 100000, guid: 94e05a8846ea435c96f791bd1e5efba1, type: 3}
+      elementSpawns:
+      - element: 0
+        enemiesToSpawn: 0
+        enemyPrefabs: []
+      - element: 1
+        enemiesToSpawn: 0
+        enemyPrefabs: []
+      - element: 2
+        enemiesToSpawn: 0
+        enemyPrefabs: []
+      - element: 3
+        enemiesToSpawn: 0
+        enemyPrefabs: []
     bossPrefab: {fileID: 6987567159529471374, guid: a47862505c404dc4fadd6b0c7c52db63, type: 3}
     badgeDrop: {fileID: 11400000, guid: 7f6fdb3fc9164b348904f9237a73270b, type: 2}
   - stageName: Fire Stage
@@ -949,6 +975,19 @@ MonoBehaviour:
       enemiesToSpawn: 20
       enemyPrefabs:
       - {fileID: 100000, guid: fbe052ce5bc74c1691eb1314e001cd18, type: 3}
+      elementSpawns:
+      - element: 0
+        enemiesToSpawn: 0
+        enemyPrefabs: []
+      - element: 1
+        enemiesToSpawn: 0
+        enemyPrefabs: []
+      - element: 2
+        enemiesToSpawn: 0
+        enemyPrefabs: []
+      - element: 3
+        enemiesToSpawn: 0
+        enemyPrefabs: []
     bossPrefab: {fileID: 4754518623609711788, guid: 00085e28555a6674d810f8640044fb0b, type: 3}
     badgeDrop: {fileID: 11400000, guid: 2fbb3bc8c0a34effad2948303b2ed47f, type: 2}
   - stageName: Final Showdown
@@ -960,9 +999,22 @@ MonoBehaviour:
       - {fileID: 100000, guid: 94e05a8846ea435c96f791bd1e5efba1, type: 3}
       - {fileID: 100000, guid: fbe052ce5bc74c1691eb1314e001cd18, type: 3}
       - {fileID: 100000, guid: 6b1c6e9afc7f4a7b98d8ce2f7421c102, type: 3}
+      elementSpawns:
+      - element: 0
+        enemiesToSpawn: 0
+        enemyPrefabs: []
+      - element: 1
+        enemiesToSpawn: 0
+        enemyPrefabs: []
+      - element: 2
+        enemiesToSpawn: 0
+        enemyPrefabs: []
+      - element: 3
+        enemiesToSpawn: 0
+        enemyPrefabs: []
     bossPrefab: {fileID: 7766717611197441085, guid: 2a7c8d4f752e8f94797dc4f5baf004d5, type: 3}
     badgeDrop: {fileID: 0}
-  spawnInterval: 1
+  spawnInterval: 0.1
   timeBetweenWaves: 4
   minSpawnDistance: 8
   maxSpawnDistance: 18
@@ -1403,6 +1455,15 @@ MonoBehaviour:
   controlledProjectileFollowSpeed: 28
   heldProjectileSpawnTravelSpeed: 10
   streamHoldDelay: 0.25
+  windChargeTimeToMax: 1.5
+  windMaxChargeScaleMultiplier: 2.2
+  windMinChargedKnockbackForce: 8
+  windMaxChargedKnockbackForce: 28
+  windMinChargedKnockbackDuration: 0.2
+  windMaxChargedKnockbackDuration: 0.8
+  windChargeSpinSpeed: 720
+  windMinImpactAreaRadius: 1.25
+  windMaxImpactAreaRadius: 3.25
   playerFireStateName: Player_Fire
   streamMuzzleOffset: {x: -0.35, y: 0}
   showElementInventory: 1
@@ -1430,10 +1491,19 @@ MonoBehaviour:
   enemyContactDamage: 10
   contactDamageCooldown: 1
   enemyContactRadius: 0.95
+  bossContactKnockbackForce: 12
+  bossContactKnockbackUpwardVelocity: 4
+  bossContactKnockbackDuration: 0.22
+  damageFlashDuration: 0.12
+  damageFlashBlinks: 3
   createHealthBarIfMissing: 1
   healthBarPosition: {x: 28, y: -28}
   healthBarSize: {x: 240, y: 22}
   gameOverDelay: 1
+  lowHealthBorderThreshold: 0.3
+  lowHealthBorderBlinkSpeed: 7
+  lowHealthBorderMaxAlpha: 0.75
+  lowHealthBorderThickness: 16
 --- !u!114 &1476606681
 MonoBehaviour:
   m_ObjectHideFlags: 0

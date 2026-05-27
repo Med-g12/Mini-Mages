@@ -23,12 +23,17 @@ public class PlayerResources : MonoBehaviour
     public float bossContactKnockbackUpwardVelocity = 4f;
     public float bossContactKnockbackDuration = 0.22f;
     public float damageFlashDuration = 0.12f;
+    public int damageFlashBlinks = 3;
 
     [Header("Auto UI")]
     public bool createHealthBarIfMissing = true;
     public Vector2 healthBarPosition = new Vector2(48f, -16f);
     public Vector2 healthBarSize = new Vector2(240f, 22f);
     public float gameOverDelay = 1f;
+    [Range(0.01f, 1f)] public float lowHealthBorderThreshold = 0.3f;
+    public float lowHealthBorderBlinkSpeed = 7f;
+    public float lowHealthBorderMaxAlpha = 0.75f;
+    public float lowHealthBorderThickness = 16f;
 
     private float nextContactDamageTime;
     private bool isDead;
@@ -37,6 +42,7 @@ public class PlayerResources : MonoBehaviour
     private Coroutine damageFlashRoutine;
     private GameObject gameOverPanel;
     private RectTransform healthFillRect;
+    private Image[] lowHealthBorderImages;
     private SpriteRenderer[] spriteRenderers;
     private Color[] baseSpriteColors;
 
@@ -48,10 +54,13 @@ public class PlayerResources : MonoBehaviour
         EnsureHealthBar();
         UpdateHealthBar();
         UpdateManaBar();
+        EnsureLowHealthBorder();
     }
 
     void Update()
     {
+        UpdateLowHealthBorder();
+
         if (isDead || isKnockedDown) return;
 
         if (currentMana < maxMana)
@@ -228,8 +237,17 @@ public class PlayerResources : MonoBehaviour
 
     private IEnumerator DamageFlashRoutine()
     {
-        SetSpriteColors(Color.red);
-        yield return new WaitForSeconds(damageFlashDuration);
+        int blinkCount = Mathf.Max(1, damageFlashBlinks);
+        float blinkStepDuration = damageFlashDuration / blinkCount;
+
+        for (int i = 0; i < blinkCount; i++)
+        {
+            SetSpriteColors(Color.red);
+            yield return new WaitForSeconds(blinkStepDuration * 0.5f);
+            RestoreSpriteColors();
+            yield return new WaitForSeconds(blinkStepDuration * 0.5f);
+        }
+
         RestoreSpriteColors();
         damageFlashRoutine = null;
     }
@@ -288,6 +306,7 @@ public class PlayerResources : MonoBehaviour
 
         if (weaponManager != null)
         {
+            weaponManager.CancelHeldBasicFire();
             weaponManager.enabled = false;
         }
 
@@ -354,6 +373,7 @@ public class PlayerResources : MonoBehaviour
         WeaponManager weaponManager = GetComponent<WeaponManager>();
         if (weaponManager != null)
         {
+            weaponManager.CancelHeldBasicFire();
             weaponManager.enabled = false;
         }
 
@@ -567,6 +587,93 @@ public class PlayerResources : MonoBehaviour
         continueLabel.color = Color.white;
     }
 
+    private void EnsureLowHealthBorder()
+    {
+        if (lowHealthBorderImages != null && lowHealthBorderImages.Length > 0)
+        {
+            return;
+        }
+
+        Canvas canvas = FindAnyObjectByType<Canvas>();
+        if (canvas == null)
+        {
+            GameObject canvasObject = new GameObject("PlayerHUDCanvas");
+            canvas = canvasObject.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvasObject.AddComponent<CanvasScaler>();
+            canvasObject.AddComponent<GraphicRaycaster>();
+        }
+
+        GameObject borderRoot = new GameObject("LowHealthBorder");
+        borderRoot.transform.SetParent(canvas.transform, false);
+        RectTransform rootRect = borderRoot.AddComponent<RectTransform>();
+        rootRect.anchorMin = Vector2.zero;
+        rootRect.anchorMax = Vector2.one;
+        rootRect.offsetMin = Vector2.zero;
+        rootRect.offsetMax = Vector2.zero;
+
+        lowHealthBorderImages = new Image[4];
+        lowHealthBorderImages[0] = CreateBorderImage(borderRoot.transform, "Top", new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, lowHealthBorderThickness));
+        lowHealthBorderImages[1] = CreateBorderImage(borderRoot.transform, "Bottom", Vector2.zero, new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, lowHealthBorderThickness));
+        lowHealthBorderImages[2] = CreateBorderImage(borderRoot.transform, "Left", Vector2.zero, new Vector2(0f, 1f), new Vector2(0f, 0.5f), new Vector2(lowHealthBorderThickness, 0f));
+        lowHealthBorderImages[3] = CreateBorderImage(borderRoot.transform, "Right", new Vector2(1f, 0f), Vector2.one, new Vector2(1f, 0.5f), new Vector2(lowHealthBorderThickness, 0f));
+        SetLowHealthBorderAlpha(0f);
+    }
+
+    private Image CreateBorderImage(Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 sizeDelta)
+    {
+        GameObject borderObject = new GameObject(name);
+        borderObject.transform.SetParent(parent, false);
+
+        RectTransform rect = borderObject.AddComponent<RectTransform>();
+        rect.anchorMin = anchorMin;
+        rect.anchorMax = anchorMax;
+        rect.pivot = pivot;
+        rect.anchoredPosition = Vector2.zero;
+        rect.sizeDelta = sizeDelta;
+
+        Image image = borderObject.AddComponent<Image>();
+        image.raycastTarget = false;
+        image.color = new Color(1f, 0f, 0f, 0f);
+        return image;
+    }
+
+    private void UpdateLowHealthBorder()
+    {
+        EnsureLowHealthBorder();
+
+        if (lowHealthBorderImages == null)
+        {
+            return;
+        }
+
+        float healthPercent = maxHealth > 0f ? currentHealth / maxHealth : 0f;
+        if (isDead || healthPercent > lowHealthBorderThreshold)
+        {
+            SetLowHealthBorderAlpha(0f);
+            return;
+        }
+
+        float pulse = (Mathf.Sin(Time.unscaledTime * lowHealthBorderBlinkSpeed) + 1f) * 0.5f;
+        SetLowHealthBorderAlpha(pulse * lowHealthBorderMaxAlpha);
+    }
+
+    private void SetLowHealthBorderAlpha(float alpha)
+    {
+        if (lowHealthBorderImages == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < lowHealthBorderImages.Length; i++)
+        {
+            if (lowHealthBorderImages[i] != null)
+            {
+                lowHealthBorderImages[i].color = new Color(1f, 0f, 0f, alpha);
+            }
+        }
+    }
+
     private void RestartScene()
     {
         Time.timeScale = 1f;
@@ -624,22 +731,7 @@ public class PlayerResources : MonoBehaviour
 
     private void RestoreEnemyCollisions()
     {
-        Collider2D[] playerColliders = GetComponentsInChildren<Collider2D>();
-        EnemyMovement[] enemies = FindObjectsByType<EnemyMovement>();
-
-        foreach (Collider2D playerCollider in playerColliders)
-        {
-            foreach (EnemyMovement enemy in enemies)
-            {
-                if (enemy == null) continue;
-
-                Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
-                if (enemyCollider != null)
-                {
-                    Physics2D.IgnoreCollision(playerCollider, enemyCollider, false);
-                }
-            }
-        }
+        // Enemies stay non-physical with the player; contact damage is handled by overlap checks.
     }
 
     private void EnsureEventSystem()

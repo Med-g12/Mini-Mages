@@ -14,6 +14,10 @@ public class Admiral2Boss : MonoBehaviour
     public float groundPoundTakeoffGrace = 0.2f;
     public float groundPoundMaxDuration = 3.5f;
     public float groundPoundRadius = 2.4f;
+    public float groundPoundKnockbackRadius = 6f;
+    public float groundPoundKnockbackForce = 24f;
+    public float groundPoundKnockbackUpwardVelocity = 5f;
+    public float groundPoundKnockbackDuration = 0.35f;
     public float groundPoundShakeDuration = 0.28f;
     public float groundPoundShakeStrength = 0.35f;
     public float groundPoundAnimationSpeed = 1.2f;
@@ -399,7 +403,8 @@ public class Admiral2Boss : MonoBehaviour
         returnToIdleRoutine = StartCoroutine(FinishAttackAfterDelay(groundPoundImpactAnimationHold));
 
         Vector3 impactPoint = GetFeetPosition();
-        Collider2D[] nearbyPlayers = Physics2D.OverlapCircleAll(impactPoint, groundPoundRadius);
+        float impactRadius = Mathf.Max(groundPoundRadius, groundPoundKnockbackRadius);
+        Collider2D[] nearbyPlayers = Physics2D.OverlapCircleAll(impactPoint, impactRadius);
         foreach (Collider2D nearby in nearbyPlayers)
         {
             if (nearby == null || nearby == GetComponent<Collider2D>())
@@ -415,8 +420,22 @@ public class Admiral2Boss : MonoBehaviour
 
             if (resources != null)
             {
-                resources.TakeNonlethalDamage(groundPoundDamage);
-                resources.ApplyKnockdown(impactPoint, knockdownDuration);
+                float distanceToImpact = Vector2.Distance(resources.transform.position, impactPoint);
+                if (distanceToImpact <= groundPoundRadius)
+                {
+                    resources.TakeNonlethalDamage(groundPoundDamage);
+                    resources.ApplyKnockdown(impactPoint, knockdownDuration);
+                }
+                else if (distanceToImpact <= groundPoundKnockbackRadius)
+                {
+                    KnockbackPlayerFromPoint(
+                        resources,
+                        impactPoint,
+                        groundPoundKnockbackForce,
+                        groundPoundKnockbackUpwardVelocity,
+                        groundPoundKnockbackDuration
+                    );
+                }
             }
         }
     }
@@ -1133,6 +1152,52 @@ public class Admiral2Boss : MonoBehaviour
         {
             StartCoroutine(PushPlayerForDuration(playerRb, direction, force, blowPushDuration));
         }
+    }
+
+    private void KnockbackPlayerFromPoint(
+        PlayerResources resources,
+        Vector3 sourcePosition,
+        float force,
+        float upwardVelocity,
+        float duration
+    )
+    {
+        if (resources == null)
+        {
+            return;
+        }
+
+        Rigidbody2D playerRb = resources.GetComponent<Rigidbody2D>();
+        if (playerRb == null)
+        {
+            playerRb = resources.GetComponentInParent<Rigidbody2D>();
+        }
+
+        if (playerRb == null)
+        {
+            return;
+        }
+
+        float xDifference = resources.transform.position.x - sourcePosition.x;
+        float direction = Mathf.Abs(xDifference) > 0.15f ? Mathf.Sign(xDifference) : GetFacingDirection();
+        Vector2 knockbackVelocity = new Vector2(direction * force, upwardVelocity);
+
+        PlayerController playerController = resources.GetComponent<PlayerController>();
+        if (playerController == null)
+        {
+            playerController = resources.GetComponentInParent<PlayerController>();
+        }
+
+        if (playerController != null)
+        {
+            playerController.ApplyExternalKnockback(knockbackVelocity, duration);
+        }
+        else
+        {
+            playerRb.linearVelocity = knockbackVelocity;
+        }
+
+        playerRb.AddForce(new Vector2(direction * force * 0.35f, upwardVelocity * 0.4f), ForceMode2D.Impulse);
     }
 
     private float GetKnockbackDirection(Transform target)
