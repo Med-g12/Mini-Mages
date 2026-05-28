@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &920000000000000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 920000000000000002}
+  - component: {fileID: 920000000000000003}
+  - component: {fileID: 920000000000000004}
+  - component: {fileID: 920000000000000005}
+  - component: {fileID: 920000000000000006}
+  m_Layer: 0
+  m_Name: WaterProjectilePlayer
+  m_TagString: Untagged
+  m_IsActive: 1
+--- !u!4 &920000000000000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 920000000000000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.8, y: 1.8, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+--- !u!212 &920000000000000003
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 920000000000000001}
+  m_Enabled: 1
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_SortingOrder: 10
+  m_Sprite: {fileID: 7562051503014276381, guid: d9c0485a0abc13840a81af73dc0c2c74, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_WasSpriteAssigned: 1
+--- !u!50 &920000000000000004
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 920000000000000001}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_CollisionDetection: 1
+--- !u!58 &920000000000000005
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 920000000000000001}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_IsTrigger: 1
+  m_Offset: {x: 0.55, y: 0}
+  m_Radius: 0.85
+--- !u!114 &920000000000000006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 920000000000000001}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: b34ed7610c2d02f44adfca173b4385b4, type: 3}
+  m_EditorClassIdentifier: Assembly-CSharp::Projectile
+  element: 1
+  speed: 13
+  damage: 4
+  lifetime: 0.75
+  spinSpeed: 0
+  isHeldByPlayer: 0
+  impactMode: 2
+  knockbackForce: 0
+  knockbackDuration: 0.2
+  areaRadius: 1.1
+  areaDamageMultiplier: 0.45
+  enemyLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  tickInterval: 0.15
+  canDamageWhileHeld: 0
+  heldAttachOffset: {x: 0, y: 0}
+  waterSlowMultiplier: 0.35
+  waterSlowDuration: 1.5
+  startupAnimationFrames: []
+  animationFrames:
+  - {fileID: 7562051503014276381, guid: d9c0485a0abc13840a81af73dc0c2c74, type: 3}
+  - {fileID: -8692598661924546958, guid: d9c0485a0abc13840a81af73dc0c2c74, type: 3}
+  - {fileID: -3450082043103890147, guid: d9c0485a0abc13840a81af73dc0c2c74, type: 3}
+  - {fileID: 5472649329318242861, guid: d9c0485a0abc13840a81af73dc0c2c74, type: 3}
+  - {fileID: 4500288318245535633, guid: d9c0485a0abc13840a81af73dc0c2c74, type: 3}
+  - {fileID: -2965425499395623024, guid: d9c0485a0abc13840a81af73dc0c2c74, type: 3}
+  framesPerSecond: 16
+  showTrail: 1
+  trailTime: 0.08
+  trailStartWidth: 0.28
+  trailEndWidth: 0.08
+  trailStartColor: {r: 0.85, g: 1, b: 1, a: 0.75}
+  trailEndColor: {r: 0.85, g: 1, b: 1, a: 0}

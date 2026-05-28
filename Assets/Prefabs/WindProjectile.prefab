@@ -175,6 +175,20 @@ MonoBehaviour:
   lifetime: 3
   spinSpeed: 720
   isHeldByPlayer: 0
+  impactMode: 0
+  knockbackForce: 5
+  knockbackDuration: 0.14
+  areaRadius: 2.25
+  areaDamageMultiplier: 1
+  enemyLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  tickInterval: 0.2
+  canDamageWhileHeld: 0
+  heldAttachOffset: {x: 0, y: 0}
+  startupAnimationFrames: []
+  animationFrames: []
+  framesPerSecond: 12
   showTrail: 1
   trailTime: 0.18
   trailStartWidth: 0.16

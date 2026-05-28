@@ -9,6 +9,7 @@ public class WandData : ScriptableObject
 
     [Header("Basic Attack")]
     public GameObject basicProjectilePrefab;
+    public GameObject heldBasicProjectilePrefab;
     public float basicManaCost = 0f;
 
     [Header("Q Skill")]

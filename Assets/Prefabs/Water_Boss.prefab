@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 3572058951492437267}
   - component: {fileID: 7876646208969407873}
   - component: {fileID: 1026538485861334297}
+  - component: {fileID: 6047281382661044021}
   m_Layer: 0
   m_Name: Water_Boss
   m_TagString: Boss
@@ -244,3 +245,26 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.6
+--- !u!114 &6047281382661044021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6987567159529471374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2a612d989e1467fa3daedb7d1069a51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WaterBossDash
+  approachSpeed: 3.5
+  dashInterval: 4
+  dashWindup: 0.35
+  dashDuration: 0.55
+  dashSpeed: 22
+  dashDamage: 18
+  dashKnockbackForce: 14
+  dashKnockbackUpwardVelocity: 3
+  dashKnockbackDuration: 0.25
+  minDashDistance: 2
+  windupColor: {r: 0.35, g: 0.9, b: 1, a: 1}

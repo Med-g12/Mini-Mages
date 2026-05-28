@@ -15,7 +15,8 @@ MonoBehaviour:
   wandName: Fire
   elementType: 3
   elementIcon: {fileID: 74115422740611732, guid: 915b3babc71361a49b4f49d7f89765d4, type: 3}
-  basicProjectilePrefab: {fileID: 7019178283928350698, guid: b590f7b1600836648898673c3aec0003, type: 3}
+  basicProjectilePrefab: {fileID: 930000000000000001, guid: 2ce9e228ec194f288a8e65aec6d20a57, type: 3}
+  heldBasicProjectilePrefab: {fileID: 950000000000000001, guid: 7a41e3b5ed914d4a8a7ee58405f4e861, type: 3}
   basicManaCost: 0
   qProjectilePrefab: {fileID: 0}
   qManaCost: 15
