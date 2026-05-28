@@ -19,6 +19,19 @@ public class PickupableItem : MonoBehaviour
     private bool pickedUp;
     private Collider2D pickupCollider;
 
+    [Header("Visual Effects")]
+    public bool enableVisualEffects = true;
+    public float bounceAmplitude = 0.15f;
+    public float bounceSpeed = 3f;
+    public float glowPulseSpeed = 4f;
+    public float minGlowScale = 0.9f;
+    public float maxGlowScale = 1.15f;
+    public float maxAuraScale = 1.65f;
+
+    private Vector3 startPosition;
+    private SpriteRenderer spriteRenderer;
+    private SpriteRenderer auraRenderer;
+
     private void Reset()
     {
         EnsurePickupPhysics();
@@ -27,16 +40,66 @@ public class PickupableItem : MonoBehaviour
     private void Awake()
     {
         EnsurePickupPhysics();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null)
+        {
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        }
     }
 
     private void Start()
     {
         TryPickupNearbyPlayer();
+
+        startPosition = transform.position;
+
+        if (enableVisualEffects && spriteRenderer != null && spriteRenderer.sprite != null)
+        {
+            GameObject auraObj = new GameObject("Aura");
+            auraObj.transform.SetParent(spriteRenderer.transform, false);
+            auraObj.transform.localPosition = new Vector3(0f, 0f, 0.1f);
+            
+            auraRenderer = auraObj.AddComponent<SpriteRenderer>();
+            auraRenderer.sprite = spriteRenderer.sprite;
+            auraRenderer.sortingOrder = spriteRenderer.sortingOrder - 1;
+        }
     }
 
     private void Update()
     {
         TryPickupNearbyPlayer();
+
+        if (!pickedUp && enableVisualEffects)
+        {
+            float newY = startPosition.y + Mathf.Sin(Time.time * bounceSpeed) * bounceAmplitude;
+            transform.position = new Vector3(transform.position.x, newY, transform.position.z);
+
+            float pulse = (Mathf.Sin(Time.time * glowPulseSpeed) + 1f) * 0.5f;
+            float scale = Mathf.Lerp(minGlowScale, maxGlowScale, pulse);
+            
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.transform.localScale = new Vector3(scale, scale, 1f);
+                float brightness = Mathf.Lerp(0.85f, 1.25f, pulse);
+                spriteRenderer.color = new Color(brightness, brightness, brightness, 1f);
+            }
+            else
+            {
+                transform.localScale = new Vector3(scale, scale, 1f);
+            }
+
+            if (auraRenderer != null)
+            {
+                float auraPulse = (Mathf.Sin(Time.time * glowPulseSpeed * 1.5f) + 1f) * 0.5f;
+                // Since aura is a child of spriteRenderer, we might need to adjust relative scale. 
+                // But spriteRenderer is scaling. We'll just scale auraRenderer locally.
+                float auraScale = Mathf.Lerp(1.0f, maxAuraScale, auraPulse) / scale; 
+                auraRenderer.transform.localScale = new Vector3(auraScale, auraScale, 1f);
+                
+                float alpha = Mathf.Lerp(0.6f, 0f, auraPulse);
+                auraRenderer.color = new Color(1f, 1f, 1f, alpha);
+            }
+        }
     }
 
     private void EnsurePickupPhysics()
@@ -178,7 +241,8 @@ public class PickupableItem : MonoBehaviour
         {
             if (controller != null && speedToAdd > 0f)
             {
-                controller.AddSpeedBuff(speedToAdd, buffDuration);
+                Sprite icon = spriteRenderer != null ? spriteRenderer.sprite : null;
+                controller.AddSpeedBuff(speedToAdd, buffDuration, icon);
                 applied = true;
             }
 

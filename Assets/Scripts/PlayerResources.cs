@@ -96,7 +96,6 @@ public class PlayerResources : MonoBehaviour
         if (currentHealth <= 0) Die();
     }
 
-<<<<<<< HEAD
     public void AddHealth(float amount)
     {
         if (isDead) return;
@@ -113,10 +112,7 @@ public class PlayerResources : MonoBehaviour
         UpdateManaBar();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-=======
     public void TakeNonlethalDamage(float amount)
->>>>>>> 719aaa973a146e102e89b21519a7adc25285c9af
     {
         if (isDead) return;
 

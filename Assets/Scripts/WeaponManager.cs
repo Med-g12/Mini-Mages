@@ -46,6 +46,9 @@ public class WeaponManager : MonoBehaviour
     private Image[] inventorySlotBackgrounds;
     private Image[] inventorySlotIcons;
 
+    private float damageBuffEndTime = 0f;
+    private float activeDamageBonus = 0f;
+
     void Start()
     {
         resources = GetComponent<PlayerResources>();
@@ -108,6 +111,8 @@ public class WeaponManager : MonoBehaviour
             FacePlayerToward(mousePos);
             FireProjectile(activeWand, activeWand.eProjectilePrefab, activeWand.eManaCost);
         }
+
+        UpdateDamageBuff();
     }
 
     void OnDisable()
@@ -680,14 +685,28 @@ public class WeaponManager : MonoBehaviour
             return;
         }
 
-        StartCoroutine(DamageBuffRoutine(damageAmount, duration));
+        if (Time.time >= damageBuffEndTime)
+        {
+            activeDamageBonus = damageAmount;
+            bonusProjectileDamage += activeDamageBonus;
+        }
+        else if (damageAmount > activeDamageBonus)
+        {
+            bonusProjectileDamage -= activeDamageBonus;
+            activeDamageBonus = damageAmount;
+            bonusProjectileDamage += activeDamageBonus;
+        }
+
+        damageBuffEndTime = Time.time + duration;
     }
 
-    private System.Collections.IEnumerator DamageBuffRoutine(float damageAmount, float duration)
+    private void UpdateDamageBuff()
     {
-        bonusProjectileDamage += damageAmount;
-        yield return new WaitForSeconds(duration);
-        bonusProjectileDamage -= damageAmount;
+        if (Time.time >= damageBuffEndTime && activeDamageBonus > 0f)
+        {
+            bonusProjectileDamage -= activeDamageBonus;
+            activeDamageBonus = 0f;
+        }
     }
 
     private void BuildElementInventoryUI()

@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -56,6 +57,17 @@ public class PlayerController : MonoBehaviour
     private Camera mainCamera;
     private WeaponManager weaponManager;
     private float nextBasicFireTime = 0f;
+
+    // Buff tracking
+    private float speedBuffEndTime = 0f;
+    private float activeSpeedBonus = 0f;
+    private float buffMaxDuration = 1f;
+    private Sprite currentBuffIcon;
+
+    // Buff Visuals & UI
+    private SpriteRenderer buffAuraRenderer;
+    private GameObject buffUIContainer;
+    private Image buffUITimerFill;
 
     void Awake()
     {
@@ -149,6 +161,9 @@ public class PlayerController : MonoBehaviour
 
         // Animations
         UpdateAnimations();
+
+        // Buff Logic
+        UpdateBuffs();
     }
 
     void FixedUpdate()
@@ -307,7 +322,7 @@ public class PlayerController : MonoBehaviour
         SetSpriteFacing(targetPosition.x < transform.position.x);
     }
 
-    public void AddSpeedBuff(float speedAmount, float duration)
+    public void AddSpeedBuff(float speedAmount, float duration, Sprite icon = null)
     {
         if (duration <= 0f)
         {
@@ -315,14 +330,160 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        StartCoroutine(SpeedBuffRoutine(speedAmount, duration));
+        if (Time.time >= speedBuffEndTime)
+        {
+            // Apply new buff
+            activeSpeedBonus = speedAmount;
+            moveSpeed += activeSpeedBonus;
+        }
+        else if (speedAmount > activeSpeedBonus)
+        {
+            // Upgrade existing buff
+            moveSpeed -= activeSpeedBonus;
+            activeSpeedBonus = speedAmount;
+            moveSpeed += activeSpeedBonus;
+        }
+
+        speedBuffEndTime = Time.time + duration;
+        buffMaxDuration = duration;
+        if (icon != null)
+        {
+            currentBuffIcon = icon;
+        }
+
+        EnsureBuffAura();
+        EnsureBuffUI();
     }
 
-    private IEnumerator SpeedBuffRoutine(float speedAmount, float duration)
+    private void UpdateBuffs()
     {
-        moveSpeed += speedAmount;
-        yield return new WaitForSeconds(duration);
-        moveSpeed -= speedAmount;
+        bool buffActive = Time.time < speedBuffEndTime;
+
+        if (!buffActive && activeSpeedBonus > 0f)
+        {
+            // Expire buff
+            moveSpeed -= activeSpeedBonus;
+            activeSpeedBonus = 0f;
+        }
+
+        // Aura logic
+        if (buffAuraRenderer != null)
+        {
+            if (buffActive)
+            {
+                buffAuraRenderer.enabled = true;
+                buffAuraRenderer.sprite = spriteRenderer.sprite; // Sync animation frame
+                float pulse = (Mathf.Sin(Time.time * 6f) + 1f) * 0.5f;
+                float auraScale = Mathf.Lerp(1.2f, 1.4f, pulse);
+                buffAuraRenderer.transform.localScale = new Vector3(auraScale, auraScale, 1f);
+                float alpha = Mathf.Lerp(0.2f, 0.6f, pulse);
+                buffAuraRenderer.color = new Color(1f, 0.8f, 0f, alpha); // Gold/Yellow
+            }
+            else
+            {
+                buffAuraRenderer.enabled = false;
+            }
+        }
+
+        // UI logic
+        if (buffUIContainer != null)
+        {
+            if (buffActive)
+            {
+                buffUIContainer.SetActive(true);
+                if (buffUITimerFill != null)
+                {
+                    float remaining = speedBuffEndTime - Time.time;
+                    buffUITimerFill.fillAmount = Mathf.Clamp01(remaining / buffMaxDuration);
+                }
+            }
+            else
+            {
+                buffUIContainer.SetActive(false);
+            }
+        }
+    }
+
+    private void EnsureBuffAura()
+    {
+        if (buffAuraRenderer != null) return;
+        if (spriteRenderer == null) return;
+
+        GameObject auraObj = new GameObject("BuffAura");
+        auraObj.transform.SetParent(spriteRenderer.transform, false);
+        auraObj.transform.localPosition = new Vector3(0f, 0f, 0.1f);
+        
+        buffAuraRenderer = auraObj.AddComponent<SpriteRenderer>();
+        buffAuraRenderer.sprite = spriteRenderer.sprite;
+        buffAuraRenderer.sortingOrder = spriteRenderer.sortingOrder - 1;
+        buffAuraRenderer.enabled = false;
+    }
+
+    private void EnsureBuffUI()
+    {
+        if (buffUIContainer != null) return;
+
+        Canvas canvas = FindAnyObjectByType<Canvas>();
+        if (canvas == null) return;
+
+        // Container
+        buffUIContainer = new GameObject("BuffTimerUI");
+        buffUIContainer.transform.SetParent(canvas.transform, false);
+        RectTransform containerRect = buffUIContainer.AddComponent<RectTransform>();
+        containerRect.anchorMin = new Vector2(1f, 1f);
+        containerRect.anchorMax = new Vector2(1f, 1f);
+        containerRect.pivot = new Vector2(1f, 1f);
+        containerRect.anchoredPosition = new Vector2(-20f, -20f);
+        containerRect.sizeDelta = new Vector2(80f, 100f);
+
+        // Icon
+        GameObject iconObj = new GameObject("Icon");
+        iconObj.transform.SetParent(buffUIContainer.transform, false);
+        RectTransform iconRect = iconObj.AddComponent<RectTransform>();
+        iconRect.anchorMin = new Vector2(0f, 0.2f);
+        iconRect.anchorMax = new Vector2(1f, 1f);
+        iconRect.offsetMin = Vector2.zero;
+        iconRect.offsetMax = Vector2.zero;
+        Image iconImage = iconObj.AddComponent<Image>();
+        iconImage.preserveAspect = true;
+        if (currentBuffIcon != null) 
+        {
+            iconImage.sprite = currentBuffIcon;
+        }
+
+        // Bar Background
+        GameObject bgObj = new GameObject("BarBackground");
+        bgObj.transform.SetParent(buffUIContainer.transform, false);
+        RectTransform bgRect = bgObj.AddComponent<RectTransform>();
+        bgRect.anchorMin = new Vector2(0f, 0f);
+        bgRect.anchorMax = new Vector2(1f, 0.15f);
+        bgRect.offsetMin = Vector2.zero;
+        bgRect.offsetMax = Vector2.zero;
+        Image bgImage = bgObj.AddComponent<Image>();
+        bgImage.color = new Color(0.1f, 0.1f, 0.1f, 0.8f);
+
+        // Bar Fill
+        GameObject fillObj = new GameObject("BarFill");
+        fillObj.transform.SetParent(bgObj.transform, false);
+        RectTransform fillRect = fillObj.AddComponent<RectTransform>();
+        fillRect.anchorMin = Vector2.zero;
+        fillRect.anchorMax = Vector2.one;
+        fillRect.offsetMin = new Vector2(2f, 2f);
+        fillRect.offsetMax = new Vector2(-2f, -2f);
+        buffUITimerFill = fillObj.AddComponent<Image>();
+        buffUITimerFill.color = new Color(1f, 0.8f, 0f, 1f);
+        
+        // Setup Fill behavior
+        // To use fillMethod, image needs a sprite, but we can use a blank texture
+        Texture2D blankTex = new Texture2D(1, 1);
+        blankTex.SetPixel(0, 0, Color.white);
+        blankTex.Apply();
+        Sprite blankSprite = Sprite.Create(blankTex, new Rect(0,0,1,1), new Vector2(0.5f, 0.5f));
+        buffUITimerFill.sprite = blankSprite;
+        buffUITimerFill.type = Image.Type.Filled;
+        buffUITimerFill.fillMethod = Image.FillMethod.Horizontal;
+        buffUITimerFill.fillOrigin = (int)Image.OriginHorizontal.Left;
+        buffUITimerFill.fillAmount = 1f;
     }
 
     private void CheckGroundedWithLaser()

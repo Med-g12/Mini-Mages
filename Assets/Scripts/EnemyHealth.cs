@@ -351,13 +351,12 @@ public class EnemyHealth : MonoBehaviour
             dropTable.TryDropItems();
         }
 
-        GameDirector director = FindFirstObjectByType<GameDirector>();
+        GameDirector director = FindAnyObjectByType<GameDirector>();
         if (bossHealthBarObject != null)
         {
             Destroy(bossHealthBarObject);
         }
 
-        GameDirector director = FindAnyObjectByType<GameDirector>();
         if (director != null)
         {
             if (isBoss) director.OnBossDefeated(this);
