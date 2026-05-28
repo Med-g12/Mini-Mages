@@ -51,6 +51,7 @@ public class PlayerResources : MonoBehaviour
 
     void Start()
     {
+        manaBarSize.y = healthBarSize.y; // Force mana bar height to match health bar height
         CacheSpriteRenderers();
         currentHealth = maxHealth;
         currentMana = maxMana;
