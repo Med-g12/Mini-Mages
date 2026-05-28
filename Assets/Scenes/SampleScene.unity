@@ -844,7 +844,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.16679877, y: -0.7342596, z: -10}
+  m_LocalPosition: {x: -0.16680372, y: -1.1442595, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -950,7 +950,6 @@ MonoBehaviour:
     badgeDrop: {fileID: 11400000, guid: 684296789f5c4e08a0208db7c207f673, type: 2}
   - stageName: Water Stage
     waves:
-<<<<<<< HEAD
     - waveName: Wave
       enemiesToSpawn: 5
       enemyPrefabs:
@@ -961,10 +960,6 @@ MonoBehaviour:
       - {fileID: 100000, guid: 94e05a8846ea435c96f791bd1e5efba1, type: 3}
     - waveName: Wave
       enemiesToSpawn: 10
-=======
-    - waveName: Water Wave
-      enemiesToSpawn: 20
->>>>>>> 719aaa973a146e102e89b21519a7adc25285c9af
       enemyPrefabs:
       - {fileID: 100000, guid: 94e05a8846ea435c96f791bd1e5efba1, type: 3}
       elementSpawns:
@@ -984,26 +979,24 @@ MonoBehaviour:
     badgeDrop: {fileID: 11400000, guid: 7f6fdb3fc9164b348904f9237a73270b, type: 2}
   - stageName: Fire Stage
     waves:
-    - waveName: Fire Wave
-      enemiesToSpawn: 20
+    - waveName: Wave
+      enemiesToSpawn: 5
       enemyPrefabs:
       - {fileID: 100000, guid: fbe052ce5bc74c1691eb1314e001cd18, type: 3}
-      elementSpawns:
-      - element: 0
-        enemiesToSpawn: 0
-        enemyPrefabs: []
-      - element: 1
-        enemiesToSpawn: 0
-        enemyPrefabs: []
-      - element: 2
-        enemiesToSpawn: 0
-        enemyPrefabs: []
-      - element: 3
-        enemiesToSpawn: 0
-        enemyPrefabs: []
+    - waveName: Wave
+      enemiesToSpawn: 5
+      enemyPrefabs:
+      - {fileID: 100000, guid: fbe052ce5bc74c1691eb1314e001cd18, type: 3}
+    - waveName: Wave
+      enemiesToSpawn: 10
+      enemyPrefabs:
+      - {fileID: 100000, guid: fbe052ce5bc74c1691eb1314e001cd18, type: 3}
+    - waveName: Wave
+      enemiesToSpawn: 10
+      enemyPrefabs: []
     bossPrefab: {fileID: 4754518623609711788, guid: 00085e28555a6674d810f8640044fb0b, type: 3}
-    badgeDrop: {fileID: 11400000, guid: 2fbb3bc8c0a34effad2948303b2ed47f, type: 2}
-  - stageName: Final Showdown
+    badgeDrop: {fileID: 0}
+  - stageName: Admiral
     waves:
     - waveName: Mixed Element Wave
       enemiesToSpawn: 18
@@ -1467,18 +1460,7 @@ MonoBehaviour:
   earthBasicFireCooldown: 0.65
   controlledProjectileFollowSpeed: 28
   heldProjectileSpawnTravelSpeed: 10
-  streamHoldDelay: 0.25
-  windChargeTimeToMax: 1.5
-  windMaxChargeScaleMultiplier: 2.2
-  windMinChargedKnockbackForce: 8
-  windMaxChargedKnockbackForce: 28
-  windMinChargedKnockbackDuration: 0.2
-  windMaxChargedKnockbackDuration: 0.8
-  windChargeSpinSpeed: 720
-  windMinImpactAreaRadius: 1.25
-  windMaxImpactAreaRadius: 3.25
-  playerFireStateName: Player_Fire
-  streamMuzzleOffset: {x: -0.35, y: 0}
+  bonusProjectileDamage: 0
   showElementInventory: 1
   inventorySlotSize: {x: 48, y: 48}
   inventorySpacing: {x: 8, y: 0}
