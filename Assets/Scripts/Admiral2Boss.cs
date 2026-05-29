@@ -4,8 +4,8 @@ public class Admiral2Boss : MonoBehaviour
 {
     public float moveSpeed = 2.5f;
     public float jumpForce = 28f;
-    public float attackInterval = 0.75f;
-    public float woundedAttackInterval = 0.45f;
+    public float attackInterval = 2.5f;
+    public float woundedAttackInterval = 1.5f;
     [Range(0.1f, 0.9f)] public float woundedHealthThreshold = 0.5f;
     public float groundPoundGapCloseDistance = 7f;
     public float groundPoundHorizontalSpeed = 8f;
@@ -25,16 +25,16 @@ public class Admiral2Boss : MonoBehaviour
     public float groundPoundAirborneMaxFrame = 0.68f;
     public float groundPoundImpactFrame = 0.78f;
     public float knockdownDuration = 1f;
-    public float groundPoundDamage = 24f;
+    public float groundPoundDamage = 30f;
     public float blowRadius = 9f;
     public float blowForce = 34f;
-    public float blowDamage = 15f;
+    public float blowDamage = 18f;
     public float blowPushDuration = 0.75f;
-    public float contactDamage = 12f;
+    public float contactDamage = 15f;
     public float contactKnockbackForce = 10f;
     public float contactDamageCooldown = 0.8f;
     public float incomingDamageMultiplier = 0.55f;
-    public float healAmount = 40f;
+    public float healAmount = 50f;
     public float attackAnimationSpeed = 0.6f;
     public int laughSummonCount = 15;
     public float laughSummonSpacing = 1.5f;
@@ -144,7 +144,7 @@ public class Admiral2Boss : MonoBehaviour
 
         SnapToGroundBelow();
 
-        maxHealth = enemyHealth != null ? enemyHealth.health : 400f;
+        maxHealth = enemyHealth != null ? enemyHealth.health : 550f;
         nextAttackTime = Time.time + attackInterval;
 
         if (animator != null)

@@ -309,7 +309,7 @@ public class Projectile : MonoBehaviour
             }
 
             hitEnemies.Add(enemy);
-            enemy.TakeDamage(damage * areaDamageMultiplier);
+            enemy.TakeDamage(damage * areaDamageMultiplier, element);
         }
     }
 
@@ -406,7 +406,7 @@ public class Projectile : MonoBehaviour
 
         if (element == ElementType.Wind)
         {
-            enemy.TakeDamage(damage);
+            enemy.TakeDamage(damage, element);
             if (!enemy.isBoss)
             {
                 ApplyKnockback(enemy);
@@ -414,13 +414,13 @@ public class Projectile : MonoBehaviour
         }
         if (element == ElementType.Water)
         {
-            enemy.TakeDamage(damage * areaDamageMultiplier);
+            enemy.TakeDamage(damage * areaDamageMultiplier, element);
             enemy.ApplySlow(waterSlowMultiplier, waterSlowDuration);
         }
-        if (element == ElementType.Earth) enemy.TakeDamage(damage * 2.5f);
+        if (element == ElementType.Earth) enemy.TakeDamage(damage * 2.5f, element);
         if (element == ElementType.Fire)
         {
-            enemy.TakeDamage(damage * areaDamageMultiplier);
+            enemy.TakeDamage(damage * areaDamageMultiplier, element);
             enemy.ApplyBurn(damage * 0.2f, 1.25f);
         }
     }

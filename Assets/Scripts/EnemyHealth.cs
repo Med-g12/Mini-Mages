@@ -36,6 +36,11 @@ public class EnemyHealth : MonoBehaviour
     [Tooltip("Disable the built-in chase logic for bosses that handle movement themselves.")]
     public bool allowBuiltInMovement = true;
 
+    [Header("Hit Flash Colors")]
+    public Color normalHitColor = new Color(1f, 0.4f, 0.4f, 1f); // Reddish
+    public Color superEffectiveHitColor = new Color(1f, 0.9f, 0.2f, 1f); // Golden/Yellow
+    public Color resistedHitColor = new Color(0.6f, 0.6f, 0.6f, 1f); // Greyish
+
     public bool IsHitFlashing => isHitFlashing;
 
     void Start()
@@ -114,16 +119,47 @@ public class EnemyHealth : MonoBehaviour
 
     public void TakeDamage(float amount)
     {
+        TakeDamage(amount, enemyElement); // Default to same element for neutral 1x damage if not specified
+    }
+
+    public void TakeDamage(float amount, ElementType sourceElement)
+    {
         if (isInvulnerable)
         {
             return;
         }
 
-        float adjustedAmount = amount * damageReceivedMultiplier;
+        float multiplier = GetElementalMultiplier(sourceElement, enemyElement);
+        float adjustedAmount = amount * damageReceivedMultiplier * multiplier;
+        
         health -= adjustedAmount;
-        FlashRed();
+
+        Color flashColor = normalHitColor;
+        if (multiplier > 1.2f) flashColor = superEffectiveHitColor;
+        else if (multiplier < 0.8f) flashColor = resistedHitColor;
+
+        FlashColor(flashColor);
         UpdateBossHealthBar();
         if (health <= 0) Die();
+    }
+
+    private float GetElementalMultiplier(ElementType attacker, ElementType defender)
+    {
+        if (attacker == defender) return 1f;
+
+        // Fire -> Wind -> Earth -> Water -> Fire
+        if (attacker == ElementType.Fire && defender == ElementType.Wind) return 1.5f;
+        if (attacker == ElementType.Wind && defender == ElementType.Earth) return 1.5f;
+        if (attacker == ElementType.Earth && defender == ElementType.Water) return 1.5f;
+        if (attacker == ElementType.Water && defender == ElementType.Fire) return 1.5f;
+
+        // Resisted
+        if (attacker == ElementType.Wind && defender == ElementType.Fire) return 0.5f;
+        if (attacker == ElementType.Earth && defender == ElementType.Wind) return 0.5f;
+        if (attacker == ElementType.Water && defender == ElementType.Earth) return 0.5f;
+        if (attacker == ElementType.Fire && defender == ElementType.Water) return 0.5f;
+
+        return 1f; // Neutral fallbacks for opposites
     }
 
     public void Heal(float amount)
@@ -209,40 +245,39 @@ public class EnemyHealth : MonoBehaviour
         externalKnockbackEndTime = Time.time + duration;
     }
 
-    private void FlashRed()
+    public void FlashColor(Color color)
     {
-        if (spriteRenderers == null || spriteRenderers.Length == 0)
-        {
-            return;
-        }
-
         if (hitFlashRoutine != null)
         {
             StopCoroutine(hitFlashRoutine);
         }
 
-        hitFlashRoutine = StartCoroutine(HitFlashRoutine());
+        hitFlashRoutine = StartCoroutine(HitFlashRoutine(color));
     }
 
-    private IEnumerator HitFlashRoutine()
+    private IEnumerator HitFlashRoutine(Color flashColor)
     {
         isHitFlashing = true;
-        SetSpriteColors(Color.red);
-        yield return new WaitForSeconds(hitFlashDuration);
-        RestoreSpriteColors();
-        isHitFlashing = false;
-        hitFlashRoutine = null;
-    }
-
-    private void SetSpriteColors(Color color)
-    {
         for (int i = 0; i < spriteRenderers.Length; i++)
         {
             if (spriteRenderers[i] != null)
             {
-                spriteRenderers[i].color = color;
+                spriteRenderers[i].color = flashColor;
             }
         }
+
+        yield return new WaitForSeconds(hitFlashDuration);
+
+        for (int i = 0; i < spriteRenderers.Length; i++)
+        {
+            if (spriteRenderers[i] != null)
+            {
+                spriteRenderers[i].color = baseColors[i];
+            }
+        }
+
+        isHitFlashing = false;
+        hitFlashRoutine = null;
     }
 
     private void RestoreSpriteColors()

@@ -15,36 +15,40 @@ public class EnemyDropTable : MonoBehaviour
 
     public void TryDropItems()
     {
-        if (drops == null || drops.Length == 0)
+        if (drops == null || drops.Length == 0) return;
+
+        float totalChance = 0f;
+        foreach (var drop in drops)
         {
-            return;
+            if (drop != null && drop.prefab != null)
+            {
+                totalChance += Mathf.Clamp(drop.dropChancePercent, 0f, 100f);
+            }
         }
 
+        if (totalChance <= 0f) return;
+
+        float roll = UnityEngine.Random.Range(0f, 100f);
+        float cumulative = 0f;
         Vector3 baseDropPosition = GetDropPosition();
-        foreach (DropEntry drop in drops)
+
+        foreach (var drop in drops)
         {
-            if (drop == null || drop.prefab == null)
-            {
-                continue;
-            }
-
+            if (drop == null || drop.prefab == null) continue;
+            
             float chance = Mathf.Clamp(drop.dropChancePercent, 0f, 100f);
-            if (UnityEngine.Random.value * 100f > chance)
+            cumulative += chance;
+            
+            if (roll <= cumulative)
             {
-                continue;
-            }
-
-            Vector3 dropPosition = baseDropPosition + (Vector3)drop.dropOffset;
-            GameObject droppedItem = Instantiate(drop.prefab, dropPosition, Quaternion.identity);
-            PickupableItem pickup = droppedItem.GetComponent<PickupableItem>();
-            if (pickup == null)
-            {
-                pickup = droppedItem.GetComponentInChildren<PickupableItem>();
-            }
-
-            if (pickup != null)
-            {
-                pickup.TryPickupNearbyPlayer();
+                Vector3 dropPosition = baseDropPosition + (Vector3)drop.dropOffset;
+                GameObject droppedItem = Instantiate(drop.prefab, dropPosition, Quaternion.identity);
+                
+                PickupableItem pickup = droppedItem.GetComponent<PickupableItem>();
+                if (pickup == null) pickup = droppedItem.GetComponentInChildren<PickupableItem>();
+                if (pickup != null) pickup.TryPickupNearbyPlayer();
+                
+                return; // Exit after dropping exactly ONE item
             }
         }
     }
@@ -72,4 +76,23 @@ public class EnemyDropTable : MonoBehaviour
 
         return transform.position;
     }
+
+#if UNITY_EDITOR
+    private void Reset()
+    {
+        drops = new DropEntry[3];
+        
+        drops[0] = new DropEntry();
+        drops[0].prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Health_Potion.prefab");
+        drops[0].dropChancePercent = 10f;
+        
+        drops[1] = new DropEntry();
+        drops[1].prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Mana_Potion.prefab");
+        drops[1].dropChancePercent = 10f;
+        
+        drops[2] = new DropEntry();
+        drops[2].prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Buff_Potion.prefab");
+        drops[2].dropChancePercent = 2.5f;
+    }
+#endif
 }

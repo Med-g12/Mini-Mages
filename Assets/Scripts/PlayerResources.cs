@@ -8,6 +8,8 @@ public class PlayerResources : MonoBehaviour
 {
     public float maxHealth = 100f;
     public float currentHealth;
+    public float healthRegenAmount = 1f;
+    public float healthRegenInterval = 2f;
     public float maxMana = 100f;
     public float currentMana;
     public float manaRegenAmount = 5f;
@@ -39,6 +41,7 @@ public class PlayerResources : MonoBehaviour
     public float lowHealthBorderThickness = 16f;
 
     private float nextContactDamageTime;
+    private float nextHealthRegenTime;
     private float nextManaRegenTime;
     private bool isDead;
     private bool isKnockedDown;
@@ -68,6 +71,16 @@ public class PlayerResources : MonoBehaviour
         UpdateLowHealthBorder();
 
         if (isDead || isKnockedDown) return;
+
+        if (currentHealth < maxHealth)
+        {
+            if (Time.time >= nextHealthRegenTime)
+            {
+                currentHealth = Mathf.Min(currentHealth + healthRegenAmount, maxHealth);
+                UpdateHealthBar();
+                nextHealthRegenTime = Time.time + healthRegenInterval;
+            }
+        }
 
         if (currentMana < maxMana)
         {

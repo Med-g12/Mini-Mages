@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PickupableItem
   healthToAdd: 0
-  manaToAdd: 40
+  manaToAdd: 50
   isBuff: 0
   speedToAdd: 0
   damageToAdd: 0

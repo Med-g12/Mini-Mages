@@ -239,12 +239,14 @@ MonoBehaviour:
   flapScaleAmount: 0.12
   flapSpeed: 8
   flapRotationAmount: 5
+  fireBossProjectilePrefab: {fileID: 0}
   highlightColor: {r: 1, g: 1, b: 1, a: 1}
   highlightPulseAmount: 0.35
   showVisibilityMarker: 1
   markerColor: {r: 1, g: 0.95, b: 0.1, a: 1}
   markerOffset: {x: 0, y: 0.68, z: 0}
   markerSize: 0.14
+  baseScale: {x: 0, y: 0, z: 0}
 --- !u!114 &9068368304220736597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -259,8 +261,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDropTable
   drops:
   - prefab: {fileID: 5175711495734363953, guid: b99932eb37757a54dad7483df867b3ee, type: 3}
-    dropChancePercent: 15
+    dropChancePercent: 10
+    dropOffset: {x: 0, y: 0}
+  - prefab: {fileID: 4711179470399443457, guid: 740f0040bbf8dd24da8420e65bef951f, type: 3}
+    dropChancePercent: 10
     dropOffset: {x: 0, y: 0}
   - prefab: {fileID: 3824420821870899090, guid: 228e9d683a9f11c46add820e5fa3ea62, type: 3}
-    dropChancePercent: 15
+    dropChancePercent: 2.5
     dropOffset: {x: 0, y: 0}

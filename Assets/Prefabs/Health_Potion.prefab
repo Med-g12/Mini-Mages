@@ -138,7 +138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b1dae201f6f74c4e907c25fa99454f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PickupableItem
-  healthToAdd: 30
+  healthToAdd: 50
   manaToAdd: 0
   isBuff: 1
   speedToAdd: 0

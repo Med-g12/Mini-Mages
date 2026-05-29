@@ -30,6 +30,10 @@ public class WeaponManager : MonoBehaviour
     public Vector2 inventorySlotSize = new Vector2(48f, 48f);
     public Vector2 inventorySpacing = new Vector2(8f, 0f);
 
+    [Header("Audio")]
+    public AudioClip[] elementShootSounds; // 0=Wind, 1=Water, 2=Earth, 3=Fire
+
+    private AudioSource audioSource;
     private int activeWandIndex = 0;
     private float nextBasicFireTime = 0f;
     private bool isHoldingBasicFire;
@@ -59,6 +63,14 @@ public class WeaponManager : MonoBehaviour
             playerController.currentElementData != null)
         {
             EnsureStartingWand(playerController.currentElementData);
+        }
+
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.playOnAwake = false;
+            audioSource.spatialBlend = 0f; // 2D sound
         }
 
         // Find the Animator component (on self or children)
@@ -134,6 +146,37 @@ public class WeaponManager : MonoBehaviour
             }
 
             TriggerFireAnimation();
+            PlayElementSound(wand.elementType, false);
+        }
+    }
+
+    private void PlayElementSound(ElementType type, bool isLoopingStream)
+    {
+        if (audioSource == null || elementShootSounds == null || elementShootSounds.Length <= (int)type) return;
+
+        AudioClip clip = elementShootSounds[(int)type];
+        if (clip == null) return;
+
+        if (isLoopingStream)
+        {
+            if (audioSource.clip != clip || !audioSource.isPlaying)
+            {
+                audioSource.clip = clip;
+                audioSource.loop = true;
+                audioSource.Play();
+            }
+        }
+        else
+        {
+            audioSource.PlayOneShot(clip);
+        }
+    }
+
+    private void StopLoopingSound()
+    {
+        if (audioSource != null && audioSource.isPlaying && audioSource.loop)
+        {
+            audioSource.Stop();
         }
     }
 
@@ -233,11 +276,13 @@ public class WeaponManager : MonoBehaviour
                 nextBasicFireTime = Time.time + GetBasicFireCooldown(activeWand);
                 isHoldingBasicFire = false;
                 isElementStreamActive = false;
+                StopLoopingSound();
                 return;
             }
 
             MoveElementStream(mousePos);
             KeepPlayerInFirePose();
+            PlayElementSound(activeWand.elementType, true);
         }
 
         if (isHoldingBasicFire && Input.GetMouseButtonUp(0))
@@ -346,6 +391,7 @@ public class WeaponManager : MonoBehaviour
         isHoldingBasicFire = false;
         isElementStreamActive = false;
         windChargeRotation = 0f;
+        StopLoopingSound();
     }
 
     private void KeepPlayerInFirePose()

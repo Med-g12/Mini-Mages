@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf14f95741c779d4bacf78f935df05bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  health: 200
+  health: 250
   baseSpeed: 2.5
   isBoss: 1
   bossTier: 2
@@ -176,7 +176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e241137918c94a028b8a10cc87c1bcc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
-  enemyElement: 2
+  enemyElement: 1
   moveSpeed: 2.5
   flyingSpeed: 3.5
   flyAnywhere: 1
@@ -262,7 +262,7 @@ MonoBehaviour:
   dashWindup: 0.35
   dashDuration: 0.55
   dashSpeed: 22
-  dashDamage: 18
+  dashDamage: 20
   dashKnockbackForce: 14
   dashKnockbackUpwardVelocity: 3
   dashKnockbackDuration: 0.25

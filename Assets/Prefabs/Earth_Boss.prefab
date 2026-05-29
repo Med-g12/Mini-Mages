@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf14f95741c779d4bacf78f935df05bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  health: 200
+  health: 350
   baseSpeed: 2.5
   isBoss: 1
   isInvulnerable: 0
@@ -186,7 +186,7 @@ MonoBehaviour:
   moveSpeed: 1
   flyingSpeed: 2
   flyAnywhere: 1
-  contactDamage: 10
+  contactDamage: 15
   damageCooldown: 5
   contactDamageRadius: 0.85
   knockbackForce: 15
@@ -267,6 +267,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EarthBossThrowAttack
   attackInterval: 4
   projectileSpeed: 10
-  projectileDamage: 20
+  projectileDamage: 25
   throwDelay: -25
   boulderPrefab: {fileID: 6079468320140279788, guid: 610cd9eca43732a4cbbe132c08a841e9, type: 3}

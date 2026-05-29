@@ -134,7 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf14f95741c779d4bacf78f935df05bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  health: 200
+  health: 220
   baseSpeed: 2.5
   isBoss: 1
   isInvulnerable: 0
@@ -188,7 +188,7 @@ MonoBehaviour:
   moveSpeed: 2.5
   flyingSpeed: 3.5
   flyAnywhere: 1
-  contactDamage: 10
+  contactDamage: 12
   damageCooldown: 1
   contactDamageRadius: 0.85
   knockbackForce: 9
@@ -269,7 +269,7 @@ MonoBehaviour:
   heatWaveInterval: 3
   heatWaveDuration: 1.2
   heatWaveRadius: 5
-  heatWaveDamage: 20
+  heatWaveDamage: 25
 --- !u!114 &5960615055853281859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -285,7 +285,7 @@ MonoBehaviour:
   attackInterval: 6
   projectileCount: 6
   projectileSpeed: 8
-  projectileDamage: 15
+  projectileDamage: 18
   projectilePrefab: {fileID: 930000000000000001, guid: 0d2135238302a7643b0d368ecdfc7e3f, type: 3}
 --- !u!114 &5085047831847548337
 MonoBehaviour:

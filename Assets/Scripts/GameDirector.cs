@@ -43,7 +43,57 @@ public class GameDirector : MonoBehaviour
     [Header("Stages")]
     public StageConfig[] stages =
     {
-        new StageConfig()
+        // Stage 1: Earth
+        new StageConfig {
+            stageName = "The Earthy Caverns",
+            waves = new WaveConfig[] {
+                new WaveConfig { waveName = "Wave 1", enemiesToSpawn = 5, elementSpawns = new ElementWaveConfig[] { new ElementWaveConfig { element = ElementType.Earth, enemiesToSpawn = 5 } } },
+                new WaveConfig { waveName = "Wave 2", enemiesToSpawn = 8, elementSpawns = new ElementWaveConfig[] { new ElementWaveConfig { element = ElementType.Earth, enemiesToSpawn = 8 } } },
+                new WaveConfig { waveName = "Wave 3", enemiesToSpawn = 12, elementSpawns = new ElementWaveConfig[] { new ElementWaveConfig { element = ElementType.Earth, enemiesToSpawn = 12 } } }
+            }
+        },
+        // Stage 2: Water
+        new StageConfig {
+            stageName = "The Watery Depths",
+            waves = new WaveConfig[] {
+                new WaveConfig { waveName = "Wave 1", enemiesToSpawn = 5, elementSpawns = new ElementWaveConfig[] { new ElementWaveConfig { element = ElementType.Water, enemiesToSpawn = 5 } } },
+                new WaveConfig { waveName = "Wave 2", enemiesToSpawn = 8, elementSpawns = new ElementWaveConfig[] { new ElementWaveConfig { element = ElementType.Water, enemiesToSpawn = 8 } } },
+                new WaveConfig { waveName = "Wave 3", enemiesToSpawn = 12, elementSpawns = new ElementWaveConfig[] { new ElementWaveConfig { element = ElementType.Water, enemiesToSpawn = 12 } } }
+            }
+        },
+        // Stage 3: Fire
+        new StageConfig {
+            stageName = "The Fiery Core",
+            waves = new WaveConfig[] {
+                new WaveConfig { waveName = "Wave 1", enemiesToSpawn = 5, elementSpawns = new ElementWaveConfig[] { new ElementWaveConfig { element = ElementType.Fire, enemiesToSpawn = 5 } } },
+                new WaveConfig { waveName = "Wave 2", enemiesToSpawn = 8, elementSpawns = new ElementWaveConfig[] { new ElementWaveConfig { element = ElementType.Fire, enemiesToSpawn = 8 } } },
+                new WaveConfig { waveName = "Wave 3", enemiesToSpawn = 12, elementSpawns = new ElementWaveConfig[] { new ElementWaveConfig { element = ElementType.Fire, enemiesToSpawn = 12 } } }
+            }
+        },
+        // Stage 4: Admiral's Last Stand
+        new StageConfig {
+            stageName = "Admiral's Last Stand",
+            waves = new WaveConfig[] {
+                new WaveConfig { waveName = "Wave 1", enemiesToSpawn = 8, elementSpawns = new ElementWaveConfig[] { 
+                    new ElementWaveConfig { element = ElementType.Wind, enemiesToSpawn = 2 },
+                    new ElementWaveConfig { element = ElementType.Water, enemiesToSpawn = 2 },
+                    new ElementWaveConfig { element = ElementType.Earth, enemiesToSpawn = 2 },
+                    new ElementWaveConfig { element = ElementType.Fire, enemiesToSpawn = 2 }
+                }},
+                new WaveConfig { waveName = "Wave 2", enemiesToSpawn = 10, elementSpawns = new ElementWaveConfig[] { 
+                    new ElementWaveConfig { element = ElementType.Wind, enemiesToSpawn = 3 },
+                    new ElementWaveConfig { element = ElementType.Water, enemiesToSpawn = 3 },
+                    new ElementWaveConfig { element = ElementType.Earth, enemiesToSpawn = 2 },
+                    new ElementWaveConfig { element = ElementType.Fire, enemiesToSpawn = 2 }
+                }},
+                new WaveConfig { waveName = "Wave 3", enemiesToSpawn = 15, elementSpawns = new ElementWaveConfig[] { 
+                    new ElementWaveConfig { element = ElementType.Wind, enemiesToSpawn = 4 },
+                    new ElementWaveConfig { element = ElementType.Water, enemiesToSpawn = 4 },
+                    new ElementWaveConfig { element = ElementType.Earth, enemiesToSpawn = 4 },
+                    new ElementWaveConfig { element = ElementType.Fire, enemiesToSpawn = 3 }
+                }}
+            }
+        }
     };
 
     [Header("Timing")]
@@ -1282,4 +1332,60 @@ public class GameDirector : MonoBehaviour
     {
         enemiesSpawnedByElementThisWave = new int[0];
     }
+
+#if UNITY_EDITOR
+    private void Reset()
+    {
+        if (stages == null || stages.Length < 4) return;
+
+        // Stage 1: Earth
+        stages[0].bossPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Earth_Boss.prefab");
+        PopulateWavePrefabs(stages[0], "Assets/Prefabs/EarthEnemy.prefab");
+
+        // Stage 2: Water
+        stages[1].bossPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Water_Boss.prefab");
+        PopulateWavePrefabs(stages[1], "Assets/Prefabs/WaterEnemy.prefab");
+
+        // Stage 3: Fire
+        stages[2].bossPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Fire_Boss.prefab");
+        PopulateWavePrefabs(stages[2], "Assets/Prefabs/FireEnemy.prefab");
+
+        // Stage 4: Admiral
+        stages[3].bossPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Animations/Admiral2Animation/Admiral2_GroundPound_0.prefab");
+        PopulateMixedWavePrefabs(stages[3]);
+    }
+
+    private void PopulateWavePrefabs(StageConfig stage, string enemyPath)
+    {
+        GameObject enemy = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(enemyPath);
+        if (enemy == null) return;
+        
+        foreach (var wave in stage.waves)
+        {
+            foreach (var spawn in wave.elementSpawns)
+            {
+                spawn.enemyPrefabs = new GameObject[] { enemy };
+            }
+        }
+    }
+
+    private void PopulateMixedWavePrefabs(StageConfig stage)
+    {
+        GameObject wind = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/AirEnemy.prefab");
+        GameObject water = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/WaterEnemy.prefab");
+        GameObject earth = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/EarthEnemy.prefab");
+        GameObject fire = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/FireEnemy.prefab");
+
+        foreach (var wave in stage.waves)
+        {
+            foreach (var spawn in wave.elementSpawns)
+            {
+                if (spawn.element == ElementType.Wind && wind != null) spawn.enemyPrefabs = new GameObject[] { wind };
+                if (spawn.element == ElementType.Water && water != null) spawn.enemyPrefabs = new GameObject[] { water };
+                if (spawn.element == ElementType.Earth && earth != null) spawn.enemyPrefabs = new GameObject[] { earth };
+                if (spawn.element == ElementType.Fire && fire != null) spawn.enemyPrefabs = new GameObject[] { fire };
+            }
+        }
+    }
+#endif
 }

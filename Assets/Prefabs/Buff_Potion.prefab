@@ -47,12 +47,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b1dae201f6f74c4e907c25fa99454f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PickupableItem
-  healthToAdd: 30
-  manaToAdd: 30
+  healthToAdd: 20
+  manaToAdd: 20
   isBuff: 1
-  speedToAdd: 8
-  damageToAdd: 30
-  buffDuration: 20
+  speedToAdd: 3
+  damageToAdd: 15
+  buffDuration: 12
   pickupRadius: 0.75
   destroyOnPickup: 1
   enableVisualEffects: 1
