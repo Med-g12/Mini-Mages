@@ -17,6 +17,11 @@ public class EnemyMovement : MonoBehaviour
     public float flapScaleAmount = 0.12f;
     public float flapSpeed = 8f;
     public float flapRotationAmount = 5f;
+
+    [Header("Boss Settings")]
+    public GameObject fireBossProjectilePrefab;
+
+    [Header("Highlights & Polish")]
     public Color highlightColor = new Color(1f, 1f, 1f, 1f);
     public float highlightPulseAmount = 0.35f;
     public bool showVisibilityMarker = true;
@@ -31,7 +36,7 @@ public class EnemyMovement : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Color baseSpriteColor;
     private Collider2D enemyCollider;
-    private Vector3 baseScale;
+    public Vector3 baseScale;
     private Transform visibilityMarker;
     private float nextDamageTime;
     private float knockbackEndTime;
@@ -76,6 +81,25 @@ public class EnemyMovement : MonoBehaviour
             if (gameObject.GetComponent<FireBossHeatWave>() == null)
             {
                 gameObject.AddComponent<FireBossHeatWave>();
+            }
+            
+            FireBossProjectileAttack projAttack = gameObject.GetComponent<FireBossProjectileAttack>();
+            if (projAttack == null)
+            {
+                projAttack = gameObject.AddComponent<FireBossProjectileAttack>();
+            }
+            
+            if (projAttack != null && fireBossProjectilePrefab != null)
+            {
+                projAttack.projectilePrefab = fireBossProjectilePrefab;
+            }
+        }
+        else if (enemyHealth != null && enemyHealth.isBoss && 
+                 (enemyElement == ElementType.Earth || enemyHealth.enemyElement == ElementType.Earth || gameObject.name.Contains("Earth_Boss")))
+        {
+            if (gameObject.GetComponent<EarthBossThrowAttack>() == null)
+            {
+                gameObject.AddComponent<EarthBossThrowAttack>();
             }
         }
     }
