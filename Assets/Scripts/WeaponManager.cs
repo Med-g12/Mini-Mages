@@ -48,6 +48,7 @@ public class WeaponManager : MonoBehaviour
 
     private float damageBuffEndTime = 0f;
     private float activeDamageBonus = 0f;
+    private float damageBuffMaxDuration = 1f;
 
     void Start()
     {
@@ -698,6 +699,7 @@ public class WeaponManager : MonoBehaviour
         }
 
         damageBuffEndTime = Time.time + duration;
+        damageBuffMaxDuration = duration;
     }
 
     private void UpdateDamageBuff()
@@ -707,6 +709,21 @@ public class WeaponManager : MonoBehaviour
             bonusProjectileDamage -= activeDamageBonus;
             activeDamageBonus = 0f;
         }
+    }
+
+    public bool HasActiveDamageBuff()
+    {
+        return Time.time < damageBuffEndTime;
+    }
+
+    public float GetDamageBuffRemainingTime()
+    {
+        return Mathf.Max(0f, damageBuffEndTime - Time.time);
+    }
+
+    public float GetDamageBuffMaxDuration()
+    {
+        return damageBuffMaxDuration;
     }
 
     private void BuildElementInventoryUI()

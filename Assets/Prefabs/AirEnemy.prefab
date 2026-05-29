@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 950000}
   - component: {fileID: 1140000}
   - component: {fileID: 1140001}
+  - component: {fileID: 9068368304220736597}
   m_Layer: 0
   m_Name: AirEnemy
   m_TagString: Enemy
@@ -159,12 +160,13 @@ BoxCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0.016574085, y: 0.00314828}
   m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0.16}
+    border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.66, y: 0.32}
+    oldSize: {x: 0.61, y: 0.55}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
+    adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 0.6964116, y: 0.3433782}
   m_EdgeRadius: 0
@@ -200,13 +202,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf14f95741c779d4bacf78f935df05bd, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   health: 30
   baseSpeed: 2.5
   isBoss: 0
+  isInvulnerable: 0
   bossTier: 1
   enemyElement: 0
+  hitFlashDuration: 0.12
+  damageReceivedMultiplier: 1
+  bossHealthBarOffset: {x: 0, y: 0.25, z: 0}
+  bossHealthBarSize: {x: 1.6, y: 0.14}
+  allowBuiltInMovement: 1
 --- !u!114 &1140001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,8 +225,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e241137918c94a028b8a10cc87c1bcc5, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   enemyElement: 0
   moveSpeed: 2.5
   flyingSpeed: 3.5
@@ -237,3 +245,22 @@ MonoBehaviour:
   markerColor: {r: 1, g: 0.95, b: 0.1, a: 1}
   markerOffset: {x: 0, y: 0.68, z: 0}
   markerSize: 0.14
+--- !u!114 &9068368304220736597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 325d70a36c0045543906ca2e042f9765, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDropTable
+  drops:
+  - prefab: {fileID: 5175711495734363953, guid: b99932eb37757a54dad7483df867b3ee, type: 3}
+    dropChancePercent: 15
+    dropOffset: {x: 0, y: 0}
+  - prefab: {fileID: 3824420821870899090, guid: 228e9d683a9f11c46add820e5fa3ea62, type: 3}
+    dropChancePercent: 15
+    dropOffset: {x: 0, y: 0}

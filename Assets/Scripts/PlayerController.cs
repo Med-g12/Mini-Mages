@@ -65,7 +65,8 @@ public class PlayerController : MonoBehaviour
     private Sprite currentBuffIcon;
 
     // Buff Visuals & UI
-    private SpriteRenderer buffAuraRenderer;
+    private SpriteRenderer buffShadeRenderer;
+    private SpriteRenderer[] buffBorderRenderers;
     private GameObject buffUIContainer;
     private Image buffUITimerFill;
 
@@ -357,31 +358,55 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateBuffs()
     {
-        bool buffActive = Time.time < speedBuffEndTime;
+        bool speedBuffActive = Time.time < speedBuffEndTime;
+        bool damageBuffActive = weaponManager != null && weaponManager.HasActiveDamageBuff();
+        bool buffActive = speedBuffActive || damageBuffActive;
 
-        if (!buffActive && activeSpeedBonus > 0f)
+        if (!speedBuffActive && activeSpeedBonus > 0f)
         {
             // Expire buff
             moveSpeed -= activeSpeedBonus;
             activeSpeedBonus = 0f;
         }
 
+        if (buffActive)
+        {
+            EnsureBuffAura();
+            EnsureBuffUI();
+        }
+
         // Aura logic
-        if (buffAuraRenderer != null)
+        if (buffShadeRenderer != null)
         {
             if (buffActive)
             {
-                buffAuraRenderer.enabled = true;
-                buffAuraRenderer.sprite = spriteRenderer.sprite; // Sync animation frame
+                buffShadeRenderer.enabled = true;
+                buffShadeRenderer.sprite = spriteRenderer.sprite; // Sync animation frame
+                buffShadeRenderer.flipX = spriteRenderer.flipX;
+                buffShadeRenderer.sortingOrder = spriteRenderer.sortingOrder + 1;
+                buffShadeRenderer.color = new Color(1f, 1f, 0f, 0.75f); // Yellow shade (more visible)
+
                 float pulse = (Mathf.Sin(Time.time * 6f) + 1f) * 0.5f;
-                float auraScale = Mathf.Lerp(1.2f, 1.4f, pulse);
-                buffAuraRenderer.transform.localScale = new Vector3(auraScale, auraScale, 1f);
-                float alpha = Mathf.Lerp(0.2f, 0.6f, pulse);
-                buffAuraRenderer.color = new Color(1f, 0.8f, 0f, alpha); // Gold/Yellow
+                float borderAlpha = Mathf.Lerp(0.7f, 1f, pulse);
+                Color borderColor = new Color(1f, 0.8f, 0f, borderAlpha); // Gold/Yellow
+
+                for (int i = 0; i < buffBorderRenderers.Length; i++)
+                {
+                    buffBorderRenderers[i].enabled = true;
+                    buffBorderRenderers[i].sprite = spriteRenderer.sprite;
+                    buffBorderRenderers[i].flipX = spriteRenderer.flipX;
+                    buffBorderRenderers[i].sortingOrder = spriteRenderer.sortingOrder - 1;
+                    buffBorderRenderers[i].color = borderColor;
+                }
             }
             else
             {
-                buffAuraRenderer.enabled = false;
+                buffShadeRenderer.enabled = false;
+                for (int i = 0; i < buffBorderRenderers.Length; i++)
+                {
+                    if (buffBorderRenderers[i] != null)
+                        buffBorderRenderers[i].enabled = false;
+                }
             }
         }
 
@@ -393,8 +418,28 @@ public class PlayerController : MonoBehaviour
                 buffUIContainer.SetActive(true);
                 if (buffUITimerFill != null)
                 {
-                    float remaining = speedBuffEndTime - Time.time;
-                    buffUITimerFill.fillAmount = Mathf.Clamp01(remaining / buffMaxDuration);
+                    float remaining = 0f;
+                    float maxDur = 1f;
+
+                    if (speedBuffActive && damageBuffActive)
+                    {
+                        float speedRemaining = speedBuffEndTime - Time.time;
+                        float damageRemaining = weaponManager.GetDamageBuffRemainingTime();
+                        remaining = Mathf.Max(speedRemaining, damageRemaining);
+                        maxDur = Mathf.Max(buffMaxDuration, weaponManager.GetDamageBuffMaxDuration());
+                    }
+                    else if (speedBuffActive)
+                    {
+                        remaining = speedBuffEndTime - Time.time;
+                        maxDur = buffMaxDuration;
+                    }
+                    else if (damageBuffActive)
+                    {
+                        remaining = weaponManager.GetDamageBuffRemainingTime();
+                        maxDur = weaponManager.GetDamageBuffMaxDuration();
+                    }
+
+                    buffUITimerFill.fillAmount = Mathf.Clamp01(remaining / maxDur);
                 }
             }
             else
@@ -406,17 +451,47 @@ public class PlayerController : MonoBehaviour
 
     private void EnsureBuffAura()
     {
-        if (buffAuraRenderer != null) return;
+        if (buffShadeRenderer != null) return;
         if (spriteRenderer == null) return;
 
-        GameObject auraObj = new GameObject("BuffAura");
-        auraObj.transform.SetParent(spriteRenderer.transform, false);
-        auraObj.transform.localPosition = new Vector3(0f, 0f, 0.1f);
+        GameObject auraContainer = new GameObject("BuffAuraContainer");
+        auraContainer.transform.SetParent(spriteRenderer.transform, false);
+        auraContainer.transform.localPosition = Vector3.zero;
+
+        GameObject shadeObj = new GameObject("BuffShade");
+        shadeObj.transform.SetParent(auraContainer.transform, false);
+        shadeObj.transform.localPosition = new Vector3(0f, 0f, -0.1f);
         
-        buffAuraRenderer = auraObj.AddComponent<SpriteRenderer>();
-        buffAuraRenderer.sprite = spriteRenderer.sprite;
-        buffAuraRenderer.sortingOrder = spriteRenderer.sortingOrder - 1;
-        buffAuraRenderer.enabled = false;
+        buffShadeRenderer = shadeObj.AddComponent<SpriteRenderer>();
+        buffShadeRenderer.sprite = spriteRenderer.sprite;
+        buffShadeRenderer.sortingOrder = spriteRenderer.sortingOrder + 1; // On top
+        buffShadeRenderer.enabled = false;
+
+        buffBorderRenderers = new SpriteRenderer[8];
+        Vector3[] offsets = new Vector3[]
+        {
+            new Vector3(0.12f, 0f, 0f),
+            new Vector3(-0.12f, 0f, 0f),
+            new Vector3(0f, 0.12f, 0f),
+            new Vector3(0f, -0.12f, 0f),
+            new Vector3(0.085f, 0.085f, 0f),
+            new Vector3(-0.085f, 0.085f, 0f),
+            new Vector3(0.085f, -0.085f, 0f),
+            new Vector3(-0.085f, -0.085f, 0f)
+        };
+
+        for (int i = 0; i < 8; i++)
+        {
+            GameObject borderObj = new GameObject("BuffBorder_" + i);
+            borderObj.transform.SetParent(auraContainer.transform, false);
+            borderObj.transform.localPosition = offsets[i] + new Vector3(0f, 0f, 0.1f);
+            
+            SpriteRenderer sr = borderObj.AddComponent<SpriteRenderer>();
+            sr.sprite = spriteRenderer.sprite;
+            sr.sortingOrder = spriteRenderer.sortingOrder - 1; // Behind player
+            sr.enabled = false;
+            buffBorderRenderers[i] = sr;
+        }
     }
 
     private void EnsureBuffUI()
