@@ -265,6 +265,9 @@ MonoBehaviour:
   - prefab: {fileID: 3824420821870899090, guid: 228e9d683a9f11c46add820e5fa3ea62, type: 3}
     dropChancePercent: 15
     dropOffset: {x: 0, y: 0}
+  - prefab: {fileID: 4711179470399443457, guid: 740f0040bbf8dd24da8420e65bef951f, type: 3}
+    dropChancePercent: 15
+    dropOffset: {x: 0, y: 0}
 --- !u!1 &100001
 GameObject:
   m_ObjectHideFlags: 0
