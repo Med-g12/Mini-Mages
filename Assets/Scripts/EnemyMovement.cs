@@ -69,6 +69,15 @@ public class EnemyMovement : MonoBehaviour
         IgnorePlayerCollisions();
 
         EnsureVisibilityMarker();
+
+        if (enemyHealth != null && enemyHealth.isBoss && 
+            (enemyElement == ElementType.Fire || enemyHealth.enemyElement == ElementType.Fire || gameObject.name.Contains("Fire_Boss")))
+        {
+            if (gameObject.GetComponent<FireBossHeatWave>() == null)
+            {
+                gameObject.AddComponent<FireBossHeatWave>();
+            }
+        }
     }
 
     void Update()

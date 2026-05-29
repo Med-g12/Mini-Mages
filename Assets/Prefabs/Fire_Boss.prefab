@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 3375126032287342464}
   - component: {fileID: 8125217806905179039}
   - component: {fileID: 6293154179029046807}
+  - component: {fileID: 4827310404509143644}
   m_Layer: 0
   m_Name: Fire_Boss
   m_TagString: Boss
@@ -134,8 +135,14 @@ MonoBehaviour:
   health: 200
   baseSpeed: 2.5
   isBoss: 1
+  isInvulnerable: 0
   bossTier: 4
   enemyElement: 3
+  hitFlashDuration: 0.12
+  damageReceivedMultiplier: 1
+  bossHealthBarOffset: {x: 0, y: 0.25, z: 0}
+  bossHealthBarSize: {x: 1.6, y: 0.14}
+  allowBuiltInMovement: 1
 --- !u!50 &3187374645665724500
 Rigidbody2D:
   serializedVersion: 5
@@ -244,3 +251,19 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.64
+--- !u!114 &4827310404509143644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4754518623609711788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a24f1e0780119f4d9141611452e6783, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FireBossHeatWave
+  heatWaveInterval: 3
+  heatWaveDuration: 1.2
+  heatWaveRadius: 6.5
+  heatWaveDamage: 20
