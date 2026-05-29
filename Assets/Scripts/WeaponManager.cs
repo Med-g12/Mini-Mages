@@ -225,6 +225,17 @@ public class WeaponManager : MonoBehaviour
 
         if (isElementStreamActive)
         {
+            // Drain continuous mana over time while holding
+            if (resources != null && !resources.SpendMana(activeWand.continuousManaCost * Time.deltaTime))
+            {
+                // Out of mana, cancel the stream
+                DestroyHeldProjectile();
+                nextBasicFireTime = Time.time + GetBasicFireCooldown(activeWand);
+                isHoldingBasicFire = false;
+                isElementStreamActive = false;
+                return;
+            }
+
             MoveElementStream(mousePos);
             KeepPlayerInFirePose();
         }
@@ -254,7 +265,7 @@ public class WeaponManager : MonoBehaviour
     {
         if (Time.time < nextBasicFireTime ||
             activeWand == null ||
-            !CanSpendMana(activeWand.basicManaCost))
+            (resources != null && resources.currentMana <= 0f))
         {
             isHoldingBasicFire = false;
             return;

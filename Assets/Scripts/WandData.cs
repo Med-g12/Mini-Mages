@@ -10,13 +10,14 @@ public class WandData : ScriptableObject
     [Header("Basic Attack")]
     public GameObject basicProjectilePrefab;
     public GameObject heldBasicProjectilePrefab;
-    public float basicManaCost = 0f;
+    public float basicManaCost = 50f; // Cost for single-click shots
+    public float continuousManaCost = 30; // Cost per second for hold streams
 
     [Header("Q Skill")]
     public GameObject qProjectilePrefab;
-    public float qManaCost = 15f;
+    public float qManaCost = 50f;
 
     [Header("E Skill")]
     public GameObject eProjectilePrefab;
-    public float eManaCost = 30f;
+    public float eManaCost = 100f;
 }

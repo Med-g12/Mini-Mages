@@ -10,7 +10,8 @@ public class PlayerResources : MonoBehaviour
     public float currentHealth;
     public float maxMana = 100f;
     public float currentMana;
-    public float manaRegenRate = 10f;
+    public float manaRegenAmount = 5f;
+    public float manaRegenInterval = 0.5f;
 
     public Slider healthSlider;
     public Slider manaSlider;
@@ -38,6 +39,7 @@ public class PlayerResources : MonoBehaviour
     public float lowHealthBorderThickness = 16f;
 
     private float nextContactDamageTime;
+    private float nextManaRegenTime;
     private bool isDead;
     private bool isKnockedDown;
     private Coroutine knockdownRoutine;
@@ -69,8 +71,12 @@ public class PlayerResources : MonoBehaviour
 
         if (currentMana < maxMana)
         {
-            currentMana += manaRegenRate * Time.deltaTime;
-            UpdateManaBar();
+            if (Time.time >= nextManaRegenTime)
+            {
+                currentMana = Mathf.Min(currentMana + manaRegenAmount, maxMana);
+                UpdateManaBar();
+                nextManaRegenTime = Time.time + manaRegenInterval;
+            }
         }
 
         CheckNearbyEnemies();

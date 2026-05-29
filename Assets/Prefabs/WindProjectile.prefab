@@ -171,7 +171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
   element: 0
   speed: 12
-  damage: 10
+  damage: 12
   lifetime: 3
   spinSpeed: 720
   isHeldByPlayer: 0

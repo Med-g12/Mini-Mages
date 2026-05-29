@@ -17,7 +17,8 @@ MonoBehaviour:
   elementIcon: {fileID: 3734613166931456683, guid: a7ac571aac5eb4b4dbffeaa12d9ac119, type: 3}
   basicProjectilePrefab: {fileID: 910000000000000001, guid: 458a6f9cf0f746e486dfc0f38b52b311, type: 3}
   heldBasicProjectilePrefab: {fileID: 0}
-  basicManaCost: 0
+  basicManaCost: 20
+  continuousManaCost: 30
   qProjectilePrefab: {fileID: 0}
   qManaCost: 15
   eProjectilePrefab: {fileID: 0}
