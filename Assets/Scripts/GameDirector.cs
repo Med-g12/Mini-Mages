@@ -117,6 +117,11 @@ public class GameDirector : MonoBehaviour
     public float baktinNiAdmiralPlatformEdgePadding = 0.8f;
     public float baktinNiAdmiralSpawnHeight = 0.8f;
 
+    [Header("Audio")]
+    public AudioClip normalBGM;
+    public AudioClip bossBGM;
+    private AudioSource bgmSource;
+
     private Transform playerTransform;
     private int currentStageIndex = 0;
     private int currentWaveIndex = 0;
@@ -138,6 +143,15 @@ public class GameDirector : MonoBehaviour
         if (player != null)
         {
             playerTransform = player.transform;
+        }
+
+        bgmSource = gameObject.AddComponent<AudioSource>();
+        bgmSource.loop = true;
+        bgmSource.spatialBlend = 0f;
+        if (normalBGM != null)
+        {
+            bgmSource.clip = normalBGM;
+            bgmSource.Play();
         }
 
         CacheFloorSpawnPoints();
@@ -642,6 +656,12 @@ public class GameDirector : MonoBehaviour
         if (isAdmiral2Boss && FindAnyObjectByType<Admiral2Boss>() != null)
         {
             return;
+        }
+
+        if (isAdmiral2Boss && bossBGM != null && bgmSource != null)
+        {
+            bgmSource.clip = bossBGM;
+            bgmSource.Play();
         }
 
         bossActiveOrPending = true;

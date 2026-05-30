@@ -925,23 +925,162 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 54a825a0677a530449a75dd4ecd5a543, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameDirector
   stages:
-  - stageName: Test
+  - stageName: The Earthy Caverns
     waves:
-    - waveName: 1
+    - waveName: Wave 1
       enemiesToSpawn: 5
-      enemyPrefabs:
-      - {fileID: 100000, guid: d6e1949159d04540af6433277f874550, type: 3}
-      elementSpawns: []
+      enemyPrefabs: []
+      elementSpawns:
+      - element: 2
+        enemiesToSpawn: 5
+        enemyPrefabs:
+        - {fileID: 100000, guid: d6e1949159d04540af6433277f874550, type: 3}
+    - waveName: Wave 2
+      enemiesToSpawn: 8
+      enemyPrefabs: []
+      elementSpawns:
+      - element: 2
+        enemiesToSpawn: 8
+        enemyPrefabs:
+        - {fileID: 100000, guid: d6e1949159d04540af6433277f874550, type: 3}
+    - waveName: Wave 3
+      enemiesToSpawn: 12
+      enemyPrefabs: []
+      elementSpawns:
+      - element: 2
+        enemiesToSpawn: 12
+        enemyPrefabs:
+        - {fileID: 100000, guid: d6e1949159d04540af6433277f874550, type: 3}
     bossPrefab: {fileID: 6551586121070330101, guid: 0be4abd8547292d42852f48171147013, type: 3}
     badgeDrop: {fileID: 0}
-  spawnInterval: 0.1
+  - stageName: The Watery Depths
+    waves:
+    - waveName: Wave 1
+      enemiesToSpawn: 5
+      enemyPrefabs: []
+      elementSpawns:
+      - element: 1
+        enemiesToSpawn: 5
+        enemyPrefabs:
+        - {fileID: 100000, guid: 94e05a8846ea435c96f791bd1e5efba1, type: 3}
+    - waveName: Wave 2
+      enemiesToSpawn: 8
+      enemyPrefabs: []
+      elementSpawns:
+      - element: 1
+        enemiesToSpawn: 8
+        enemyPrefabs:
+        - {fileID: 100000, guid: 94e05a8846ea435c96f791bd1e5efba1, type: 3}
+    - waveName: Wave 3
+      enemiesToSpawn: 12
+      enemyPrefabs: []
+      elementSpawns:
+      - element: 1
+        enemiesToSpawn: 12
+        enemyPrefabs:
+        - {fileID: 100000, guid: 94e05a8846ea435c96f791bd1e5efba1, type: 3}
+    bossPrefab: {fileID: 6987567159529471374, guid: a47862505c404dc4fadd6b0c7c52db63, type: 3}
+    badgeDrop: {fileID: 0}
+  - stageName: The Fiery Core
+    waves:
+    - waveName: Wave 1
+      enemiesToSpawn: 5
+      enemyPrefabs: []
+      elementSpawns:
+      - element: 3
+        enemiesToSpawn: 5
+        enemyPrefabs:
+        - {fileID: 100000, guid: fbe052ce5bc74c1691eb1314e001cd18, type: 3}
+    - waveName: Wave 2
+      enemiesToSpawn: 8
+      enemyPrefabs: []
+      elementSpawns:
+      - element: 3
+        enemiesToSpawn: 8
+        enemyPrefabs:
+        - {fileID: 100000, guid: fbe052ce5bc74c1691eb1314e001cd18, type: 3}
+    - waveName: Wave 3
+      enemiesToSpawn: 12
+      enemyPrefabs: []
+      elementSpawns:
+      - element: 3
+        enemiesToSpawn: 12
+        enemyPrefabs:
+        - {fileID: 100000, guid: fbe052ce5bc74c1691eb1314e001cd18, type: 3}
+    bossPrefab: {fileID: 4754518623609711788, guid: 00085e28555a6674d810f8640044fb0b, type: 3}
+    badgeDrop: {fileID: 0}
+  - stageName: Admiral's Last Stand
+    waves:
+    - waveName: Wave 1
+      enemiesToSpawn: 8
+      enemyPrefabs: []
+      elementSpawns:
+      - element: 0
+        enemiesToSpawn: 2
+        enemyPrefabs:
+        - {fileID: 100000, guid: 6b1c6e9afc7f4a7b98d8ce2f7421c102, type: 3}
+      - element: 1
+        enemiesToSpawn: 2
+        enemyPrefabs:
+        - {fileID: 100000, guid: 94e05a8846ea435c96f791bd1e5efba1, type: 3}
+      - element: 2
+        enemiesToSpawn: 2
+        enemyPrefabs:
+        - {fileID: 100000, guid: d6e1949159d04540af6433277f874550, type: 3}
+      - element: 3
+        enemiesToSpawn: 2
+        enemyPrefabs:
+        - {fileID: 100000, guid: fbe052ce5bc74c1691eb1314e001cd18, type: 3}
+    - waveName: Wave 2
+      enemiesToSpawn: 10
+      enemyPrefabs: []
+      elementSpawns:
+      - element: 0
+        enemiesToSpawn: 3
+        enemyPrefabs:
+        - {fileID: 100000, guid: 6b1c6e9afc7f4a7b98d8ce2f7421c102, type: 3}
+      - element: 1
+        enemiesToSpawn: 3
+        enemyPrefabs:
+        - {fileID: 100000, guid: 94e05a8846ea435c96f791bd1e5efba1, type: 3}
+      - element: 2
+        enemiesToSpawn: 2
+        enemyPrefabs:
+        - {fileID: 100000, guid: d6e1949159d04540af6433277f874550, type: 3}
+      - element: 3
+        enemiesToSpawn: 2
+        enemyPrefabs:
+        - {fileID: 100000, guid: fbe052ce5bc74c1691eb1314e001cd18, type: 3}
+    - waveName: Wave 3
+      enemiesToSpawn: 15
+      enemyPrefabs: []
+      elementSpawns:
+      - element: 0
+        enemiesToSpawn: 4
+        enemyPrefabs:
+        - {fileID: 100000, guid: 6b1c6e9afc7f4a7b98d8ce2f7421c102, type: 3}
+      - element: 1
+        enemiesToSpawn: 4
+        enemyPrefabs:
+        - {fileID: 100000, guid: 94e05a8846ea435c96f791bd1e5efba1, type: 3}
+      - element: 2
+        enemiesToSpawn: 4
+        enemyPrefabs:
+        - {fileID: 100000, guid: d6e1949159d04540af6433277f874550, type: 3}
+      - element: 3
+        enemiesToSpawn: 3
+        enemyPrefabs:
+        - {fileID: 100000, guid: fbe052ce5bc74c1691eb1314e001cd18, type: 3}
+    bossPrefab: {fileID: 7766717611197441085, guid: 2a7c8d4f752e8f94797dc4f5baf004d5, type: 3}
+    badgeDrop: {fileID: 0}
+  spawnInterval: 1
   timeBetweenWaves: 4
   minSpawnDistance: 8
   maxSpawnDistance: 18
-  minAirSpawnHeightAbovePlayer: 10
-  maxAirSpawnHeightAbovePlayer: 10
+  minAirSpawnHeightAbovePlayer: 2
+  maxAirSpawnHeightAbovePlayer: 7
   floorSpawnPoints: []
   windNormalEnemyScaleMultiplier: 1.45
   waterNormalEnemyScaleMultiplier: 0.7
@@ -949,6 +1088,8 @@ MonoBehaviour:
   baktinNiAdmiralScale: 3
   baktinNiAdmiralPlatformEdgePadding: 0.8
   baktinNiAdmiralSpawnHeight: 0.8
+  normalBGM: {fileID: 8300000, guid: 704e357a919d8814a9922347737bca80, type: 3}
+  bossBGM: {fileID: 8300000, guid: 2371a83230aeca744940857c70afc28b, type: 3}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1392,6 +1533,7 @@ MonoBehaviour:
   showElementInventory: 1
   inventorySlotSize: {x: 48, y: 48}
   inventorySpacing: {x: 8, y: 0}
+  elementShootSounds: []
 --- !u!114 &1476606680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1406,9 +1548,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerResources
   maxHealth: 100
   currentHealth: 100
+  healthRegenAmount: 1
+  healthRegenInterval: 2
   maxMana: 100
-  currentMana: 0
-  manaRegenRate: 10
+  currentMana: 100
+  manaRegenAmount: 5
+  manaRegenInterval: 1
   healthSlider: {fileID: 0}
   manaSlider: {fileID: 0}
   enemyContactDamage: 10
@@ -1934,37 +2079,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1920410092
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1920410093}
-  m_Layer: 0
-  m_Name: Earth_Boss_Throw
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1920410093
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1920410092}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.62664, y: 0.21568, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1981,4 +2095,3 @@ SceneRoots:
   - {fileID: 501523043}
   - {fileID: 75773776}
   - {fileID: 748040}
-  - {fileID: 1920410093}
